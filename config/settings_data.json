@@ -80,7 +80,7 @@
       "sidebar": {
         "type": "sidebar",
         "settings": {
-          "main_linklist": "main-menu",
+          "main_linklist": "main-menu-ja",
           "feature_second_level_links": false,
           "collection_image_crop": "0.8",
           "secondary_menu": "",

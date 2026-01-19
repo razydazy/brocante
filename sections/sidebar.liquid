@@ -48,6 +48,7 @@
       {% endif %}
     </div>
     <nav class="mt-8" aria-label="{{ 'layout.navigation.primary' | t }}">
+      {% comment %} メニューカスタマイズ【スタート】 {% endcomment %}
       <ul>
         {%- for link in linklists[section.settings.main_linklist].links -%}
           {%- liquid
@@ -65,7 +66,19 @@
                       x-bind:aria-expanded="accordionOpen.accordion{{ counter }}? true: 'false'"
                       @click="accordionOpen.accordion{{ counter }} = !accordionOpen.accordion{{ counter }}"
                       aria-controls="accordion{{ counter }}">
-                {{ link.title }}
+
+                {% comment %} {{ link.title }} {% endcomment %}
+
+                {%- if link.title contains '%' -%}
+                  {%- assign titles = link.title | split: '%' -%}
+                  <span class="block leading-tight">
+                    <span class="block text-base">{{ titles[0] }}</span>
+                    <span class="block text-xs mt-2 opacity-80">{{ titles[1] }}</span>
+                  </span>
+                {%- else -%}
+                  {{ link.title }}
+                {%- endif -%}
+
                 <span class="absolute right-0 w-3 top-1/2 transform -translate-y-1/2 flex items-center">
                   <span class="inline-block transform transition origin-center" :class="{'rotate-180': accordionOpen.accordion{{ counter }}}">
                     {%- render 'icon-chevron-down' -%}
@@ -105,7 +118,9 @@
                                 x-bind:aria-expanded="accordionOpen.accordion{{ counter }}? true: 'false'"
                                 @click="accordionOpen.accordion{{ counter }} = !accordionOpen.accordion{{ counter }}"
                                 aria-controls="accordion{{ counter }}">
+
                           {{ child_link.title }}
+
                           <span class="absolute w-3 right-0 top-1/2 transform -translate-y-1/2 flex items-center">
                             <span class="inline-block transform transition origin-center" :class="{'rotate-180': accordionOpen.accordion{{ counter }}}">
                               {%- render 'icon-chevron-down' -%}
@@ -127,7 +142,20 @@
                         </ul>
                       {%- else -%}
                         <a class="{{ child_link_class }}" href="{{ child_link.url }}">
-                          {{ child_link.title }}
+                          {% comment %} {{ child_link.title }} {% endcomment %}
+                          {%- if child_link.title contains '%' -%}
+                            {%- assign titles = child_link.title | split: '%' -%}
+                            <span class="block leading-tight">
+                              <span class="block text-base leading-none">
+                                {{ titles[0] }}
+                              </span>
+                              <span class="block text-xs leading-none mt-2 opacity-80">
+                                {{ titles[1] }}
+                              </span>
+                            </span>
+                          {%- else -%}
+                            {{ child_link.title }}
+                          {%- endif -%}
                         </a>
                       {%- endif -%}
                     </li>
@@ -137,7 +165,16 @@
               {%- endunless -%}
             {%- else -%}
               <a class="{{ link_class }}" href="{{ link.url }}">
-                {{ link.title }}
+                {% comment %} {{ link.title }} {% endcomment %}
+                {%- if link.title contains '%' -%}
+                  {%- assign titles = link.title | split: '%' -%}
+                  <span class="block leading-tight">
+                    <span class="block text-base">{{ titles[0] }}</span>
+                    <span class="block text-xs mt-2 opacity-80">{{ titles[1] }}</span>
+                  </span>
+                {%- else -%}
+                  {{ link.title }}
+                {%- endif -%}
               </a>
             {%- endif -%}
             {%- if have_feature_links and feature_second_level_links -%}
@@ -192,6 +229,7 @@
           </li>
         {%- endfor -%}
       </ul>
+      {% comment %} メニューカスタマイズ【エンド】 {% endcomment %}
     </nav>
 
     <div class="mt-8 border-t-theme-width border-scheme-border">
