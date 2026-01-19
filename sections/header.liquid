@@ -1,0 +1,1087 @@
+{% comment %}theme-check-disable MissingTemplate,TemplateLength{% endcomment %}
+{%- liquid
+  assign layout = section.settings.header_layout
+  assign show_border = section.settings.show_border
+  assign predictive_search_enabled = settings.predictive_search_enabled
+  assign section_color = 'primary'
+  assign text_color = 'primary'
+  assign show_hero = false
+  assign show_logo = true
+  assign border_class = 'border-scheme-border'
+  assign border_scheme = 'primary'
+  if template == 'index' and section.blocks.size > 0
+    assign section_color = section.blocks[0].settings.banner_text_color
+    assign text_color = section.blocks[0].settings.banner_text_color
+    assign show_hero = true
+    assign show_logo = true
+    assign enable_overlay = true
+    assign show_border = false
+    for block in section.blocks
+      if block.settings.show_logo_on_hero
+        assign show_logo = false
+      endif
+    endfor
+  endif
+  if section.settings.enable_overlay_on_homepage and template == 'index' and section.blocks.size == 0
+    assign section_color = section.settings.overlay_text_color
+    assign text_color = section.settings.overlay_text_color
+    assign border_class = 'border-scheme-text'
+    assign border_scheme = section.settings.overlay_text_color
+    assign enable_overlay = true
+  endif
+  assign counter = 0
+-%}
+{%- capture logo -%}
+  {%- assign class = 'font-heading text-xl lg:text-3xl' -%}
+  {%- if template == 'index' -%}
+    <h1 class="h1 font-heading {{ class }}">
+  {%- else -%}
+    <div class="h1 font-heading {{ class }}">
+  {%- endif -%}
+    {% if section.settings.logo != blank %}
+      {% comment %}theme-check-disable ImgWidthAndHeight{% endcomment %}
+      <a href="{{ routes.root_url }}" class="site-header__logo-link">
+        {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
+        {% capture image_size_px %}{{ section.settings.logo_max_width | escape }}px{% endcapture %}
+        {% capture image_size_2x %}{{ section.settings.logo_max_width | times: 2 }}x{% endcapture %}
+        {%- unless enable_overlay and section.settings.overlay_logo != blank -%}
+        <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+        {%- endunless -%}
+        {%- if enable_overlay and section.settings.overlay_logo != blank -%}
+        {%- assign logo = section.settings.overlay_logo -%}
+        <img src="{{ logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+        {%- endif -%}
+      </a>
+      {% comment %}theme-check-enable ImgWidthAndHeight{% endcomment %}
+    {% else %}
+      <a href="{{ routes.root_url }}" class="">{{ shop.name }}</a>
+    {% endif %}
+  {%- if template == 'index' -%}
+    </h1>
+  {%- else -%}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+{%- liquid
+  assign link_all = section.settings.show_all_navigation_links
+  assign link_classes = 'inline-block font-secondary px-4 py-2'
+  assign secondary_link_classes = 'inline-block font-body px-4 py-2'
+  assign show_collection_images = section.settings.show_collection_images
+  assign feature_second_level_links = section.settings.feature_second_level_links
+-%}
+{% capture navigation %}
+  <nav class="" role="navigation">
+    <ul class=" -mx-4 flex flex-wrap {% if layout contains 'navigation_left' %}justify-start{% else %}justify-center{% endif %} items-center type-navigation text-base">
+      {% for link in linklists[section.settings.main_linklist].links %}
+        <li class="inline-block">
+          {% if link.links != blank %}
+            <div class="no-js-focus-wrapper">
+              <button class="inline-block flex items-center {{ link_classes }}""
+                @click="openMenu({{ counter }})"
+                x-bind:aria-expanded="menuOpen.menu{{ counter }}? true: 'false'"
+                aria-controls="menu{{ counter }}">
+                <span class="inline-block pr-1">{{ link.title }}</span>
+                <span class="inline-block w-3 align-middle svg-scale mr-1 transform origin-center rotate transition" :class="{'rotate-180': menuOpen.menu{{ counter }}}">{% render 'icon-chevron-down' %}</span>
+              </button>
+              <div  class="no-js-focus-container absolute left-0 bottom-4 w-full section-y-padding section-x-padding transform translate-y-full z-100 bg-scheme-background text-scheme-text {% if layout contains 'navigation_center' %}text-center{% elsif layout contains 'navigation_right'%}text-right{% endif %} max-h-screen-header overflow-hidden overflow-y-auto"
+                    data-color-scheme="primary"
+                    id="menu{{ counter }}"
+                    x-cloak
+                    x-show="menuOpen.menu{{ counter }}"
+                    x-transition:enter="transition ease duration-200"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease duration-00"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    data-header-dropdown
+                    @focusout="focusOut($event, 'menu{{ counter }}')"
+                    @click.away.prevent="menuOpen.menu{{ counter }} = false">
+                {%- liquid
+                  assign counter = counter | plus: 1
+                  assign have_feature_links = false
+                  assign all_feature_links = false
+                  assign feature_link_count = 0
+                  assign single_level_links = link.links | where: "levels", 0
+                  assign product_links = single_level_links | where: "type", "product_link"
+                  assign collection_links = single_level_links | where: "type", "collection_link"
+                  assign feature_link_count = product_links.size | plus: collection_links.size
+                  if feature_link_count > 0
+                    assign have_feature_links = true
+                  endif
+                  if feature_link_count == link.links.size
+                    assign all_feature_links = true
+                  endif
+                  assign list_class = 'flex items-top justify-start -mx-4'
+                  assign col_class = 'px-4'
+                  assign use_grid = false
+                  if link.levels > 1
+                    assign use_grid = true
+                  endif
+                  if feature_link_count > 0 and feature_second_level_links == true
+                    assign use_grid = true
+                  endif
+                  if collection_links.size > 0 and show_collection_images
+                    assign use_grid = true
+                  endif
+                  if use_grid
+                    assign list_class = 'grid lg:grid-cols-12 lg:gap-10 grid-flow-row-dense'
+                    assign col_class = 'lg:col-span-2'
+                  endif
+                %}
+                <ul class="{{ list_class }} {% if layout contains 'navigation_center' %}text-center{% else %}text-left{% endif %}">
+                  {% comment %}theme-check-disable LiquidTag{% endcomment %}
+                  {%- if have_feature_links and feature_second_level_links -%}
+                    {% assign features_mod = feature_link_count | modulo: 2 %}
+                    {% for child_link in link.links %}
+                        {%- if child_link.type == 'product_link' or child_link.type == 'collection_link' and child_link.levels == 0 -%}
+                          {% if features_mod == 0 %}
+                            {% capture cycle_class %}{% cycle "lg:col-end-11", "lg:col-end-13" %}{% endcapture %}
+                          {% else %}
+                            {% capture cycle_class %}{% cycle "lg:col-end-13", "lg:col-end-11" %}{% endcapture %}
+                          {% endif %}
+                          {%- if child_link.type == 'product_link' -%}
+                            <li class="lg:col-span-2 {% unless all_feature_links %}{{ cycle_class }}{% endunless %}">
+                              {%- assign product = child_link.object -%}
+                              <a href="{{ product.url }}">
+                                {%- if product.featured_media != blank -%}
+                                  {%- render 'responsive-image' with
+                                    image: product.featured_media.preview_image
+                                  -%}
+                                {%- endif -%}
+                                <div class="mt-4 {{ settings.product_grid_font }} {% if settings.product_grid_align == 'center' %}text-center{% endif %}">
+                                  <h3 class="text-sm py-2">
+                                    {% if settings.products_split_title and product.title contains '-' %}
+                                      {%- assign title = product.title | split: '-' -%}
+                                      <p class="product-grid-title">{{ title | last | strip }}</p>
+                                      <p class="mt-1">{{ title | first | strip }}</p>
+                                    {% else %}
+                                      <p class="product-grid-title">{{ product.title }}</p>
+                                    {% endif %}
+                                  </h3>
+                                </div>
+                              </a>
+                            </li>
+                            {%- else -%}
+                            <li class="lg:col-span-2 {% unless all_feature_links %}{{ cycle_class }}{% endunless %}">
+                              {%- assign collection = child_link.object -%}
+                              <a href="{{ collection.url }}">
+                                {%- if collection.image != blank -%}
+                                  {% render 'image-crop' with
+                                    image: collection.image,
+                                    ratio: section.settings.collection_image_crop | plus: 0.0
+                                  %}
+                                {%- endif -%}
+                                <div class="mt-4 {{ settings.product_grid_font }} {% if settings.product_grid_align == 'center' %}text-center{% endif %}">
+                                  <h3 class="text-sm py-2">
+                                    <p class="product-grid-title">{{ collection.title }}</p>
+                                  </h3>
+                                </div>
+                              </a>
+                            </li>
+                            {%- endif -%}
+                        {%- endif  -%}
+                    {% endfor %}
+                  {%- endif -%}
+                  {% comment %}theme-check-enable LiquidTag{% endcomment %}
+                  {% for child_link in link.links %}
+                    {% liquid
+                      assign is_feature_link = false
+                      if child_link.type == 'product_link' or child_link.type == 'collection_link' and child_link.levels == 0
+                        assign is_feature_link = true
+                      endif
+                    %}
+                    {%- unless is_feature_link and feature_second_level_links -%}
+                    <li class="{{ col_class }} -mt-2">
+                      {% if child_link.links != blank %}
+                        {%- if child_link.type == 'collection_link' and show_collection_images -%}
+                          {%- if child_link.object.image != blank -%}
+                            <div class="mb-4 pt-2">
+                            {% render 'image-crop' with
+                              image: child_link.object.image,
+                              ratio: section.settings.collection_image_crop | plus: 0.0
+                            %}
+                            </div>
+                          {%- endif -%}
+                        {%- endif -%}
+                        <h2 class="font-secondary text-sm py-2">
+                          {% if link_all %}<a {% if child_link.active %}aria-current="page"{% endif %} class="inline-block py-1" href="{{ child_link.url }}" {% if child_link.active %}aria-current="page"{% endif %}>{% endif %}
+                          {{ child_link.title }}
+                          {% if link_all %}</a>{% endif %}
+                        </h2>
+                        <ul class="-mx-4 font-body text-base ">
+                          {% for grandchild_link in child_link.links %}
+                            <li>
+                              <a {% if grandchild_link.active %}aria-current="page"{% endif %} href="{{ grandchild_link.url }}" class="{{ secondary_link_classes }}">
+                                {{ grandchild_link.title }}
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        {%- if child_link.type == 'collection_link' and show_collection_images -%}
+                          <a {% if child_link.active %}aria-current="page"{% endif %} href="{{ child_link.url }}" class="block">
+                            {%- if child_link.object.image != blank -%}
+                              <div class="pt-2 mb-4">
+                              {% render 'image-crop' with
+                                image: child_link.object.image,
+                                ratio: section.settings.collection_image_crop | plus: 0.0
+                              %}
+                              </div>
+                            {%- endif -%}
+                            <span class="{{ secondary_link_classes }}"> {{ child_link.title }}</span>
+                          </a>
+                        {%- else -%}
+                          <a {% if child_link.active %}aria-current="page"{% endif %} href="{{ child_link.url }}" class="-mx-4 text-base {{ secondary_link_classes }}">
+                            {{ child_link.title }}
+                          </a>
+                        {%- endif -%}
+                      {% endif %}
+                    </li>
+                    {%- endunless -%}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% else %}
+            <a {% if link.active %}aria-current="page"{% endif %} href="{{ link.url }}" class="{{ link_classes }}">
+              {{ link.title }}
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endcapture %}
+{%- liquid
+  assign search_resources = ''
+  if settings.search_products
+    assign search_resources = ' product'
+  endif
+  if settings.search_collections
+    assign search_resources = search_resources | append: ' collection'
+  endif
+  if settings.search_articles
+    assign search_resources = search_resources | append: ' article'
+  endif
+  if settings.search_pages
+    assign search_resources = search_resources | append: ' page'
+  endif
+  if settings.search_suggestions
+    assign search_resources = search_resources | append: ' query'
+  endif
+  assign search_resources = search_resources | strip | split: ' ' | join: ','
+-%}
+{% assign close_text = 'general.accessibility.close_modal' %}
+{% if layout contains 'search' %}
+  {% assign close_text = 'general.search.clear' %}
+{% endif %}
+{%- capture search_form -%}
+  <form x-ref="searchForm" action="{{ routes.search_url }}" method="get" role="search"{% if predictive_search_enabled %} @submit="onFormSubmit"{% endif %}>
+    <div class="relative">
+      <input
+        id="header-search"
+        type="search"
+        name="q"
+        value=""
+        class="header-search-input pl-9 py-2 placeholder-current font-secondary w-full"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        x-ref="input"
+        {%- if predictive_search_enabled -%}
+          aria-expanded="false"
+          aria-owns="predictive-search-results-list"
+          aria-controls="predictive-search-results-list"
+          aria-autocomplete="list"
+          autocorrect="off"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          x-model="rawQuery"
+          @input.debounce.300="onChange"
+          @focus="onFocus"
+        {%- endif -%}
+      >
+      <label class="visually-hidden" for="header-search">{{ 'general.search.placeholder' | t }}</label>
+      <input type="hidden" name="options[prefix]" value="last">
+      {%- if predictive_search_enabled == false and settings.search_products or settings.search_articles or settings.search_pages -%}
+        <input type="hidden" name="type" value="{% if settings.search_products %}product{% endif %}{% if settings.search_articles %},article{% endif %}{% if settings.search_pages %},page{% endif %}">
+      {%- endif -%}
+      <button class="absolute left-0 top-1/2 transform -translate-y-1/2 p-1" aria-label="{{ 'general.search.submit' | t }}">
+        <span class="inline-block w-7 h-7">{% render 'icon-search' %}</span>
+      </button>
+      <button x-cloak {% if layout contains 'search_left' %}x-show="isOpen"{% endif %} @click="close(true,true)" class="block p-1 absolute right-0 top-1/2 transform -translate-y-1/2" type="button">
+        <span class="visually-hidden">{{ close_text | t }}</span>
+        <span class="inline-block w-7 h-7">{% render 'icon-close' %}</span>
+      </button>
+    </div>
+    {%- if predictive_search_enabled -%}
+    <div
+      id="predictiveSearchResults"
+      :class="{'opacity-0': !isOpen }"
+      tabindex="-1"
+      x-cloak
+      class="bg-scheme-background pb-4 lg:pb-8 section-x-padding absolute bottom-border-width left-0 right-0 transform translate-y-search-results z-50 overflow-hidden overflow-y-auto max-h-screen-header"
+      data-color-scheme="primary">
+      <template x-if="loading && !results">
+        <div class="w-7 h-7 mx-auto" data-predictive-loading>
+          <div class="loading"></div>
+        </div>
+      </template>
+      <template x-if="isOpen">
+        <div class="text-scheme-text" x-ref="results">
+        </div>
+      </template>
+    </div>
+    <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+    {%- endif -%}
+  </form>
+{%- endcapture -%}
+{% comment %}
+  Mobile menu icon.
+  This is mandatory on mobile. On desktop only appears if menu icon layout is selected.
+  {% endcomment %}
+{%- capture menu_icon -%}
+<button
+  class="js-enabled inline-block p-1 -m-1 {% unless layout contains 'menu_icon' %}lg:hidden{% endunless %}"
+  type="button"
+  x-bind:aria-expanded="$store.drawer.menuDrawerOpen"
+  @click="$store.drawer.menuDrawerOpen = !$store.drawer.menuDrawerOpen"
+  data-menu-drawer-toggle>
+  <span class="visually-hidden">{{ 'layout.navigation.menu' | t }}</span>
+  <span class="h-6 w-6 inline-block align-middle">{% render 'icon-menu' %}</span>
+</button>
+{%- endcapture -%}
+
+{%- capture cart_icon -%}
+<a href="{{ routes.cart_url }}"
+  class="inline-block type-navigation hover:text-scheme-accent p-1"
+  data-color-scheme="primary"
+  {% if settings.ajax_cart_method == 'drawer' %}
+    data-cart-drawer-toggle
+    x-bind:aria-expanded="$store.drawer.cartDrawerOpen"
+    @click.prevent="$store.drawer.cartOpener = $event.currentTarget; $store.drawer.cartDrawerOpen = !$store.drawer.cartDrawerOpen"
+    @keydown.space="$store.drawer.cartOpener = $event.currentTarget; $store.drawer.cartDrawerOpen = !$store.drawer.cartDrawerOpen"
+  {% endif %}
+>
+  <div class="relative" data-color-scheme="{{ section_color }}">
+    <span
+      aria-hidden="true"
+      id="CartCount"
+      :class="{'cart-count-overlay': prepareSticky || menuIsActive }"
+      class="bg-scheme-text text-scheme-text-overlay inline-block absolute right-0 {% if settings.cart_icon == 'cart' %}top-0 transform -translate-y-1/4{% else %}bottom-0 transform translate-y-1/4{% endif %} translate-x-1/4 text-xs font-bold  w-5 h-5 rounded-full flex items-center justify-center leading-zero"
+      x-show="$store.cartCount.count > 0"
+      x-text="$store.cartCount.count"
+      x-cloak
+    >
+    </span>
+    {%- if cart.item_count > 0 -%}
+      <span
+        aria-hidden="true"
+        class="no-js bg-scheme-text text-scheme-text-overlay inline-block absolute right-0 {% if settings.cart_icon == 'cart' %}top-0 transform -translate-y-1/4{% else %}bottom-0 transform translate-y-1/4{% endif %} translate-x-1/4 text-xs font-bold  w-5 h-5 rounded-full flex items-center justify-center leading-zero"
+      >
+        {{- cart.item_count -}}
+      </span>
+    {%- endif -%}
+    <span class="inline-block w-7 h-7 fill-current align-middle">
+      {%- if settings.cart_icon == 'cart' -%}
+        {%- render 'icon-cart' -%}
+      {%- else -%}
+        {%- render 'icon-bag' -%}
+      {%- endif -%}
+    </span>
+    <span class="visually-hidden" x-text="$store.cartCount.countWithText()"></span>
+  </div>
+</a>
+{%- endcapture -%}
+
+{% comment %}
+  Accounts
+{% endcomment %}
+{%- capture accounts -%}
+  {% if shop.customer_accounts_enabled %}
+    {% if customer %}
+      <a class="inline-block  p-1 lg:mr-2  " href="{{ routes.account_url }}">
+          <span class="visually-hidden">{{ 'layout.customer.account' | t }}</span>
+          <span class="inline-block w-7 h-7 align-middle">{%- render 'icon-account' -%}</span>
+      </a>
+    {% else %}
+      <a class="inline-block  p-1 lg:mr-2  " href="{{ routes.account_login_url }}">
+          <span class="visually-hidden">{{ 'layout.customer.log_in' | t }}</span>
+          <span class="inline-block w-7 h-7 align-middle">{%- render 'icon-account' -%}</span>
+        </a>
+    {% endif %}
+  {% endif %}
+{% endcapture %}
+
+<header
+    class="site-header section-x-padding  w-full text-scheme-text  {% if enable_overlay %}absolute z-20{% else %}relative{% endif %}"
+    data-color-scheme="{{ text_color }}"
+    role="banner"
+    data-section-type="header"
+    data-section-id="{{ section.id }}"
+    x-data="ThemeSection_header()"
+    x-init="mounted()"
+    data-dropdown-count="{{ counter }}"
+    {% if enable_overlay %}data-header-overlay="true"{% endif %}
+    :class="{'header-is-active': menuIsActive }"
+  >
+  <div
+    id="headerBorderWrap" class="headerBorderWrap border-b-theme-width border-transparent"
+    :class="{'{% if show_border %}{{ border_class }}{% endif %}': !prepareSticky && showBorder, '{% if show_border %}{{ border_class }}{% endif %}': !prepareSticky && showBorder, 'hide-border-mobile':  hideBorderMobile, }" data-color-scheme="{{ border_scheme }}">
+    <div
+      id="headerOuter"
+      :class="{ 'text-scheme-text': prepareSticky }"
+      data-color-scheme="primary">
+      <div id="headerContainer"
+          :class="{'fixed top-0 left-0 right-0 z-99 bg-scheme-background transform section-x-padding': prepareSticky, '-translate-y-full': prepareSticky && !revealSticky, 'transition-transform translate-y-0': revealSticky }"
+            class="z-10">
+        <div
+          :class="{'sticky-header-container': prepareSticky }"
+          class="py-4 lg:py-8">
+          <div class="flex justify-between items-center ">
+            {% comment %} Left {% endcomment %}
+            <div class="flex flex-grow {% unless layout contains 'search' %}w-1/3{% endunless %} {% if layout == 'logo_left_navigation_left' %}lg:w-2/3{% endif %} justify-start items-center">
+              {% if layout contains 'logo_center' %}
+                {{ menu_icon }}
+              {% endif %}
+
+              {% if layout contains 'logo_left' and show_logo %}
+                <div class="lg:flex-grow-1 {% if layout == 'logo_left_navigation_left' %}mr-4 lg:mr-8{% endif %}">
+                  {{ logo }}
+                </div>
+              {% endif %}
+              {% if layout contains 'search_left' %}
+                <div class="hidden lg:inline-block {% unless show_hero %}ml-8{% endunless %} lg:flex-grow" x-data='ThemeComponent_PredictiveSearch({{ search_resources | json }})' x-init="mounted()" @focusOut="onFocusOut" @keyup="onKeyup" @keydown="onKeydown">
+                  {{ search_form }}
+                </div>
+              {% endif %}
+              {% if layout contains 'navigation_left' %}
+                <div class="hidden lg:block">
+                  {{ navigation }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% comment %} Center {% endcomment %}
+            {% unless layout contains 'search' %}
+              <div class="flex justify-center text-center {% if layout contains 'logo_center' %}flex-grow lg:flex-grow-0 lg:w-auto{% else %}w-0 flex-grow-0{% endif %} {% if layout contains 'navigation_center' %}lg:w-3/4 lg:flex-grow{% endif %}">
+                {% if show_logo and layout contains 'logo_center' %}
+                  {{ logo }}
+                {% endif %}
+                {% if layout contains 'navigation_center' %}
+                  <div class="hidden lg:block">
+                    {{ navigation }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endunless %}
+
+            {% comment %} Right {% endcomment %}
+            <div class="flex flex-grow w-1/3 items-center justify-end">
+              {% if layout contains 'logo_left' %}
+                <div class="lg:hidden mr-4">
+                  {{ menu_icon }}
+                </div>
+              {% endif %}
+
+              {% if layout contains 'navigation_right' %}
+                <div class="hidden lg:block ml-4 mr-10">
+                  {{ navigation }}
+                </div>
+              {% endif %}
+
+              {% if section.settings.enable_social_icons_header %}
+                <div class="mr-10 hidden lg:block  ">
+                  {% render 'social-icons', position: 'header' %}
+                </div>
+              {% endif %}
+
+              <div class="hidden lg:block">
+                {{ accounts }}
+              </div>
+
+              {% unless layout contains 'search' or section.settings.header_show_search_icon == false %}
+                <a
+                  data-open-search
+                  x-ref="search"
+                  @click.prevent="openSearch()"
+                  @keydown.space="openSearch()"
+                  href="{{ routes.search_url }}"
+                  class=" inline-block type-navigation hover:text-scheme-accent p-1 lg:mr-2"
+                  data-color-scheme="primary">
+                  <span class="inline-block w-7 h-7 fill-current align-middle">{%- render 'icon-search' -%}</span>
+                  <span class="visually-hidden">{{ 'general.search.title' | t }}</span>
+                </a>
+                <div
+                  class="absolute top-0 left-0 right-0 bottom-0 w-full flex items-center bg-scheme-background text-scheme-text z-60 section-x-padding"
+                  data-color-scheme="primary"
+                  x-cloak
+                  x-show="searchOpen"
+                  x-transition:enter="transition ease duration-200"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="transition ease duration-00"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                  @click.away.prevent="searchOpen = false"
+                  data-header-search
+                  >
+                  <div class="w-full" x-data='ThemeComponent_PredictiveSearch({{ search_resources | json }})' x-init="mounted()" @focusOut="onFocusOut" @keyup="onKeyup" @keydown="onKeydown">
+                    {{ search_form }}
+                  </div>
+                </div>
+              {% endunless %}
+
+              <div class="flex items-center justify-end">
+                {{ cart_icon }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%- if layout contains 'search_left' -%}
+      {%- if section.settings.sticky_header -%}
+      <div class="h-header-no-search" x-cloak x-show="prepareSticky"></div>
+      {%- endif -%}
+      {%- if section.settings.sticky_header -%}
+      <div id="sticky-positioner"></div>
+      {%- endif -%}
+      <div class="mobile-predictive-search pb-4 lg:hidden"  x-data='ThemeComponent_PredictiveSearch({{ search_resources | json }})'x-init="mounted()" @focusOut="onFocusOut" @keyup="onKeyup" @keydown="onKeydown">
+        {{ search_form | replace: '"header-search"', '"mobile-search"' }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- unless layout contains 'search_left' -%}
+    {%- if section.settings.sticky_header -%}
+    <div class="h-header-no-search" x-cloak x-show="prepareSticky"></div>
+    {%- endif -%}
+
+    {%- if section.settings.sticky_header -%}
+    <div id="sticky-positioner"></div>
+    {%- endif -%}
+  {%- endunless -%}
+</header>
+{% comment %}theme-check-enable MissingTemplate, TemplateLength{% endcomment %}
+
+{%- if enable_overlay and show_hero == false -%}
+<div class="bg-gradient-to-b {{ section.settings.gradient_color }} to-transparent absolute top-0 left-0 right-0 h-32 z-10" style="opacity: {{ section.settings.gradient_opacity | divided_by: 100.0 }}"></div>
+{%- endif -%}
+
+{%- liquid
+  if show_hero
+    for block in section.blocks
+      if block.type == 'hero_image'
+        render 'header-hero-image' with section: section, block: block
+      endif
+      if block.type == 'hero_video'
+        render 'header-hero-video' with section: section, block: block
+      endif
+    endfor
+  endif
+-%}
+
+<noscript>
+  <style>
+    .no-js-focus-wrapper:focus-within > .no-js-focus-container {
+      display: block !important;
+    }
+  </style>
+</noscript>
+
+{% if section.settings.logo != blank %}
+  <style>
+    .logo-image {
+      display: block;
+      max-width: {{ section.settings.logo_max_width }}px;
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-site-header relative",
+  "max_blocks": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom logo",
+      "info": "800 x 300px recommended."
+    },
+    {
+      "type":      "range",
+      "id":        "logo_max_width",
+      "min":       20,
+      "max":        800,
+      "step":       10,
+      "unit":       "px",
+      "label":     "Custom logo width",
+      "default":   100,
+      "info": "Note: if image block is active, this won't apply to the homepage."
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all_navigation_links",
+      "label": "Enable links to drop-down link headings"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_second_level_links",
+      "label": "Feature second level links",
+      "info": "This will feature second level links that are products or collections and move them out of the natural order into their own area. [Learn more](http://www.google.com)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_images",
+      "label": "Show collection images"
+    },
+    {
+      "type": "select",
+      "id": "collection_image_crop",
+      "label": "Collection image crop",
+      "info": "This will apply to both collection images above third level links and feature collection links if enabled.",
+      "options": [
+        {
+          "value": "0",
+          "label": "No crop"
+        },
+        {
+          "value": "0.8",
+          "label": "Portrait"
+        },
+        {
+          "value": "1",
+          "label": "Square"
+        },
+        {
+          "value": "1.3",
+          "label": "Landscape"
+        },
+        {
+          "value": "2.39",
+          "label": "Super wide"
+        },
+        {
+          "value": "4.0",
+          "label": "Letterbox"
+        }
+      ],
+      "default": "1.3"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Desktop layout",
+      "info": "Note: if image block is active the logo will be moved into the center of the banner.",
+      "options": [
+        {
+          "value": "menu_icon_logo_center",
+          "label": "Menu icon left, logo center"
+        },
+        {
+          "value": "navigation_left_logo_center",
+          "label": "Navigation left, logo center"
+        },
+        {
+          "value": "logo_left_navigation_center",
+          "label": "Logo left, navigation center"
+        },
+        {
+          "value": "logo_left_navigation_left",
+          "label": "Logo left, navigation left"
+        },
+        {
+          "value": "logo_left_search_left_navigation_right",
+          "label": "Logo left with search bar"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": true,
+      "info": "Border won't show if first section is full width"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_show_search_icon",
+      "label": "Show search icon",
+      "info": "This setting is ignored if search bar is applied"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_social_icons_header",
+      "label": "Show social icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Sticky header"
+    },
+    {
+      "type": "header",
+      "content": "Overlay Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay_on_homepage",
+      "label": "Overlay header over home page",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "overlay_text_color",
+      "label": "Overlay text color",
+      "options": [
+          { "value": "primary", "label": "Primary text"},
+          { "value": "secondary", "label": "Secondary text"},
+          { "value": "tertiary", "label": "Tertiary text"},
+          { "value": "white", "label": "White"},
+          { "value": "black", "label": "Black"}
+      ],
+      "default":   "white"
+    },
+    {
+      "type": "image_picker",
+      "id": "overlay_logo",
+      "label": "Overlay logo image"
+    },
+    {
+      "type": "select",
+      "id": "gradient_color",
+      "label": "Overlay gradient color",
+      "options": [
+        { "value": "from-black", "label": "Black"},
+        { "value": "from-white", "label": "White"}
+      ],
+      "default": "from-black"
+    },
+    {
+      "type":      "range",
+      "id":        "gradient_opacity",
+      "min":       0,
+      "max":        100,
+      "step":       5,
+      "unit":       "%",
+      "label":     "Overlay gradient opacity",
+      "default":   20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "select",
+          "id": "hero_image_style",
+          "label": "Image style",
+          "options": [
+            {
+              "value": "full_screen",
+              "label": "Full Screen"
+            },
+            {
+              "value": "fit_content",
+              "label": "Content"
+            }
+          ],
+          "info": "Use \'Content\' style if you want to avoid image cropping."
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image",
+          "label": "Image",
+          "info": "1500px wide recommended."
+        },
+        {
+          "id": "hero_image_mobile",
+          "type": "image_picker",
+          "label": "Image - mobile",
+          "info": "800 x 1200px .jpg recommended"
+        },
+        {
+          "type": "select",
+          "id": "banner_text_color",
+          "label": "Text color",
+          "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"},
+            { "value": "white", "label": "White"},
+            { "value": "black", "label": "Black"}
+          ],
+          "default": "white"
+        },
+        {
+          "type": "header",
+          "content": "Logo"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_logo_on_hero",
+          "label": "Overlay logo on hero image",
+          "default": true,
+          "info": "This will move the logo from header to hero image"
+        },
+        {
+          "type":      "range",
+          "id":        "logo_max_width_hero",
+          "min":       100,
+          "max":        1200,
+          "step":       20,
+          "unit":       "px",
+          "label":     "Max logo width for image block",
+          "default":   200,
+          "info": "Max width of logo image when displayed over the banner image."
+        },
+        {
+          "type": "image_picker",
+          "id": "alternate_logo",
+          "label": "Alternate logo",
+          "info": "Use an alternate logo on the header image. 800 x 300px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Gradient"
+        },
+        {
+          "type": "paragraph",
+          "content": "Adjust visibility of the header"
+        },
+        {
+          "type": "select",
+          "id": "gradient_color",
+          "label": "Color",
+          "options": [
+            { "value": "from-black", "label": "Black"},
+            { "value": "from-white", "label": "White"}
+          ],
+          "default": "from-black"
+        },
+        {
+          "type":      "range",
+          "id":        "gradient_opacity",
+          "min":       0,
+          "max":        100,
+          "step":       5,
+          "unit":       "%",
+          "label":     "Opacity",
+          "default":   20
+        }
+      ]
+    },
+    {
+      "type": "hero_video",
+      "name": "Video",
+      "settings": [
+        {
+          "id": "video_url",
+          "type": "text",
+          "label": "Video URL",
+          "info": "Accepts YouTube or .mp4 links",
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+        },
+        {
+          "type": "select",
+          "id": "video_style",
+          "label": "Aspect ratio – mobile",
+          "options": [
+            {
+              "value": "four-three",
+              "label": "Standard"
+            },
+            {
+              "value": "widescreen",
+              "label": "Widescreen"
+            },
+            {
+              "value": "cinematic",
+              "label": "Extra wide"
+            },
+            {
+              "value": "full-screen",
+              "label": "Full screen"
+            }
+          ],
+          "default": "widescreen"
+        },
+        {
+          "type": "select",
+          "id": "video_style_desktop",
+          "label": "Aspect ratio – desktop",
+          "options": [
+            {
+              "value": "same",
+              "label": "Same as mobile"
+            },
+            {
+              "value": "four-three",
+              "label": "Standard"
+            },
+            {
+              "value": "widescreen",
+              "label": "Widescreen"
+            },
+            {
+              "value": "cinematic",
+              "label": "Extra wide"
+            },
+            {
+              "value": "full-screen",
+              "label": "Full screen"
+            }
+          ],
+          "default": "same"
+        },
+        {
+          "id": "fallback_image",
+          "type": "image_picker",
+          "label": "Fallback image",
+          "info": "Shown if video fails to load or play"
+        },
+        {
+          "type": "select",
+          "id": "banner_text_color",
+          "label": "Text color",
+          "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"},
+            { "value": "white", "label": "White"},
+            { "value": "black", "label": "Black"}
+          ],
+          "default": "white"
+        },
+        {
+          "type": "header",
+          "content": "Logo"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_logo_on_hero",
+          "label": "Overlay logo on hero video",
+          "default": true,
+          "info": "This will move the logo from header to hero image"
+        },
+        {
+          "type":      "range",
+          "id":        "logo_max_width_hero",
+          "min":       100,
+          "max":        1200,
+          "step":       20,
+          "unit":       "px",
+          "label":     "Max logo width for image block",
+          "default":   200,
+          "info": "Max width of logo image when displayed over the banner image."
+        },
+        {
+          "type": "image_picker",
+          "id": "alternate_logo",
+          "label": "Alternate logo",
+          "info": "Use an alternate logo on the header image. 800 x 300px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Gradient"
+        },
+        {
+          "type": "paragraph",
+          "content": "Adjust visibility of the header"
+        },
+        {
+          "type": "select",
+          "id": "gradient_color",
+          "label": "Color",
+          "options": [
+            { "value": "from-black", "label": "Black"},
+            { "value": "from-white", "label": "White"}
+          ],
+          "default": "from-black"
+        },
+        {
+          "type":      "range",
+          "id":        "gradient_opacity",
+          "min":       0,
+          "max":        100,
+          "step":       5,
+          "unit":       "%",
+          "label":     "Opacity",
+          "default":   20
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  {% if section.settings.logo %}
+    {% assign image_size = section.settings.logo.width | append: 'x' %}
+    "logo": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }},
+  {% endif %}
+  "sameAs": [
+    {{ settings.social_facebook_url | json }},
+    {{ settings.social_instagram_url | json }},
+    {{ settings.social_twitter_url | json }},
+    {{ settings.social_patreon_url | json }},
+    {{ settings.social_pinterest_url | json }},
+    {{ settings.social_soundcloud_url | json }},
+    {{ settings.social_spotify_url | json }},
+    {{ settings.social_bandcamp_url | json }},
+    {{ settings.social_flickr_url | json }},
+    {{ settings.social_vimeo_url | json }},
+    {{ settings.social_apple_url | json }},
+    {{ settings.social_lastfm_url | json }},
+    {{ settings.social_youtube_url | json }},
+    {{ settings.social_google_url | json }},
+    {{ settings.social_tumblr_url | json }},
+    {{ settings.social_triplej_url | json }},
+    {{ settings.social_mixcloud_url | json }}
+  ],
+  "url": {{ shop.url | append: page.url | json }}
+}
+</script>
+
+{% if request.page_type == 'index' %}
+  {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ shop.url | append: page.url | json }}
+    }
+  </script>
+{% endif %}

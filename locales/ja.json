@@ -1,0 +1,619 @@
+{
+  "sections": {
+    "slideshow": {
+      "next_slide": "",
+      "previous_slide": "",
+      "pause_slideshow": "",
+      "rotate_slideshow": "",
+      "load_slide": "",
+      "navigation_instructions": "",
+      "play_slideshow": ""
+    },
+    "tour": {
+      "tour_no_events": "",
+      "tour_ticket_link": "",
+      "tour_more_link": "",
+      "tour_location": "",
+      "tour_venue": "",
+      "online_event": ""
+    },
+    "onboarding": {
+      "modal_title": "",
+      "no_products_html": "",
+      "add_product": "",
+      "product_title": "",
+      "no_collections_html": "",
+      "add_collection": "",
+      "collection_title": "",
+      "collection_cta": "",
+      "complete_setup_html": "",
+      "blog_section-title": "",
+      "blog_title": "",
+      "blog_excerpt": "",
+      "blog_author": "",
+      "featured_page_title": "",
+      "featured_page_text": "",
+      "no_content": ""
+    },
+    "map": {
+      "address_error": "",
+      "address_no_results": "",
+      "address_query_limit_html": "",
+      "auth_error_html": ""
+    }
+  },
+  "general": {
+    "404": {
+      "title": "404",
+      "subtext_html": "ページが見つかりません。"
+    },
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close_modal": "",
+      "link_messages": {
+        "new_window": "New window",
+        "external": "",
+        "new_window_and_external": ""
+      },
+      "refresh_page": "",
+      "selection_help": "",
+      "unit_price_separator": "",
+      "error": "Error",
+      "increment_one": "",
+      "decrement_one": "",
+      "total_reviews": "",
+      "star_reviews_info": "",
+      "loading": "Loading"
+    },
+    "audio": {
+      "pause": "",
+      "play": "",
+      "previous": "",
+      "next": ""
+    },
+    "video": {
+      "pause": "",
+      "play": ""
+    },
+    "meta": {
+      "tags": "",
+      "page": ""
+    },
+    "breadcrumbs": {
+      "home": "",
+      "home_link_title": ""
+    },
+    "newsletter_form": {
+      "newsletter_email": "メールアドレス",
+      "email_placeholder": "email@example.com",
+      "confirmation": "",
+      "submit": "送信"
+    },
+    "search": {
+      "loading": "",
+      "placeholder": "",
+      "submit": "検索",
+      "no_results": "",
+      "page": "Page",
+      "products": "Products",
+      "collections": "Collections",
+      "articles": "Articles",
+      "pages": "Pages",
+      "suggestions": "",
+      "results_with_count": {
+        "one": "",
+        "other": ""
+      },
+      "results_with_count_and_term": {
+        "one": "",
+        "other": ""
+      },
+      "title": "",
+      "title_with_results": "",
+      "search_for": "",
+      "clear": ""
+    },
+    "password_page": {
+      "opening_soon": "",
+      "login_form_heading": "",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your Password",
+      "login_form_submit": "送信",
+      "signup_form_email_label": "メールアドレス",
+      "signup_form_success": "",
+      "admin_link_html": "",
+      "password_link": "",
+      "powered_by_shopify_html": ""
+    },
+    "country": {
+      "dropdown_label": "国"
+    },
+    "language": {
+      "dropdown_label": "Language"
+    }
+  },
+  "blogs": {
+    "article": {
+      "author_on_date_html": "",
+      "older_post": "",
+      "newer_post": "",
+      "tags": "",
+      "comment_meta_html": "",
+      "read_more": "",
+      "by_author": "",
+      "view_all_blogs": ""
+    },
+    "comments": {
+      "title": "",
+      "name": "Name",
+      "email": "メールアドレス",
+      "message": "Message",
+      "post": "",
+      "moderated": "",
+      "success_moderated": "",
+      "success": "",
+      "comments_with_count": {
+        "one": "",
+        "other": ""
+      }
+    },
+    "sidebar": {
+      "recent_articles": "",
+      "categories": "",
+      "rss": "",
+      "all_tags": ""
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "カート",
+      "remove": "削除",
+      "note": "備考欄（ご配送・ギフトラッピング等）",
+      "subtotal": "合計（税込）",
+      "shipping_at_checkout": "",
+      "update": "",
+      "checkout": "ご購入手続きはこちら",
+      "empty": "",
+      "taxes_and_shipping_at_checkout": "",
+      "taxes_and_shipping_policy_at_checkout_html": "",
+      "taxes_included_but_shipping_at_checkout": "",
+      "taxes_included_and_shipping_policy_html": "",
+      "cookies_required": "",
+      "continue_shopping": "",
+      "continue_browsing_html": "",
+      "close_cart": "",
+      "cart_error": "",
+      "cart_add_error": "",
+      "new_subtotal": ""
+    },
+    "label": {
+      "discounted_total": "",
+      "product": "",
+      "price": "",
+      "price_column": "",
+      "product_details": "",
+      "quantity": "",
+      "qty": "",
+      "regular_total": "",
+      "remove": "",
+      "total": "",
+      "update": "",
+      "discounted_price": "",
+      "original_price": ""
+    },
+    "popup": {
+      "added_to_cart": "",
+      "cart_count": {
+        "one": "",
+        "other": ""
+      },
+      "product_details": "",
+      "quantity": "",
+      "quantity_label": ""
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "",
+      "all_of_collection": "",
+      "no_matches": "",
+      "link_title": "",
+      "grid_view": "",
+      "list_view": "",
+      "items_with_count": {
+        "one": "",
+        "other": ""
+      }
+    },
+    "sidebar": {
+      "tags": ""
+    },
+    "onboarding": {
+      "modal_title": "",
+      "no_products_html": "",
+      "add_product": ""
+    },
+    "pagination": {
+      "item_count_label": ""
+    }
+  },
+  "facets": {
+    "filters": {
+      "use_fewer_filters_html": "",
+      "title_tags": "",
+      "clear": "",
+      "all_tags": "",
+      "to": "",
+      "from": "",
+      "apply": ""
+    },
+    "sorting": {
+      "title": "",
+      "featured": "",
+      "best_selling": "",
+      "az": "",
+      "za": "",
+      "price_ascending": "",
+      "price_descending": "",
+      "date_descending": "",
+      "date_ascending": "",
+      "filter": ""
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "お名前",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "message": "お問い合わせ内容（商品名・9~10桁の商品番号を記載の上お問合せ下さいませ）",
+      "send": "送信",
+      "post_success": "送信完了",
+      "error_heading": "送信エラー"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "マイアカウント",
+      "details": "アカウント詳細",
+      "view_addresses": "住所を確認",
+      "return": "戻る"
+    },
+    "activate_account": {
+      "title": "",
+      "subtext": "",
+      "password": "パスワード",
+      "password_confirm": "パスワードの確認",
+      "submit": "有効なアカウント",
+      "cancel": ""
+    },
+    "addresses": {
+      "title": "Address",
+      "default": "Default",
+      "add_new": "住所を追加する",
+      "edit_address": "Edit address",
+      "first_name": "名",
+      "last_name": "姓",
+      "company": "会社",
+      "address1": "住所1",
+      "address2": "住所2",
+      "city": "市区町村",
+      "country": "国",
+      "province": "",
+      "zip": "郵便番号",
+      "phone": "電話番号",
+      "set_default": "",
+      "add": "追加",
+      "update": "Update",
+      "cancel": "キャンセル",
+      "edit": "Edit",
+      "delete": "Delete",
+      "delete_confirm": ""
+    },
+    "login": {
+      "title": "ログイン",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "forgot_password": "パスワードをお忘れですか？",
+      "sign_in": "ログイン",
+      "cancel": "キャンセル",
+      "guest_title": "ゲスト購入",
+      "guest_continue": "Continue"
+    },
+    "orders": {
+      "title": "注文履歴",
+      "order_number": "Order ",
+      "date": "Date",
+      "payment_status": "Payment status",
+      "fulfillment_status": "",
+      "total": "Total",
+      "none": ""
+    },
+    "order": {
+      "title": "",
+      "date_html": "",
+      "cancelled_reason": "",
+      "billing_address": "",
+      "payment_status": "",
+      "shipping_address": "",
+      "fulfillment_status": "",
+      "discount": "",
+      "shipping": "",
+      "tax": "",
+      "product": "",
+      "sku": "",
+      "price": "",
+      "quantity": "",
+      "total": "",
+      "fulfilled_at": "",
+      "subtotal": "",
+      "cancelled_html": "",
+      "tracking_url": "",
+      "track_shipment": "",
+      "tracking_company": "",
+      "tracking_number": "",
+      "refund_amount": ""
+    },
+    "recover_password": {
+      "title": "パスワードをリセットしてください",
+      "email": "メールアドレス",
+      "submit": "送信",
+      "cancel": "キャンセル",
+      "subtext": "",
+      "success": ""
+    },
+    "reset_password": {
+      "title": "パスワードのリセット",
+      "subtext": "新しいパスワードを作成",
+      "password": "パスワード",
+      "password_confirm": "パスワードの確認",
+      "submit": "パスワードをリセット"
+    },
+    "register": {
+      "title": "アカウントを作成",
+      "first_name": "名",
+      "last_name": "姓",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "submit": "送信",
+      "cancel": "キャンセル"
+    }
+  },
+  "homepage": {
+    "tour": {
+      "tour_no_events": "",
+      "tour_ticket_link": "",
+      "tour_more_link": "",
+      "tour_location": "",
+      "tour_venue": ""
+    },
+    "onboarding": {
+      "modal_title": "",
+      "no_products_html": "",
+      "add_product": "",
+      "product_title": "",
+      "no_collections_html": "",
+      "add_collection": "",
+      "collection_title": "",
+      "collection_cta": "",
+      "complete_setup_html": "",
+      "blog_section-title": "",
+      "blog_title": "",
+      "blog_excerpt": "",
+      "blog_author": "",
+      "featured_page_title": "",
+      "featured_page_text": "",
+      "no_content": ""
+    },
+    "map": {
+      "address_error": "",
+      "address_no_results": "",
+      "address_query_limit_html": "",
+      "auth_error_html": ""
+    }
+  },
+  "layout": {
+    "navigation": {
+      "menu": "",
+      "primary": ""
+    },
+    "drawers": {
+      "browse": "",
+      "close_menu": ""
+    },
+    "cart": {
+      "title": "",
+      "items_count": {
+        "one": "",
+        "other": ""
+      }
+    },
+    "customer": {
+      "account": "Account",
+      "logged_in_as_html": "",
+      "log_out": "ログアウト",
+      "log_in": "Log in",
+      "create_account": "アカウントを作成"
+    },
+    "footer": {
+      "social_title": "",
+      "newsletter_title": "",
+      "navigation_title": "",
+      "accepted_payments": ""
+    }
+  },
+  "products": {
+    "general": {
+      "previous_product_html": "",
+      "next_product_html": "",
+      "from_text_html": "",
+      "sale_price": "",
+      "regular_price": "",
+      "share": "",
+      "related_products_title": ""
+    },
+    "product": {
+      "sold_out": "Sold out",
+      "on_sale": "",
+      "on_sale_from_html": "",
+      "unavailable": "",
+      "unit_price_label": "",
+      "compare_at": "",
+      "quantity": "",
+      "add_to_cart": "カートに追加",
+      "preorder": "",
+      "adding_to_cart": "",
+      "added_to_cart": "",
+      "add_to_cart_confirm_html": "",
+      "color_swatch_trigger": "",
+      "read_more": "",
+      "in_stock": "",
+      "out_of_stock": "Out of Stock",
+      "inventory_in_stock": "",
+      "inventory_low_stock_html": ""
+    },
+    "media": {
+      "media": "",
+      "view_in_your_space": "",
+      "view_in_your_space_label": ""
+    }
+  },
+  "store_availability": {
+    "general": {
+      "view_store_info": "",
+      "check_other_stores": "",
+      "pick_up_available": "",
+      "pick_up_currently_unavailable": "",
+      "pick_up_available_at_html": "",
+      "pick_up_unavailable_at_html": ""
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title_html": "",
+      "subtext": "",
+      "gift_card_code": "",
+      "disabled": "",
+      "expired": "",
+      "active": "",
+      "redeem_html": "",
+      "shop_link": "",
+      "print": "",
+      "remaining_html": "",
+      "add_to_apple_wallet": "",
+      "qr_image_alt": ""
+    }
+  },
+  "date_formats": {
+    "month_day_year": "",
+    "month_abbr": ""
+  },
+  "sharing": {
+    "social_sharing": {
+      "title": "",
+      "facebook": "",
+      "google": "",
+      "twitter": "",
+      "pinterest": ""
+    },
+    "rss_subscribe": ""
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "",
+      "email_label": "",
+      "email_label_optional_for_no_js_behavior": "",
+      "email": "",
+      "name_label": "",
+      "name": "",
+      "message_label": "",
+      "message": "",
+      "max_characters": "",
+      "send_on": "",
+      "send_on_label": ""
+    }
+  },
+  "shopify": {
+    "checkout": {
+      "order_summary": {
+        "more_items_modal": {
+          "clear_search": "検索をクリアする",
+          "search_item": "検索"
+        },
+        "full_price": "{{price}}",
+        "price_label": "Price"
+      },
+      "thank_you": {
+        "login_reorder_link_text": {
+          "one": "この商品も購入する"
+        },
+        "login": "Login"
+      },
+      "stock": {
+        "sold_out_label": "売り切れ"
+      },
+      "throttle": {
+        "merchandise": {
+          "sold_out": "売り切れ"
+        },
+        "inventory": {
+          "sold_out": {
+            "heading": "カートの商品は売り切れました"
+          }
+        }
+      },
+      "payment": {
+        "amazon_payments_login_hint": "Login",
+        "amazon_payments_logout": "Amazon payments logout"
+      },
+      "payment_gateway": {
+        "login_prompt": {
+          "no_access": {
+            "link": "Login"
+          }
+        }
+      },
+      "customer_account": {
+        "have_an_account_label": "アカウントをお持ちですか？",
+        "sign_in_link_label": "Sign in",
+        "sign_out_link_label": "ログアウト",
+        "save_my_information_label": "次回のためこの情報を保存する",
+        "invalid_address": "Invalid address",
+        "incomplete_address": "Incomplete address"
+      },
+      "contact": {
+        "address_title": "Address",
+        "stored_addresses_label": "住所を保存しました",
+        "new_address_label": "新しい住所を使用する",
+        "address1_label": "住所",
+        "country_label": "国 \/ 地域",
+        "country_code": "国 \/ 地域コード"
+      }
+    },
+    "page_titles": {
+      "account": "アカウント",
+      "create_account": "アカウントを作成",
+      "reset_account": "Reset account"
+    }
+  },
+  "customer_accounts": {
+    "navigation_and_structure": {
+      "log_out_link": "ログアウト",
+      "logout_overlay_label": "ログアウトしています…",
+      "delete_confirmation": {
+        "cancel": "キャンセル",
+        "delete": "Delete"
+      }
+    },
+    "order_details": {
+      "login_to_view_all_order_details": "すべての注文詳細を見るにはログイン",
+      "log_in": "ログイン"
+    },
+    "account_information": {
+      "verify_new_email_modal": {
+        "one_time_password_label": "ワンタイムパスワード",
+        "email_resend_button_accessibility_label": "認証コードを再送する",
+        "verify_button": "確認する"
+      }
+    }
+  }
+}

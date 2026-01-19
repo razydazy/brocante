@@ -1,0 +1,245 @@
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign image = section.settings.image
+  assign image_position = section.settings.image_position
+  assign text_align = section.settings.text_alignment
+  case section.settings.image_size
+    when 'third'
+      assign content_width_desktop = 'lg:col-span-8'
+      if image_position == 'right'
+        assign image_width_desktop = 'lg:col-start-9 lg:col-end-13'
+      else
+        assign image_width_desktop = 'lg:col-span-4'
+      endif
+    when 'half'
+      if image_position == 'right'
+        assign content_width_desktop = 'lg:col-span-6'
+        assign image_width_desktop = 'lg:col-start-7 lg:col-end-13'
+      else
+        assign content_width_desktop = 'lg:col-span-6'
+        assign image_width_desktop = 'lg:col-span-6'
+      endif
+    when 'two_thirds'
+      assign content_width_desktop = 'lg:col-span-4'
+      if image_position == 'right'
+        assign image_width_desktop = 'lg:col-start-5 lg:col-end-13'
+      else
+        assign image_width_desktop = 'lg:col-span-8'
+      endif
+    else
+      assign content_width_desktop = 'lg:col-span-full'
+      assign image_width_desktop = 'lg:col-span-full'
+  endcase
+  assign three_products_mobile = false
+  if section.blocks.size == 3
+    assign three_products_mobile = true
+  endif
+-%}
+
+{% if settings.product_grid_item_star_ratings != 'none' %}
+  {% capture selector %}.section--{{ section.id }}{% endcapture %}
+  {% render 'star-style',
+     selector: selector,
+     section_color: 'primary'
+  %}
+{% endif %}
+
+<section class="bg-scheme-background text-scheme-text lookbook-with-image {% if section.settings.image_size == 'full' and section.settings.title == '' %}section-with-no-padding{% else %}section-y-padding{% endif %} section--{{ section.id }}" data-color-scheme="{{ section_color }}">
+  <div class="wrapper">
+    {% if section.settings.title != '' %}
+    <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+      {{ section.settings.title | escape }}
+    </h2>
+    {% endif %}
+  </div>
+
+  <div class="grid lg:grid-cols-12 gap-10 grid-flow-row-dense {% if section.settings.title != '' %}mt-10{% else %}mt-10 lg:mt-0{% endif %} {% unless section.settings.image_size == 'full' %}wrapper{% endunless %}">
+
+    <div class="{{ image_width_desktop }}" data-fade-in>
+      {%- if image != blank -%}
+        {%- render 'responsive-image' with
+          image: image
+        -%}
+      {%- else -%}
+        <div class="bg-placeholder-bg relative" style="{% if section.settings.image_size == 'full' %}padding-top: 50%;{% else %}padding-top: 100%;{% endif %}" data-color-scheme="primary">
+          {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg absolute top-0 left-0 right-0 bottom-0 w-full h-full text-scheme-text fill-current' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="{% if section.settings.image_size == 'full' %}wrapper{% endif %} w-full text-base {{ content_width_desktop }} h-full flex items-center">
+      <div class="w-full {% if section.settings.image_size == 'full' or section.settings.image_size == 'content' %}lg:flex justify-between items-top{% endif %}" data-fade-in>
+        {%- if section.settings.caption_heading != blank or section.settings.caption != blank -%}
+        <div>
+          {%- if section.settings.caption_heading != blank -%}
+            <h3 class="font-heading {{ settings.section_heading_font_size }} {{ text_align }}">
+              {{ section.settings.caption_heading | escape }}
+            </h3>
+          {%- endif -%}
+          {%- if section.settings.caption != blank -%}
+          <div class="rte max-w-lg {{ text_align }} {% if text_align == 'text-center' %}mx-auto{% endif %} {% if text_align == 'text-right' %}ml-auto{% endif %} {% if section.settings.caption_heading != blank %}mt-4{% endif %}">
+            {{ section.settings.caption }}
+          </div>
+        {%- endif -%}
+        </div>
+        {%- endif -%}
+        <div class="mt-10 {% if section.settings.image_size == 'full' or section.settings.image_size == 'content' %}lg:mt-0{% endif %}  grid grid-cols-{{ section.blocks.size }} gap-5 lg:gap-10">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.product != blank -%}
+              {%- render 'product-grid-item', product: block.settings.product, three_products_mobile: three_products_mobile, section_color: section_color -%}
+            {%- else -%}
+              <div class="featured-collection-item  type-product-grid-item text-center ">
+                <a href="#">
+                  {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                  <div class="bg-placeholder-darker-bg">
+                    {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+                  </div>
+                  <div class="{{ settings.product_grid_font }}">
+                    <p class="text-scheme-text mt-5 mb-1">
+                      <span class="product-grid-title">{{ 'homepage.onboarding.product_title' | t }}</span>
+                    </p>
+                    <p class="price m0 mt-1">{{ 1999 | money }}</p>
+                  </div>
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook with image",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "max_blocks": 3,
+  "settings": [
+    {
+     "type":      "text",
+     "id":        "title",
+     "label":     "Heading",
+     "default":   "Shop the look"
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "label": "Image size",
+      "default": "half",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "content",
+          "label": "Content width"
+        },
+        {
+          "value": "half",
+          "label": "One half"
+        },
+        {
+          "value": "third",
+          "label": "One third"
+        },
+        {
+          "value": "two_thirds",
+          "label": "Two thirds"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position on desktop",
+      "default": "left",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "info": "Doesn't apply when image size to full or content width."
+    },
+    {
+      "type": "text",
+      "id": "caption_heading",
+      "label": "Caption heading",
+      "default": "Caption heading"
+    },
+    {
+      "id": "caption",
+      "type": "richtext",
+      "label": "Caption",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "text-left", "label": "Left"},
+        { "value": "text-center", "label": "Center"},
+        { "value": "text-right", "label": "Right"}
+      ],
+      "default":   "text-left"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+      {
+        "name": "Lookbook with image",
+        "blocks": [
+          {
+            "type": "product"
+          },
+          {
+            "type": "product"
+          }
+        ]
+      }
+    ]
+}
+{% endschema %}

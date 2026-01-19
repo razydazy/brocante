@@ -1,0 +1,98 @@
+{
+  "sections": {
+    "feature-video": {
+      "type": "main-product__feature-video",
+      "disabled": true,
+      "settings": {
+        "featured_video_layout": "full_width",
+        "enable_video_looping": false
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "option_style": "drop_down",
+            "hide_option_labels": false
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "truncate_description": false
+          }
+        },
+        "html_GfBmQN": {
+          "type": "html",
+          "settings": {
+            "custom_html": "<a href=\"\/pages\/contact\" style=\"text-decoration: underline; color: #333; transition: color 0.3s ease;\" onmouseover=\"this.style.color='#666'\" onmouseout=\"this.style.color='#333'\">商品について問い合わせる<\/a>"
+          }
+        },
+        "html_dGWfRE": {
+          "type": "html",
+          "settings": {
+            "custom_html": "<a href=\"https:\/\/brocante-online.biz\/pages\/about-furniture-shipping\" style=\"text-decoration: underline;\">家具の配送料につきまして<\/a>"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "enable_payment_button": true,
+            "show_pickup_availability": true,
+            "show_gift_card_recipient": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "description",
+        "html_GfBmQN",
+        "html_dGWfRE",
+        "buy_buttons"
+      ],
+      "settings": {
+        "layout": "narrow_width_thumbnails_bottom",
+        "thumbnail_layout": "fixed_size",
+        "show_thumbnails_on_mobile": true,
+        "mobile_layout": "content_width",
+        "hide_first_video": false,
+        "enable_image_zoom": false,
+        "enable_video_looping": false,
+        "autoplay_videos_on_desktop": true
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "show_product_recommendations": true,
+        "product_recommendations_heading": "You may also like",
+        "limit": "4",
+        "products_per_row_desktop": "4",
+        "products_per_row_mobile": "1",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "feature-video",
+    "main",
+    "product-recommendations"
+  ]
+}

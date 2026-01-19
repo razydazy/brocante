@@ -1,0 +1,174 @@
+
+{%- comment -%}
+  This is a required section for the Shopify Theme Store.
+  It is available in the "Featured Collection" section in the theme editor.
+
+  Theme Store required settings
+  - Collection
+
+  Theme Store optional settings
+  - Heading: title of the featured collection section
+{%- endcomment -%}
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign collection = collections[section.settings.collection]
+-%}
+{% if settings.product_grid_item_star_ratings != 'none' %}
+  {% capture selector %}[data-section-id="{{ section.id }}"]{% endcapture %}
+  {% render 'star-style',
+     selector: selector,
+     section_color: 'primary'
+  %}
+{% endif %}
+
+<section class="bg-scheme-background text-scheme-text featured-collection section-y-padding" data-section-id="{{ section.id }}" data-section-type="featured-collection" data-color-scheme="{{ section_color }}">
+
+  <div class="wrapper">
+
+    {%- if section.settings.title != blank -%}
+      <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+        <div>
+          {{ section.settings.title }}
+        </div>
+      </h2>
+    {%- else -%}
+    {%- endif -%}
+
+    <ul class="grid grid-cols-{{ section.settings.products_per_row_mobile }} lg:grid-cols-{{ section.settings.products_per_row_desktop }} gap-5 lg:gap-10  mt-10">
+      {%- for product in collection.products limit: section.settings.no_products -%}
+        {%- render 'product-grid-item', product: product, section_color: section_color -%}
+      {%- else -%}
+        {% for i in (1..section.settings.no_products) %}
+          <li class="featured-collection-item  type-product-grid-item text-center ">
+            <a href="#">
+              {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              <div class="bg-placeholder-darker-bg">
+                {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+              </div>
+              <div class="{{ settings.product_grid_font }}">
+                <p class="text-scheme-text mt-5 mb-1">
+                  <span class="product-grid-title">{{ 'homepage.onboarding.product_title' | t }}</span>
+                </p>
+                <p class="price m0 mt-1">{{ 1999 | money }}</p>
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+
+    {%- if collections[section.settings.collection] != blank -%}
+      {%- if collections[section.settings.collection].all_products_count > section.settings.no_products and section.settings.show_view_all -%}
+        <div class="mt-10 text-center">
+          <a href="{{ collections[section.settings.collection].url }}" class="btn btn-outline-{{ section_color }}-{{ settings.outline_button_color }}">
+            <span class="btn-text">{{ 'collections.general.all_of_collection' | t: collection: collections[section.settings.collection].title }}</span>
+            {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+  </div>
+
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+{% schema %}
+  {
+    "name": "Featured collection",
+    "disabled_on": {
+      "groups": ["header", "footer", "aside"]
+    },
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured collection"
+      },
+      {
+        "id": "collection",
+        "type": "collection",
+        "label": "Collection"
+      },
+      {
+         "type": "range",
+         "id": "no_products",
+         "min": 2,
+         "max": 18,
+         "step": 1,
+         "label": "Number of products",
+         "default": 4
+      },
+      {
+        "type": "select",
+        "id": "products_per_row_desktop",
+        "label": "Products per row - desktop",
+        "default": "4",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "products_per_row_mobile",
+        "label": "Products per row - mobile",
+        "default": "2",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": {
+          "en": "Show 'View all' link"
+        },
+        "default": false
+      },
+      {
+        "type":      "header",
+        "content":   "Color"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"}
+        ],
+        "default":   "primary"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured collection"
+      }
+    ]
+  }
+{% endschema %}

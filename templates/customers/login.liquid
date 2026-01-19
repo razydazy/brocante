@@ -1,0 +1,97 @@
+<div
+  class="section-x-padding section-y-padding  max-w-lg mx-auto"
+  x-data="ThemeComponent_Login()"
+  x-init="mounted()"
+  data-color-scheme="primary">
+  <div :class="{'hidden': state !== 'login'}">
+    {% form 'customer_login', data-login-focus: true, tabindex: '-1' %}
+      <div class="lg:flex items-center justify-between">
+        <h1 class="font-heading text-2xl mb-2">{{ 'customer.login.title' | t }}</h1>
+        <a class="font-secondary text-scheme-accent text-sm" href="{{ routes.account_register_url }}">{{ 'layout.customer.create_account' | t }}</a>
+      </div>
+
+      {% if form.errors %}
+        <div class="mt-4" tabindex="-1" data-login-error>{{ form.errors | default_errors }}</div>
+      {% endif %}
+
+      <label class="mt-4 mb-1 block font-secondary text-sm" for="CustomerEmail" class="label-hidden">
+        {{ 'customer.login.email' | t }}
+      </label>
+      <input type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            class="w-full p-2 bg-transparent border-text-width border-scheme-border {% if form.errors contains 'email' %}border-scheme-accent{% endif %}"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            {% unless form.errors %}autofocus{% endunless %}>
+
+      {% if form.password_needed %}
+        <label class="mt-4 mb-1 block font-secondary text-sm" for="CustomerPassword" class="label-hidden">
+          {{ 'customer.login.password' | t }}
+        </label>
+        <input type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              class="w-full p-2 bg-transparent border-text-width border-scheme-border {% if form.errors contains 'password' %}border-scheme-accent{% endif %}">
+      {% endif %}
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary-accent w-full">{{ 'customer.login.sign_in' | t }}</button>
+      </div>
+
+      <div class="mt-4 text-center">
+        <a class="block text-scheme-accent text-sm" href="/">{{ 'customer.login.cancel' | t }}</a>
+        {% if form.password_needed %}
+          <button @click="state = 'recover'" type="button" class="mt-2 inline-block text-scheme-accent">
+            <span class="text-sm">{{ 'customer.login.forgot_password' | t }}</span>
+          </button>
+        {% endif %}
+      </div>
+    {% endform %}
+  </div>
+
+  <div class="text-center" :class="{'hidden': state !== 'recover'}" x-cloak>
+    <div data-login-focus tabindex="-1">
+      <h2 class="font-heading text-2xl mb-2">{{ 'customer.recover_password.title' | t }}</h2>
+
+      {% form 'recover_customer_password' %}
+        {% if form.errors %}
+          <div class="mt-4" tabindex="-1" data-login-error>{{ form.errors | default_errors }}</div>
+        {% endif %}
+
+        {% if form.posted_successfully? %}
+          <p data-recover-success>{{ 'customer.recover_password.success' | t }}</p>
+        {% else %}
+          <p>{{ 'customer.recover_password.subtext' | t }}</p>
+          <label for="RecoverEmail" class="mt-4 mb-1 block font-secondary text-sm text-left">
+            {{ 'customer.recover_password.email' | t }}
+          </label>
+          <input type="email"
+                class="w-full p-2 bg-transparent border-text-width border-scheme-border"
+                name="email"
+                id="RecoverEmail"
+                spellcheck="false"
+                autocomplete="off"
+                autocapitalize="off">
+          <div class="mt-4 text-center">
+            <input type="submit" class="block w-full btn btn-primary-accent" value="{{ 'customer.recover_password.submit' | t }}">
+            <button class="mt-4 text-scheme-accent text-sm" type="button" @click="state = 'login'">
+              {{ 'customer.recover_password.cancel' | t }}
+            </button>
+          </div>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+
+  {% if shop.checkout.guest_login %}
+    <div class="mt-8">
+      <h2 class="text-center mb-2">{{ 'customer.login.guest_title' | t }}</h2>
+
+      {% form 'guest_login' %}
+        <input type="submit" class="btn btn-primary-accent w-full" value="{{ 'customer.login.guest_continue' | t }}">
+      {% endform %}
+    </div>
+  {% endif %}
+</div>

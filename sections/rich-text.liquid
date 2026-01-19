@@ -1,0 +1,179 @@
+<!-- /snippets/section_feature-text.liquid -->
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  case section.settings.font_size
+    when 'small'
+      assign font_size = 'text-base'
+    when 'medium'
+      assign font_size = 'text-lg'
+    when 'large'
+      assign font_size = 'text-2xl'
+  endcase
+-%}
+
+
+<section class="feature-text section-y-padding bg-scheme-background text-scheme-text" data-color-scheme="{{ section_color }}">
+  <div class="{% if settings.center_section_headings %}mx-auto{% endif %} {{ section.settings.max_width }} section-x-padding" data-fade-in>
+    {% if section.settings.title != '' %}
+    <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+      {{ section.settings.title | escape }}
+    </h2>
+    {% endif %}
+
+    <div class="font-body mt-6 {{ section.settings.text_align }} {{ font_size }} leading-snug rte">
+      {{ section.settings.rich_text }}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+    <div class="mt-6 text-center lg:flex items-center justify-center">
+        {%- for block in section.blocks -%}
+          {%- assign button_color = block.settings.button_style | append: '_button_color' %}
+          <a href="{{ block.settings.url }}" class="btn btn-{{ block.settings.button_style }}-{{ section_color }}-{{ settings[button_color] }} mx-1">
+            <span class="btn-text">{{ block.settings.text }}</span>{% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+          </a>
+        {%- endfor -%}
+    </div>
+    {%- endif -%}
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+{% schema %}
+{
+  "name": "Rich text",
+  "max_blocks": 2,
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+     "type":      "text",
+     "id":        "title",
+     "label":     "Heading",
+     "default":   "Heading"
+    },
+    {
+      "id": "rich_text",
+      "type": "richtext",
+      "label": "Text",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Text max width",
+      "default": "max-w-2xl",
+      "options": [
+        {
+          "value": "max-w-2xl",
+          "label": "Small"
+        },
+        {
+          "value": "max-w-5xl",
+          "label": "Medium"
+        },
+        {
+          "value": "wrapper",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "Font size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text align",
+      "default": "text-center",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Shop now"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "default": "outline",
+          "options": [
+            {
+              "value": "outline",
+              "label": "Outline"
+            },
+            {
+              "value": "solid",
+              "label": "Solid"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+      {
+        "name": "Rich text"
+      }
+    ]
+}
+{% endschema %}

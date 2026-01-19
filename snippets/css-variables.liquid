@@ -1,0 +1,360 @@
+<style>
+
+  {%- liquid
+
+    assign text_width = settings.border_width
+    if settings.border_width == '0px'
+      assign text_width = '1px'
+    endif
+
+    comment
+    Primary text overlay
+    endcomment 
+    assign background = settings.color_primary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_primary_text | color_brightness 
+    assign text = text | plus: 0 
+    assign primary_overlay_color = '' 
+    if text > 127 
+      if background > 127 
+        assign primary_overlay_color = '#000000' 
+      else 
+        assign primary_overlay_color = settings.color_primary_background 
+      endif 
+    else 
+      if background > 127 
+        assign primary_overlay_color = settings.color_primary_background 
+      else 
+        assign primary_overlay_color = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    Primary text accent overlay
+    endcomment 
+    assign background = settings.color_primary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_primary_accent | color_brightness 
+    assign text = text | plus: 0 
+    assign primary_accent_overlay_color = '' 
+    if text > 127 
+      if background > 127 
+        assign primary_accent_overlay_color = '#000000' 
+      else 
+        assign primary_accent_overlay_color = settings.color_primary_background 
+      endif 
+    else 
+      if background > 127 
+        assign primary_accent_overlay_color = settings.color_primary_background 
+      else 
+        assign primary_accent_overlay_color = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    Secondary text overlay
+    endcomment
+    assign background = settings.color_secondary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_secondary_text | color_brightness 
+    assign text = text | plus: 0 
+    assign secondary_overlay_color = '' 
+    if text > 127 
+      if background > 127 
+        assign secondary_overlay_color = '#000000' 
+      else 
+        assign secondary_overlay_color = settings.color_secondary_background 
+      endif 
+    else 
+      if background > 127 
+        assign secondary_overlay_color = settings.color_secondary_background 
+      else 
+        assign secondary_overlay_color = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    Secondary text accent overlay
+    endcomment
+    assign background = settings.color_secondary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_secondary_accent | color_brightness 
+    assign text = text | plus: 0 
+    assign secondary_accent_overlay = '' 
+    if text > 127 
+      if background > 127 
+        assign secondary_accent_overlay = '#000000' 
+      else 
+        assign secondary_accent_overlay = settings.color_secondary_background 
+      endif 
+    else 
+      if background > 127 
+        assign secondary_accent_overlay = settings.color_secondary_background 
+      else 
+        assign secondary_accent_overlay = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    Tertiary text overlay
+    endcomment
+    assign background = settings.color_tertiary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_tertiary_text | color_brightness 
+    assign text = text | plus: 0 
+    assign tertiary_overlay_color = '' 
+    if text > 127 
+      if background > 127 
+        assign tertiary_overlay_color = '#000000' 
+      else 
+        assign tertiary_overlay_color = settings.color_tertiary_background 
+      endif 
+    else 
+      if background > 127 
+        assign tertiary_overlay_color = settings.color_tertiary_background 
+      else 
+        assign tertiary_overlay_color = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    Tertiary text accent overlay
+    endcomment
+    assign background = settings.color_tertiary_background | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_tertiary_accent | color_brightness 
+    assign text = text | plus: 0 
+    assign tertiary_accent_overlay = '' 
+    if text > 127 
+      if background > 127 
+        assign tertiary_accent_overlay = '#000000' 
+      else 
+        assign tertiary_accent_overlay = settings.color_tertiary_background 
+      endif 
+    else 
+      if background > 127 
+        assign tertiary_accent_overlay = settings.color_tertiary_background 
+      else 
+        assign tertiary_accent_overlay = '#ffffff' 
+      endif 
+    endif 
+  
+    comment
+    White text overlay
+    endcomment
+    assign background = '#ffffff' | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_primary_text | color_brightness 
+    assign text = text | plus: 0 
+    assign white_text_overlay_color = '' 
+    if text > 127 
+      assign white_text_overlay_color = settings.color_primary_background 
+    else 
+      assign white_text_overlay_color = settings.color_primary_text 
+    endif 
+  
+    comment
+    Black text overlay
+    endcomment
+    assign background = '#000000' | color_brightness 
+    assign background = background | plus: 0 
+    assign text = settings.color_primary_text | color_brightness 
+    assign text = text | plus: 0 
+    assign black_text_overlay_color = '' 
+    if text > 127 
+      assign black_text_overlay_color = settings.color_primary_text 
+    else 
+      assign black_text_overlay_color = settings.color_primary_background 
+    endif 
+
+    assign percent_font_size = settings.base_font_size | times: 6.25
+    assign button_baseline_adjust = settings.button_baseline_adjust | divided_by: 2000.0
+
+    assign section_title_align = 'left'
+    if settings.center_section_headings
+      assign section_title_align = 'center'
+    endif 
+
+  -%}
+
+  {% if settings.headings_capitalize %}
+    {% capture headings_capitalize %}uppercase{% endcapture %}
+  {% else %}
+    {% capture headings_capitalize %}none{% endcapture %}
+  {% endif %}
+  {% capture headings_letterspacing %}{{ settings.headings_letterspacing | divided_by: 10.0 }}{% unless settings.headings_letterspacing == 0 %}em{% endunless %}{% endcapture %}
+
+  {% capture text_overlay_letterspacing %}{{ settings.text_overlay_letterspacing | divided_by: 10.0 }}{% unless settings.text_overlay_letterspacing == 0 %}em{% endunless %}{% endcapture %}
+
+  {% if settings.navigation_capitalize %}
+    {% capture navigation_capitalize %}uppercase{% endcapture %}
+  {% else %}
+    {% capture navigation_capitalize %}none{% endcapture %}
+  {% endif %}
+  {% capture navigation_letterspacing %}{{ settings.navigation_letterspacing | divided_by: 10.0 }}{% unless settings.navigation_letterspacing == 0 %}em{% endunless %}{% endcapture %}
+
+  {% if settings.section_title_capitalize %}
+    {% capture section_title_capitalize %}uppercase{% endcapture %}
+  {% else %}
+    {% capture section_title_capitalize %}none{% endcapture %}
+  {% endif %}
+  {% capture section_title_letterspacing %}{{ settings.section_title_letterspacing | divided_by: 10.0 }}{% unless settings.section_title_letterspacing == 0 %}em{% endunless %}{% endcapture %}
+
+  {% if settings.secondary_title_capitalize %}
+    {% capture secondary_title_capitalize %}uppercase{% endcapture %}
+  {% else %}
+    {% capture secondary_title_capitalize %}none{% endcapture %}
+  {% endif %}
+  {% capture secondary_letterspacing %}{{ settings.secondary_letterspacing | divided_by: 10.0 }}{% unless settings.secondary_letterspacing == 0 %}em{% endunless %}{% endcapture %}
+
+  {%- capture icon_select_svg -%}url({{ "ico-select.svg" | asset_url }}){%- endcapture -%}
+  {%- capture icon_select_svg_primary -%}url({{ "ico-select-primary.svg" | asset_url }}){%- endcapture -%}
+  {%- capture icon_select_svg_secondary -%}url({{ "ico-select-secondary.svg" | asset_url }}){%- endcapture -%}
+  {%- capture icon_select_svg_tertiary -%}url({{ "ico-select-tertiary.svg" | asset_url }}){%- endcapture -%}
+
+  :root {
+    --base-font-size: {{ percent_font_size }}%;
+    --base-line-height: {{ settings.base_line_height }};
+    
+    --color-primary-accent: {{ settings.color_primary_accent | color_to_rgb }};
+    --color-primary-text: {{ settings.color_primary_text | color_to_rgb }};
+    --color-primary-text-rgb: {{ settings.color_primary_text | color_extract: 'red' }}, {{ settings.color_primary_text | color_extract: 'green' }}, {{ settings.color_primary_text | color_extract: 'blue' }};
+    --color-primary-background: {{ settings.color_primary_background | color_to_rgb }};
+    --color-primary-background-hex: {{ settings.color_primary_background }};
+    --color-primary-meta: {{ settings.color_primary_meta | color_to_rgb }};
+    --color-primary-text--overlay: {{ primary_overlay_color | color_to_rgb }};
+    --color-primary-accent--overlay: {{ primary_accent_overlay_color | color_to_rgb }};
+    --color-primary-text-placeholder: {{ settings.color_primary_text | color_to_rgb | color_modify: 'alpha', 0.1 }};
+    --color-primary-background-0: {{ settings.color_primary_background | color_to_rgb | color_modify: 'alpha', 0 }};
+    --color-primary-border: {{ settings.color_primary_border }};
+
+    /*
+    Secondary color scheme
+    */
+    --color-secondary-accent: {{ settings.color_secondary_accent | color_to_rgb }};
+    --color-secondary-text: {{ settings.color_secondary_text | color_to_rgb }};
+    --color-secondary-background: {{ settings.color_secondary_background | color_to_rgb }};
+    --color-secondary-background-hex: {{ settings.color_secondary_background }};
+    --color-secondary-meta: {{ settings.color_secondary_meta | color_to_rgb }};
+    --color-secondary-text--overlay: {{ secondary_overlay_color | color_to_rgb }};
+    --color-secondary-accent--overlay: {{ secondary_accent_overlay | color_to_rgb }};
+    --color-secondary-text-placeholder: {{ settings.color_secondary_text | color_to_rgb | color_modify: 'alpha', 0.1 }};
+    --color-secondary-background-0: {{ settings.color_secondary_background | color_to_rgb | color_modify: 'alpha', 0 }};
+    --color-secondary-border: {{ settings.color_secondary_border }};
+
+    /*
+    Tertiary color scheme
+    */
+    --color-tertiary-accent: {{ settings.color_tertiary_accent | color_to_rgb }};
+    --color-tertiary-text: {{ settings.color_tertiary_text | color_to_rgb }};
+    --color-tertiary-background: {{ settings.color_tertiary_background | color_to_rgb }};
+    --color-tertiary-background-hex: {{ settings.color_tertiary_background }};
+    --color-tertiary-meta: {{ settings.color_tertiary_meta | color_to_rgb }};
+    --color-tertiary-text--overlay: {{ tertiary_overlay_color | color_to_rgb }};
+    --color-tertiary-accent--overlay: {{ tertiary_accent_overlay | color_to_rgb }};
+    --color-tertiary-text-placeholder: {{ settings.color_tertiary_text | color_to_rgb | color_modify: 'alpha', 0.1 }};
+    --color-tertiary-background-0: {{ settings.color_tertiary_background | color_to_rgb | color_modify: 'alpha', 0 }};
+    --color-tertiary-border: {{ settings.color_tertiary_border }};
+
+    --color-white-text: {{ '#ffffff' | color_to_rgb }};
+    --color-black-text: {{ '#000000' | color_to_rgb }};
+    --color-white-accent: {{ '#ffffff' | color_to_rgb }};
+    --color-black-accent: {{ '#000000' | color_to_rgb }};
+    --color-white-text--overlay: {{ white_text_overlay_color | color_to_rgb }};
+    --color-black-text--overlay: {{ black_text_overlay_color | color_to_rgb }};
+
+
+    --heading-font: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    --heading-font-weight: {{ settings.type_header_font.weight }};
+    --heading-font-style: {{ settings.type_header_font.style }};
+
+    --body-font: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --body-font-weight: {{ settings.type_body_font.weight }};
+    --body-font-style: {{ settings.type_body_font.style }};
+    --body-font-bold-weight: {{ type_body_font.weight | default: 'bold' }};
+
+    --secondary-font: {{ settings.type_secondary_font.family }}, {{ settings.type_secondary_font.fallback_families }};
+    --secondary-font-weight: {{ settings.type_secondary_font.weight }};
+    --secondary-font-style: {{ settings.type_secondary_font.style }};
+
+    --heading-letterspacing: {{ headings_letterspacing }};
+    --heading-capitalize: {{ headings_capitalize }};
+    --text-overlay-letterspacing: {{ text_overlay_letterspacing }};
+
+    --navigation-font: {{ navigation_font }};
+    --navigation-font-weight: {{ navigation_font_weight }};
+    --navigation-font-style: {{ navigation_font_style }};
+
+    --navigation-capitalize: {{ navigation_capitalize }};
+    --navigation-letterspacing: {{ navigation_letterspacing }};
+
+    --section-title-capitalize: {{ section_title_capitalize }};
+    --section-title-letterspacing: {{ section_title_letterspacing }};
+    --section-title-align: {{ section_title_align }};
+
+    --secondary-title-capitalize: {{ secondary_title_capitalize }};
+    --secondary-letterspacing: {{ secondary_letterspacing }};
+
+    --rte-font-size: {{ settings.rte_font_size }};
+
+    /*
+    SVG ico select
+    */
+    --icon-svg-select: {{ icon_select_svg }};
+    --icon-svg-select-primary: {{ icon_select_svg_primary }};
+    --icon-svg-select-secondary: {{ icon_select_svg_secondary }};
+    --icon-svg-select-tertiary: {{ icon_select_svg_tertiary }};
+
+    --border-width: {{ settings.border_width }};
+    --text-width: {{ text_width }};
+
+    --button-baseline-adjust: {{ button_baseline_adjust }}rem;
+
+    --header-height: 120px;
+    --announcement-bar-height: 44px;
+    --header-height-no-search: 120px;
+    --payment-button-height: 60px;
+  }
+
+  [data-color-scheme="primary"] {
+    --color-scheme-text: {{ settings.color_primary_text | color_to_rgb | color_extract: 'red' }}, {{ settings.color_primary_text | color_to_rgb | color_extract: 'green' }}, {{ settings.color_primary_text | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-background: {{ settings.color_primary_background | color_to_rgb | color_extract: 'red' }}, {{ settings.color_primary_background | color_to_rgb | color_extract: 'green' }}, {{ settings.color_primary_background | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-accent: {{ settings.color_primary_accent | color_to_rgb | color_extract: 'red' }}, {{ settings.color_primary_accent | color_to_rgb | color_extract: 'green' }}, {{ settings.color_primary_accent | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-meta: {{ settings.color_primary_meta | color_to_rgb | color_extract: 'red' }}, {{ settings.color_primary_meta | color_to_rgb | color_extract: 'green' }}, {{ settings.color_primary_meta | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-text--overlay: {{ primary_overlay_color | color_extract: 'red' }}, {{ primary_overlay_color | color_extract: 'green' }}, {{ primary_overlay_color | color_extract: 'blue' }};
+    --color-scheme-accent--overlay: {{ primary_accent_overlay_color | color_extract: 'red' }}, {{ primary_accent_overlay_color | color_extract: 'green' }}, {{ primary_accent_overlay_color | color_extract: 'blue' }};
+    --color-scheme-border: {{ settings.color_primary_border | color_to_rgb | color_extract: 'red' }}, {{ settings.color_primary_border | color_to_rgb | color_extract: 'green' }}, {{ settings.color_primary_border | color_to_rgb | color_extract: 'blue' }};
+    --payment-terms-background-color: {{ settings.color_primary_background }};
+  }
+  [data-color-scheme="secondary"] {
+    --color-scheme-text: {{ settings.color_secondary_text | color_to_rgb | color_extract: 'red' }}, {{ settings.color_secondary_text | color_to_rgb | color_extract: 'green' }}, {{ settings.color_secondary_text | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-background: {{ settings.color_secondary_background | color_to_rgb | color_extract: 'red' }}, {{ settings.color_secondary_background | color_to_rgb | color_extract: 'green' }}, {{ settings.color_secondary_background | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-accent: {{ settings.color_secondary_accent | color_to_rgb | color_extract: 'red' }}, {{ settings.color_secondary_accent | color_to_rgb | color_extract: 'green' }}, {{ settings.color_secondary_accent | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-meta: {{ settings.color_secondary_meta | color_to_rgb | color_extract: 'red' }}, {{ settings.color_secondary_meta | color_to_rgb | color_extract: 'green' }}, {{ settings.color_secondary_meta | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-text--overlay: {{ secondary_overlay_color | color_extract: 'red' }}, {{ secondary_overlay_color | color_extract: 'green' }}, {{ secondary_overlay_color | color_extract: 'blue' }};
+    --color-scheme-accent--overlay: {{ secondary_accent_overlay | color_extract: 'red' }}, {{ secondary_accent_overlay | color_extract: 'green' }}, {{ secondary_accent_overlay | color_extract: 'blue' }};
+    --color-scheme-border: {{ settings.color_secondary_border | color_to_rgb | color_extract: 'red' }}, {{ settings.color_secondary_border | color_to_rgb | color_extract: 'green' }}, {{ settings.color_secondary_border | color_to_rgb | color_extract: 'blue' }};
+    --payment-terms-background-color: {{ settings.color_secondary_background }};
+  }
+  [data-color-scheme="tertiary"] {
+    --color-scheme-text: {{ settings.color_tertiary_text | color_to_rgb | color_extract: 'red' }}, {{ settings.color_tertiary_text | color_to_rgb | color_extract: 'green' }}, {{ settings.color_tertiary_text | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-background: {{ settings.color_tertiary_background | color_to_rgb | color_extract: 'red' }}, {{ settings.color_tertiary_background | color_to_rgb | color_extract: 'green' }}, {{ settings.color_tertiary_background | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-accent: {{ settings.color_tertiary_accent | color_to_rgb | color_extract: 'red' }}, {{ settings.color_tertiary_accent | color_to_rgb | color_extract: 'green' }}, {{ settings.color_tertiary_accent | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-meta: {{ settings.color_tertiary_meta | color_to_rgb | color_extract: 'red' }}, {{ settings.color_tertiary_meta | color_to_rgb | color_extract: 'green' }}, {{ settings.color_tertiary_meta | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-text--overlay: {{ tertiary_overlay_color | color_extract: 'red' }}, {{ tertiary_overlay_color | color_extract: 'green' }}, {{ tertiary_overlay_color | color_extract: 'blue' }};
+    --color-scheme-accent--overlay: {{ tertiary_accent_overlay | color_extract: 'red' }}, {{ tertiary_accent_overlay | color_extract: 'green' }}, {{ tertiary_accent_overlay | color_extract: 'blue' }};
+    --color-scheme-border: {{ settings.color_tertiary_border | color_to_rgb | color_extract: 'red' }}, {{ settings.color_tertiary_border | color_to_rgb | color_extract: 'green' }}, {{ settings.color_tertiary_border | color_to_rgb | color_extract: 'blue' }};
+    --payment-terms-background-color: {{ settings.color_tertiary_background }};
+  }
+
+  [data-color-scheme="white"] {
+    --color-scheme-text: {{ '#ffffff' | color_to_rgb | color_extract: 'red' }}, {{ '#ffffff' | color_to_rgb | color_extract: 'green' }}, {{ '#ffffff' | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-text--overlay: {{ '#000000' | color_to_rgb | color_extract: 'red' }}, {{ '#000000' | color_to_rgb | color_extract: 'green' }}, {{ '#000000' | color_to_rgb | color_extract: 'blue' }};
+  }
+
+  [data-color-scheme="black"] {
+    --color-scheme-text: {{ '#000000' | color_to_rgb | color_extract: 'red' }}, {{ '#000000' | color_to_rgb | color_extract: 'green' }}, {{ '#000000' | color_to_rgb | color_extract: 'blue' }};
+    --color-scheme-text--overlay: {{ '#ffffff' | color_to_rgb | color_extract: 'red' }}, {{ '#ffffff' | color_to_rgb | color_extract: 'green' }}, {{ '#ffffff' | color_to_rgb | color_extract: 'blue' }};
+  }
+
+</style>

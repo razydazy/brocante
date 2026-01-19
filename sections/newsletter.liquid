@@ -1,0 +1,89 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- assign section_color = section.settings.color_scheme -%}
+<section class="bg-scheme-background text-scheme-text newsletter section-y-padding" data-color-scheme="{{ section_color }}">
+  <div class="wrapper">
+    {% if section.settings.section_title != blank %}
+    <h2 class="block font-heading section-title-align {{ settings.section_heading_font_size }}">
+      <span class="block">{{ section.settings.section_title | escape }}</span>
+    </h2>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+    <div class="font-body mt-4 {% if settings.center_section_headings %}mx-auto lg:max-w-2xl text-center {% endif %} leading-snug">
+      <p>{{ section.settings.subheading | escape }}</p>
+    </div>
+    {% endif %}
+    <div class="font-body mt-12 text-center text-base {% if settings.center_section_headings %}mx-auto lg:max-w-2xl{% endif %} leading-snug">
+      {% form 'customer', id: 'NewsletterSection' %}
+        {{ form.errors | default_errors }}
+        {% if form.posted_successfully? %}
+          <p>{{ 'general.newsletter_form.confirmation' | t }}</p>
+        {% else %}
+          <div class="flex flex-row {% if settings.center_section_headings %}mx-auto lg:max-w-2xl{% endif %} justify-center {% if settings.center_section_headings %}mx-4{% endif %}">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <label class="visually-hidden" for="Email-{{ section.id }}">
+                {{ 'general.newsletter_form.newsletter_email' | t }}
+              </label>
+              <input type="email"
+                name="contact[email]"
+                id="Email-{{ section.id }}"
+                value="{% if customer.email != blank %}{{ customer.email }}{% endif %}"
+                placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                autocorrect="off"
+                autocapitalize="off"
+                class="newsletter__input border-scheme-border flex-1 {% if settings.center_section_headings %}max-w-xl{% endif %} min-w-0 border-b-theme-width py-5 placeholder-secondary">
+              <button class="btn btn-outline-{{ section_color }}-{{ settings.outline_button_color }} lg:w-auto ml-2 lg:ml-12" type="submit" name="commit">
+                <span class="btn-text">{{ 'general.newsletter_form.submit' | t }}</span>
+                {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}<span>{% endif %}
+              </button>
+          </div>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "disabled_on": {
+      "groups": ["header", "aside"]
+    },
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_title",
+        "label": "Heading",
+        "default": "Subscribe to our newsletter"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "A short sentence describing what someone will receive by subscribing"
+      },
+      {
+        "type": "paragraph",
+        "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+      },
+      {
+        "type":      "header",
+        "content":   "Color"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"}
+        ],
+        "default":   "primary"
+      }
+    ],
+    "presets": [{
+      "name": "Newsletter"
+    }]
+  }
+{% endschema %}

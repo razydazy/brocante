@@ -1,0 +1,59 @@
+<div class="section-x-padding section-y-padding  max-w-lg mx-auto" data-color-scheme="primary">
+  <h1 class="font-heading text-2xl mb-2">{{ 'customer.register.title' | t }}</h1>
+  {%- assign formId = 'RegisterForm' -%}
+  {% form 'create_customer', id: formId %}
+
+    {% if form.errors %}
+      <div class="mt-4" tabindex="-1">{{ form.errors | default_errors }}</div>
+    {% endif %}
+
+    <label for="FirstName" class="mt-4 mb-1 block font-secondary text-sm">
+      {{ 'customer.register.first_name' | t }}
+    </label>
+    <input type="text"
+      class="w-full p-2 bg-transparent border-text-width border-scheme-border"
+      name="customer[first_name]"
+      id="FirstName"
+      {% unless form.errors %}autofocus{% endunless %}
+      {% if form.first_name %}value="{{ form.first_name }}"{% endif %}>
+
+    <label for="LastName" class="mt-4 mb-1 block font-secondary text-sm">
+      {{ 'customer.register.last_name' | t }}
+    </label>
+    <input type="text"
+      class="w-full p-2 bg-transparent border-text-width border-scheme-border"
+      name="customer[last_name]"
+      id="LastName"
+      {% if form.last_name %}value="{{ form.last_name }}"{% endif %}>
+
+    <label for="Email" class="mt-4 mb-1 block font-secondary text-sm">
+      {{ 'customer.register.email' | t }}
+    </label>
+    <input type="email"
+      name="customer[email]"
+      id="Email"
+      class="w-full p-2 bg-transparent border-text-width border-scheme-border {% if form.errors contains 'email' %}border-scheme-accent{% endif %}"
+      value="{% if form.email %}{{ form.email }}{% endif %}"
+      spellcheck="false"
+      autocomplete="off"
+      autocapitalize="off">
+
+    <label for="CreatePassword" class="mt-4 mb-1 block font-secondary text-sm">
+      {{ 'customer.register.password' | t }}
+    </label>
+    <input type="password"
+      class="w-full p-2 bg-transparent border-text-width border-scheme-border {% if form.errors contains 'password' %}border-scheme-accent{% endif %}"
+      name="customer[password]"
+      id="CreatePassword">
+
+    <div class="mt-4">
+      <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn btn-primary-accent w-full">
+    </div>
+
+    <div class="text-center">
+      <a class="mt-4 inline-block text-scheme-accent text-sm" href="{{ routes.account_login_url }}">
+        {{ 'customer.login.sign_in' | t }}
+      </a>
+    </div>
+  {% endform %}
+</div>

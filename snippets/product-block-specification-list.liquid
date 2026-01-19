@@ -1,0 +1,31 @@
+{%- liquid
+  assign have_content = false
+  for i in (1..5)
+    assign text = 'text_' | append: i
+    if block.settings[text] != blank
+      assign have_content = true
+      break
+    endif
+  endfor  
+-%}
+{%- if have_content -%}
+<div class="-mt-theme-width py-8 border-t-theme-width border-b-theme-width border-scheme-border" {{ block.shopify_attributes }} data-color-scheme="{{ section_color | default: 'primary' }}">
+  {%- if block.settings.heading != '' -%}
+  <h2 class="font-heading">{{ block.settings.heading }}</h2>
+  {%- endif -%}
+  <dl class="spec-list {% if block.settings.heading != '' %}mt-4{% endif %}">
+    {%- for i in (1..5) -%}
+    {%- capture label %}label_{{ i }}{%- endcapture -%}
+    {%- capture text %}text_{{ i }}{%- endcapture -%}
+    {%- liquid
+      assign label = block.settings[label]
+      assign text = block.settings[text]
+    -%}
+    {% if text != blank %}
+    <dt class="text-scheme-{{ block.settings.label_text_color }}">{{ label }}</dt>
+    <dd class="">{{ text }}</dd>
+    {% endif %}
+    {%- endfor -%}
+  </dl>
+</div>
+{%- endif -%}

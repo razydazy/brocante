@@ -1,0 +1,125 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-page-artist__banner",
+      "disabled": true,
+      "settings": {
+        "image_width": "full_width",
+        "crop": "2.39",
+        "title_overlay": true,
+        "overlay_text_color": "white"
+      }
+    },
+    "main": {
+      "type": "main-page-artist",
+      "settings": {
+        "heading_size": "template",
+        "hide_title": true
+      }
+    },
+    "collection-with-product": {
+      "type": "collection-with-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "option_style": "drop_down",
+            "hide_option_labels": false
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "enable_payment_button": true,
+            "show_pickup_availability": true
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons"
+      ],
+      "disabled": true,
+      "settings": {
+        "product_title": "Featured product",
+        "product": "",
+        "layout": "narrow_width",
+        "enable_video_looping": false,
+        "show_featured_collection": true,
+        "collection_title": "Featured collection",
+        "collection": "",
+        "no_products": 3,
+        "products_per_row_desktop": "3",
+        "products_per_row_mobile": "1"
+      }
+    },
+    "image_with_text_atrYPq": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/2147.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "what we believe",
+        "richtext": "<p><\/p><p>世の中に存在するものにはあらゆる物語があります<\/p><p>長い時を経て大切にされて来た物を目前にした時 <\/p><p>その確かなものだけが放つ美しさに心を動かされたことは無いでしょうか<\/p><p>ふとした瞬間に見入るもの 何気なく手に取るもの<\/p><p>そこには情報から得た知識よりも先に<\/p><p> 美しさを感じ取る感情が湧いている筈 <\/p><p>例えば足元に咲く小さな花に心惹かれるときのように<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_DrHnNn": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/SS_2024-04-19_16.25.41.png",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "Select",
+        "richtext": "<p><\/p><p>時代がどれほど進もうと <\/p><p>この美しいものは二度と作り出される事はありません <\/p><p>けれど残された物にはきっと意味があり <\/p><p>時間という美しさを放ちながらこの日常に降り注ぎます <\/p><p>時にはダメージのあるマテリアルも何故か愛しく見え <\/p><p>あらゆるコンデイションを内包する不思議な美しさが<\/p><p>BROCANTEには秘められています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_JkpVL7": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/083DC0D8-D51A-4088-A0F3-6E930814918B.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "Buying France",
+        "richtext": "<p><\/p><p>何処までも続く森の宿り木 <\/p><p>プラタナスのトンネル <\/p><p>白鳥が羽を休める湖では明け方にフクロウが飛び立つ <\/p><p>BROCANTE美しいガラクタを語源に持つフランス語 <\/p><p>豊かに生きる意味を教えてくれたフランス <\/p><p>絶え間なく続く私達の日常が少しでもより良くなるように <\/p><p>古く美しいものを集めご紹介しています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main",
+    "collection-with-product",
+    "image_with_text_atrYPq",
+    "image_with_text_DrHnNn",
+    "image_with_text_JkpVL7"
+  ]
+}

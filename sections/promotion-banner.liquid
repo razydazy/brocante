@@ -1,0 +1,123 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- assign section_color = section.settings.color_scheme -%}
+<section class="promotion {% unless section.settings.full_width %}wrapper section-y-padding{% else %}section-with-no-padding{% endunless %}">
+  <div class="relative px-5 lg:px-10 py-4 lg:py-8 bg-scheme-background text-scheme-text" data-color-scheme="{{ section_color }}">
+    {%- if section.settings.cta_url != blank -%}
+    <a href="{{ section.settings.cta_url }}" class="increase-target"></a>
+    {%- endif -%}
+    <div class=" lg:flex items-center  {{ section.settings.align }}">
+      <div class="lg:inline-flex items-center">
+        {% if section.settings.title != '' %}
+        <h2 class="font-heading  {{ settings.section_heading_font_size }}">
+          {{ section.settings.title | escape }}
+        </h2>
+        {% endif %}
+
+        {% if section.settings.rich_text != '' %}
+        <div class="rte font-body leading-snug {% if section.settings.title != '' %}lg:ml-5 mt-5 lg:mt-0{% endif %}">
+          {{ section.settings.rich_text }}
+        </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.cta_url != blank and section.settings.cta_text != blank %}
+      <div class="mt-5 lg:mt-0 lg:ml-5 btn btn-{{ section.settings.button_style }}-{{ section_color }}-{{ settings.outline_button_color }}">
+        <span class="btn-text">{{ section.settings.cta_text }}</span>
+        {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+{% schema %}
+  {
+    "name": "Promotion banner",
+    "disabled_on": {
+      "groups": ["header", "footer", "aside"]
+    },
+    "settings": [
+      {
+        "type":      "text",
+        "id":        "title",
+        "label":     "Heading",
+        "default":   "Promotion"
+      },
+      {
+        "id": "rich_text",
+        "type": "richtext",
+        "label": "Text",
+        "default": "<p>Use this text to share details about your promotion.</p>"
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "default": false,
+        "label": "Full width"
+      },
+      {
+        "type": "select",
+        "id": "align",
+        "label": "Content align",
+        "default": "text-left justify-between",
+        "options": [
+          {
+            "value": "text-left justify-between",
+            "label": "Spread"
+          },
+          {
+            "value": "text-center justify-center",
+            "label": "Center"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Call to action"
+      },
+      {
+        "type": "url",
+        "id": "cta_url",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "cta_text",
+        "label": "Text",
+        "default": "Shop Now"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "outline",
+        "options": [
+          {
+            "value": "outline",
+            "label": "Outline"
+          },
+          {
+            "value": "solid",
+            "label": "Solid"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"}
+        ],
+        "default":   "secondary"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Promotion banner"
+      }
+    ]
+  }
+{% endschema %}

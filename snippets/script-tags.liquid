@@ -1,0 +1,29 @@
+
+{%- if script == 'theme' -%}
+<script>
+window.baseAssetsUrl = '{{ 'theme.min.js' | asset_url | split: 'assets/theme.min.js' | first }}';
+</script>
+<script type="module" src="{{ 'theme.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if script == 'cart-drawer' -%}
+
+<script type="module" src="{{ 'cart-drawer.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if script == 'video' -%}
+
+<script type="module" src="{{ 'video.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if script == 'background-video' -%}
+
+<script type="module" src="{{ 'background-video.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if script == 'audio-player' -%}
+
+<script type="module" src="{{ 'audio-player.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if script == 'giftcard' -%}
+<script>
+window.baseAssetsUrl = '{{ 'giftcard.min.js' | asset_url | split: 'assets/giftcard.min.js' | first }}';
+</script>
+<script type="module" src="{{ 'giftcard.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

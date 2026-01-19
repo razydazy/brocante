@@ -1,0 +1,19 @@
+<template x-if="$store.availability.current_variant.available && currentVariantLocations">
+  <div class="-mt-theme-width border-t-theme-width border-b-theme-width border-scheme-border py-8" {{ block.shopify_attributes }} x-ref="locationInventoryStatus" data-color-scheme="{{ section_color | default: 'primary' }}">
+    <div class="" :class="{'opacity-50': $store.availability.loading}" :aria-busy="$store.availability.loading">
+      <ul>
+        <template x-for="[name, availability] in Object.entries(currentVariantLocations)">
+          <li :class="{'text-scheme-meta': !availability}">
+            <span x-text="name" class="inline-block w-28 mr-4"></span>
+            <template x-if="availability">
+              <span>{{ 'products.product.in_stock' | t }}</span>
+            </template>
+            <template x-if="!availability">
+              <span>{{ 'products.product.out_of_stock' | t }}</span>
+            </template>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,370 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign mode = section.settings.mode
+  assign video_position = section.settings.video_position
+  assign text_align = section.settings.text_alignment
+  case section.settings.video_size
+    when 'third'
+      assign content_width_desktop = 'lg:col-span-8'
+      if video_position == 'right'
+        assign video_width_desktop = 'lg:col-start-9 lg:col-end-13'
+      else
+        assign video_width_desktop = 'lg:col-span-4'
+      endif
+    when 'half'
+      if video_position == 'right'
+        assign content_width_desktop = 'lg:col-span-6'
+        assign video_width_desktop = 'lg:col-start-7 lg:col-end-13'
+      else
+        assign content_width_desktop = 'lg:col-span-6'
+        assign video_width_desktop = 'lg:col-span-6'
+      endif
+    when 'two_thirds'
+      assign content_width_desktop = 'lg:col-span-4'
+      if video_position == 'right'
+        assign video_width_desktop = 'lg:col-start-5 lg:col-end-13'
+      else
+        assign video_width_desktop = 'lg:col-span-8'
+      endif
+    else
+      assign content_width_desktop = 'lg:col-span-full'
+      assign video_width_desktop = 'lg:col-span-full'
+  endcase
+  assign small_text_on_mobile = false
+  if section.blocks.size == 3
+    assign small_text_on_mobile = true
+  endif
+  assign section_with_no_padding = false
+  if section.settings.video_size == 'full' or section.settings.video_size == 'content'
+    if section.settings.title == ''
+      assign section_with_no_padding = true
+    endif
+  endif
+
+  assign video = section.settings.video_url
+  if video == '' or video == blank
+    assign video = 'https://www.youtube.com/watch?v=_9VUPq3SxOc'
+    assign video_type = 'youtube'
+    assign video_id = '_9VUPq3SxOc'
+  endif
+  if video contains 'youtube.com/watch'
+    assign video_type = 'youtube'
+    assign video_id = video | split: 'v='
+    assign video_id = video_id[1] | split: '&' | first
+  endif
+  if video contains 'youtu.be/'
+    assign video_type = 'youtube'
+    assign video_id = video | split: '.be/'
+    assign video_id = video_id[1] | split: '&' | first
+  endif
+  if video contains 'mp4'
+    assign video_type = 'mp4'
+  endif
+
+  assign ratios = section.settings.aspect_ratio | split: ':'
+  assign ratio = ratios[1] | plus: 0.0 | divided_by: ratios[0] | plus: 0.0 | times: 100.0
+-%}
+
+{% if settings.product_grid_item_star_ratings != 'none' %}
+  {% capture selector %}.section--{{ section.id }}{% endcapture %}
+  {% render 'star-style',
+     selector: selector,
+     section_color: 'primary'
+  %}
+{% endif %}
+
+{% unless request.design_mode %}
+  {% render 'script-tags', script: 'video' %}
+{% endunless %}
+
+<section class="bg-scheme-background text-scheme-text lookbook-with-image {% if section_with_no_padding %}bg-scheme-background section-with-no-padding{% else %}section-y-padding{% endif %} section--{{ section.id }}" data-color-scheme="{{ section_color }}">
+  <div class="wrapper">
+    {% if section.settings.title != '' %}
+    <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+      {{ section.settings.title | escape }}
+    </h2>
+    {% endif %}
+  </div>
+
+  <div class="grid lg:grid-cols-12 gap-10 grid-flow-row-dense {% if section.settings.title != '' %}mt-10{% else %}mt-10 lg:mt-0{% endif %} {% unless section.settings.video_size == 'full' %}wrapper{% endunless %}">
+
+    <div class="{{ video_width_desktop }} lg:flex items-center justify-center" data-fade-in>
+      {% comment %}
+      Click to play
+      {% endcomment %}
+      {%- if mode == 'click' -%}
+        <div class="w-full" x-data='ThemeModule_Video("featuredVideo-{{ section.id }}", "external_video", "youtube")' x-init="mounted()">
+          <div class="relative w-full" x-ref="video_container" style="padding-top: {{ ratio }}%;">
+            <template x-if="!enabled">
+              <button  @click="enableVideo()" class="absolute top-0 left-0 right-0 bottom-0 h-full w-full flex items-center justify-center group overflow-hidden" type="button">
+                <div class="z-40 text-center">
+                  <span
+                    class="rounded-full w-14 h-14 lg:w-18 lg:h-18 bg-scheme-background text-scheme-background-overlay  inline-flex items-center justify-center hover:bg-scheme-accent hover:text-scheme-accent-overlay transition-opacity"
+                  >
+                    <span class="w-8 h-8 lg:w-10 h-10 inline-block" >{% render 'icon-play' %}</span>
+                  </span>
+                </div>
+                {%- if section.settings.cover_image != blank -%}
+                  {% render 'image-object' with
+                    image: section.settings.cover_image
+                  %}
+                {%- else -%}
+                  <div class="bg-placeholder-bg absolute top-0 left-0 right-0 bottom-0">
+                    {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+                  </div>
+                {%- endif -%}
+              </button>
+            </template>
+            <template  x-if="enabled">
+              {%- if video_type == 'mp4' -%}
+                <video class="object-cover absolute top-0 right-0 bottom-0 left-0 w-full h-full" autoplay loop playsinline controls>
+                  {% comment %}theme-check-disable RemoteAsset{% endcomment %}
+                  <source src="{{ video }}" type="video/mp4">
+                  {% comment %}theme-check-enable RemoteAsset{% endcomment %}
+                    Sorry, your browser doesn't support embedded videos.
+                </video>
+              {%- endif -%}
+              {%- if video_type == 'youtube' -%}
+                <iframe src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1" class="js-youtube absolute top-0 left-0 right-0 bottom-0 w-full h-full" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              {%- endif -%}
+            </template>
+          </div>
+        </div>
+        {%- endif -%}
+
+        {%- if mode == 'autoplay' -%}
+          <div class="background-video-wrapper h-auto p-0  relative overflow-hidden w-full"  style="padding-top: {{ ratio }}%;">
+            {% assign component_id = 'background-video-' | append: section.id %}
+            {% render 'background-video'
+              extra_classes: 'video-with-text-overlay__background-video',
+              video: video,
+              fallback_image: section.settings.cover_image,
+              component_id: component_id,
+          %}
+          </div>
+        {%- endif -%}
+    </div>
+
+    <div class="{% if section.settings.video_size == 'full' %}wrapper{% endif %} w-full text-base {{ content_width_desktop }} h-full flex items-center">
+      <div class="w-full {% if section.settings.video_size == 'full' or section.settings.video_size == 'content' %}lg:flex justify-between items-top{% endif %}" data-fade-in>
+        {%- if section.settings.caption_heading != blank or section.settings.caption != blank -%}
+        <div>
+          {%- if section.settings.caption_heading != blank -%}
+            <h3 class="font-heading {{ settings.section_heading_font_size }} {{ text_align }}">
+              {{ section.settings.caption_heading | escape }}
+            </h3>
+          {%- endif -%}
+          {%- if section.settings.caption != blank -%}
+          <div class="rte max-w-lg {{ text_align }} {% if text_align == 'text-center' %}mx-auto{% endif %} {% if text_align == 'text-right' %}ml-auto{% endif %} {% if section.settings.caption_heading != blank %}mt-4{% endif %}">
+            {{ section.settings.caption }}
+          </div>
+        {%- endif -%}
+        </div>
+        {%- endif -%}
+        <div class="mt-10 {% if section.settings.video_size == 'full' or section.settings.video_size == 'content' %}lg:mt-0{% endif %}  grid grid-cols-{{ section.blocks.size }} gap-5 lg:gap-10">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.product != blank -%}
+              {%- render 'product-grid-item', product: block.settings.product, small_text_on_mobile: small_text_on_mobile, section_color: section_color -%}
+            {%- else -%}
+              <div class="featured-collection-item  type-product-grid-item text-center ">
+                <a href="#">
+                  {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                  <div class="bg-placeholder-darker-bg">
+                    {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+                  </div>
+                  <div class="{{ settings.product_grid_font }}">
+                    <p class="text-scheme-text mt-5 mb-1">
+                      <span class="product-grid-title">{{ 'homepage.onboarding.product_title' | t }}</span>
+                    </p>
+                    <p class="price m0 mt-1">{{ 1999 | money }}</p>
+                  </div>
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook with video",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "max_blocks": 3,
+  "settings": [
+    {
+     "type":      "text",
+     "id":        "title",
+     "label":     "Heading",
+     "default":   "Shop the look"
+    },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Mode",
+      "options": [
+        { "value": "click", "label": "Click to play"},
+        { "value": "autoplay", "label": "Autoplay"}
+      ],
+      "default":   "click",
+      "info": "Autoplay will loop with no sound"
+    },
+    {
+      "id": "video_url",
+      "type": "text",
+      "label": "Video URL",
+      "info": "Accepts YouTube or .mp4 links",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect ratio",
+      "default": "16:9",
+      "options": [
+        {
+          "value": "16:9",
+          "label": "Standard - 16:9"
+        },
+        {
+          "value": "4:3",
+          "label": "Standard - 4:3"
+        },
+        {
+          "value": "2.39:1",
+          "label": "Cinema"
+        },
+        {
+          "value": "1:1",
+          "label": "Square"
+        },
+        {
+          "value": "9:16",
+          "label": "Portrait"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_size",
+      "label": "Video size",
+      "default": "half",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "content",
+          "label": "Content width"
+        },
+        {
+          "value": "half",
+          "label": "One half"
+        },
+        {
+          "value": "third",
+          "label": "One third"
+        },
+        {
+          "value": "two_thirds",
+          "label": "Two thirds"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video position on desktop",
+      "default": "left",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "info": "Doesn't apply when video size to full or content width."
+    },
+    {
+      "type": "text",
+      "id": "caption_heading",
+      "label": "Caption heading",
+      "default": "Caption heading"
+    },
+    {
+      "id": "caption",
+      "type": "richtext",
+      "label": "Caption",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "text-left", "label": "Left"},
+        { "value": "text-center", "label": "Center"},
+        { "value": "text-right", "label": "Right"}
+      ],
+      "default":   "text-left"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+      {
+        "name": "Lookbook with video",
+        "blocks": [
+          {
+            "type": "product"
+          },
+          {
+            "type": "product"
+          }
+        ]
+      }
+    ]
+}
+{% endschema %}

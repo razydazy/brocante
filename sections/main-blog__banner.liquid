@@ -1,0 +1,25 @@
+{%- assign blog_title = blog.title -%}
+{% if current_tags %}
+  {% capture blog_title %}{{ blog.title | link_to: blog.url }} &mdash; {{ current_tags.first }}{% endcapture %}
+{% endif %}
+<section class="wrapper section-t-padding {% if settings.center_page_titles %}text-center{% endif %}">
+  <h1 class="font-heading type-section-title {% if section.settings.heading_size == 'section_title' %}{{ settings.section_heading_font_size }}{% else %}{{ settings.template_heading_size }}{% endif %}">{{ blog_title }}</h1>
+</section>
+
+{% schema %}
+{
+  "name": "Blog header",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "template", "label": "Template"},
+        { "value": "section_title", "label": "Section title"}
+      ],
+      "default":   "template"
+    }
+  ]
+}
+{% endschema %}

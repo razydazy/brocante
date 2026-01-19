@@ -1,0 +1,76 @@
+<section class="py-10 md:py-20">
+  <div class="wrapper">
+    <div id="shopify-product-reviews" class="product__spr" data-id="{{ product.id }}" data-section-heading-font-size="{{ settings.section_heading_font_size }}" data-section-font-size="{{ section.settings.font_size }}" data-button-style="{{ section.settings.button_style }}" data-solid-button-color="{{ settings.solid_button_color }}" data-outline-button-color="{{ settings.outline_button_color }}" data-star-color="{{ section.settings.star_color }}">{{ product.metafields.spr.reviews }}</div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Product reviews",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "To show reviews here, install [Shopify Product Reviews](https://apps.shopify.com/product-reviews)."
+    },
+    {
+      "type": "header",
+      "content": "Styling"
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "Font size",
+      "default": "body",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "rte",
+          "label": "Rich Text"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "outline",
+      "options": [
+        {
+          "value": "outline",
+          "label": "Outline"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "accent",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ]
+    }
+  ],
+  "templates": [
+    "product"
+  ],
+  "presets": [
+    {
+      "name": "Product reviews"
+    }
+  ]
+}
+{% endschema %}

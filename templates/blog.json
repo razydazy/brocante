@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-blog__banner",
+      "settings": {
+        "heading_size": "template"
+      }
+    },
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "layout": "grid",
+        "crop": "square",
+        "show_author": false,
+        "show_date": true,
+        "show_comments": true,
+        "show_tags": true,
+        "show_excerpt": true,
+        "show_link": true,
+        "text_align": "text-left"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main"
+  ]
+}

@@ -1,0 +1,125 @@
+{%- assign section_color = section.settings.color_scheme -%}
+{%- if section.settings.show_product_recommendations -%}
+  {%- if recommendations.performed -%}
+    {% if recommendations.products_count > 0 %}
+      <div class="product-recommendations">
+        <div class="wrapper section-y-padding bg-scheme-background text-scheme-text" data-color-scheme="{{ section_color }}">
+          <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">{{ section.settings.product_recommendations_heading }}</h2>
+          <ul class="grid grid-cols-{{ section.settings.products_per_row_mobile }} lg:grid-cols-{{ section.settings.products_per_row_desktop }} gap-10  mt-10">
+            {%- for product in recommendations.products -%}
+              {%- render 'product-grid-item', product: product, section_color: section_color -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  {%- else  -%}
+    <div
+      class="product-recommendations"
+      data-section-id="{{ section.id }}"
+      data-section-type="product-recommendations"
+      data-request-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}"
+    >
+    </div>
+  {%- endif -%}
+
+  {% if settings.product_grid_item_star_ratings != 'none' %}
+    {% capture selector %}[data-section-id="{{ section.id }}"]{% endcapture %}
+    {% render 'star-style',
+       selector: selector,
+       section_color: 'primary'
+    %}
+  {% endif %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_product_recommendations",
+      "label": "Show dynamic recommendations",
+      "info": "Dynamic recommendations change and improve with time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_recommendations_heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "select",
+      "id": "limit",
+      "label": "Number of Recommendations",
+      "default": "4",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_desktop",
+      "label": "Products per row - desktop",
+      "default": "4",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "Products per row - mobile",
+      "default": "1",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ]
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ]
+}
+{% endschema %}

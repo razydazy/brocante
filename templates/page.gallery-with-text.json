@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "gallery-with-text": {
+      "type": "gallery-with-text",
+      "blocks": {
+        "3b7669be-98fa-4fb1-9abb-458063863247": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "title": "Title",
+            "description": "<p>Short description<\/p>",
+            "link": "",
+            "link_text": ""
+          }
+        },
+        "a535ab88-268f-4f6d-b00c-431dcf917a05": {
+          "type": "image",
+          "settings": {
+            "title": "Title",
+            "description": "<p>Short description<\/p>",
+            "link": "",
+            "link_text": ""
+          }
+        },
+        "07a2e623-8e8c-42ec-81b3-c038be635e00": {
+          "type": "image",
+          "settings": {
+            "title": "Title",
+            "description": "<p>Short description<\/p>",
+            "link": "",
+            "link_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "3b7669be-98fa-4fb1-9abb-458063863247",
+        "a535ab88-268f-4f6d-b00c-431dcf917a05",
+        "07a2e623-8e8c-42ec-81b3-c038be635e00"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "blocks_per_row_desktop": "3",
+        "crop": "square",
+        "text_align": "text-left",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "gallery-with-text"
+  ]
+}

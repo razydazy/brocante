@@ -1,0 +1,20 @@
+{%- liquid
+  if block.settings.list contains "metafield-multi_line_text_field"
+    assign list = block.settings.list | split: '<span class="metafield-multi_line_text_field">' | last | split: "</span>" | first | strip_newlines | split: '<br />' 
+  else
+    if block.settings.list contains "<br/>"
+      assign list = block.settings.list | split: '<p>' | last | split: "</p>" | first | strip_newlines | strip | split: '<br/>' 
+    else
+      assign list =  block.settings.list | remove_first: "<p>" | replace: '</p>', '' | strip_newlines | strip | split: '<p>'
+    endif
+  endif
+-%}
+{% if list.size > 0 %}
+<div class="my-8 rte" {{ block.shopify_attributes }}>
+  <ol>
+    {% for item in list %}
+    <li>{{ item | strip }}</li>
+    {% endfor %}
+  </ol>
+</div>
+{% endif %}

@@ -1,0 +1,628 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign onboarding = false
+  if section.settings.bandsintown_name == '' and section.settings.eventbrite_access_token == '' and section.settings.eventbrite_organization_id == '' and section.blocks.size == 0
+    assign onboarding = true
+  endif
+  assign max_events = ''
+  if section.settings.enable_max_events
+    assign max_events = section.settings.number_of_events
+  else
+    assign max_events = 'all'
+  endif
+  if section.settings.font == 'product_grid_item'
+    assign font_class = 'type-product-grid-item ' | append: settings.product_grid_font
+    assign date_font_size = 'text-sm md:text-base'
+    assign main_font_size = 'text-base'
+  else
+    assign font_class = 'font-heading'
+    assign date_font_size = 'text-sm lg:text-xl'
+    assign main_font_size = 'text-lg lg:text-xl'
+  endif
+-%}
+
+{% unless request.design_mode %}
+  <script src="{{ 'events.js' | asset_url }}" type="module"></script>
+{% endunless %}
+<section class="bg-scheme-background text-scheme-text tour-events section-y-padding" data-section-id="{{ section.id }}" data-section-tour-events data-color-scheme="{{ section_color }}">
+
+  <div class="section-x-padding">
+    {% if section.settings.title != blank and template.name != 'page' %}
+    <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+      {{ section.settings.title | strip | escape }}
+    </h2>
+  {% endif %}
+  {% if template.name == 'page' %}
+    <h1 class="font-heading {{ settings.template_heading_size }} {% if settings.center_page_titles %}text-center{% endif %}">
+      {{ page.title }}
+    </h1>
+  {% endif %}
+  </div>
+
+  <div class="max-w-screen-xl mx-auto section-x-padding">
+    {% unless section.blocks.size == 0 %}
+      <ol id="events-{{ section.id }}" class="events max-w-screen-xl mx-auto mt-5">
+        {% for block in section.blocks %}
+          {%- capture event_date -%}
+            {%- if block.settings.enable_end_date -%}
+              {%- capture end_day -%}
+                {% if block.settings.end_day < 10 %}0{% endif %}{{ block.settings.end_day }}
+              {%- endcapture -%}
+              {% if block.settings.end_month == block.settings.month and block.settings.day != block.settings.end_day %}
+                {%- assign end_date = '-' | append: end_day-%}
+              {% endif %}
+              {% if block.settings.end_month != block.settings.month %}
+                {%- assign end_date = ' - ' | append: block.settings.end_month | append: ' ' | append: end_day -%}
+              {% endif %}
+            {{ block.settings.month }} {% if block.settings.day < 10 %}0{% endif %}{{ block.settings.day }}{{ end_date }}
+            {%- else -%}
+            {{ block.settings.month }} {% if block.settings.day < 10 %}0{% endif %}{{ block.settings.day }}
+            {%- endif -%}
+          {%- endcapture -%}
+          <li class="event grid grid-rows-2 md:grid-rows-1 grid-cols-8 md:grid-cols-12 items-center py-5 lg:py-8 border-scheme-border border-b-theme-width last:border-b-0 last:pb-0">
+            <div class="event__date col-span-6 md:col-span-2 row-start-1 row-span-1">
+              <h3 class="{{ font_class }}  {{ date_font_size }} leading-none">
+                <span class="uppercase leading-none">{{ event_date }}</span>
+              </h3>
+            </div>
+            <div class="event__main {{ font_class }} {{ main_font_size }}  flex flex-col md:inline-block col-span-6 md:col-span-9 row-start-2 md:row-start-1 row-span-1 md:pl-8">
+              <span class="event__location">{{ block.settings.location }}</span>
+              <span class="hidden md:inline-block mx-1 " aria-hidden="true">·</span>
+              <span class="event__venue mt-2 md:mt-0">{{ block.settings.venue }}</span>
+            </div>
+            {% if block.settings.url != blank %}
+              <div class="event__link col-span-2 row-start-1 row-span-2 md:col-span-1 text-right">
+                <a class="inline-block p-3 -mx-3 chevron-next hover:text-scheme-accent" href="{{ block.settings.url }}">
+                  <span class="visually-hidden">{{ 'sections.tour.tour_ticket_link' | t }} {{ block.settings.name }}</span>
+                  <div class="w-3 h-3 border-solid border-current border-2 transform rotate-45 border-b-0 border-l-0 -mb-1"></div>
+                </a>
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <div x-data="ThemeSection_tourEvents({
+                    source: '{{ section.settings.tour_source }}',
+                    bandsintown: '{{ section.settings.bandsintown_name | strip | escape }}',
+                    eventbriteToken: '{{ section.settings.eventbrite_token | strip | escape }}',
+                    maxEvents: '{{ max_events }}',
+                    useExternalSource: {% if section.blocks.size == 0 and onboarding == false %}true{% else %}false{% endif %}
+                  })" x-init="fetchEvents()">
+        {% if onboarding == true %}
+          <script type="application/json" data-event-data>
+            {
+              "events": [
+                {
+                  "day": "23",
+                  "month": "Feb",
+                  "name": {{ 'sections.tour.tour_location' | t | json }},
+                  "location": {{ 'sections.tour.tour_venue' | t | json }},
+                  "url": "#"
+                },
+                {
+                  "day": "25",
+                  "month": "Mar",
+                  "name": {{ 'sections.tour.tour_location' | t | json }},
+                  "location": {{ 'sections.tour.tour_venue' | t | json }},
+                  "url": "#"
+                },
+                {
+                  "day": "02",
+                  "month": "Apr",
+                  "name": {{ 'sections.tour.tour_location' | t | json }},
+                  "location": {{ 'sections.tour.tour_venue' | t | json }},
+                  "url": "#"
+                },
+                {
+                  "day": "14",
+                  "month": "May",
+                  "name": {{ 'sections.tour.tour_location' | t | json }},
+                  "location": {{ 'sections.tour.tour_venue' | t | json }},
+                  "url": "#"
+                },
+                {
+                  "day": "18",
+                  "month": "Aug",
+                  "name": {{ 'sections.tour.tour_location' | t | json }},
+                  "location": {{ 'sections.tour.tour_venue' | t | json }},
+                  "url": "#"
+                }
+              ]
+            }
+          </script>
+        {% endif %}
+        <template x-if="eventData.length > 0">
+          <ol id="events-tourEvents" class="events max-w-screen-xl mx-auto mt-5">
+            <template x-for="event in eventData" :key="event">
+              <li class="event grid grid-rows-2 md:grid-rows-1 grid-cols-8 md:grid-cols-12 items-center py-5 lg:py-8 border-scheme-border border-b-theme-width last:border-b-0 last:pb-0">
+                <div class="event__date col-span-6 md:col-span-2 row-start-1 row-span-1 text-sm lg:text-base">
+                  <h3 class="{{ font_class }} {{ date_font_size }} type-section-title">
+                    <template x-if="event.endMonth && event.endMonth !== event.month">
+                      <span class="uppercase leading-none" x-text="`${event.month} ${event.day} - ${event.endMonth} ${event.endDay}`"></span>
+                    </template>
+
+                    <template x-if="event.endMonth === event.month && event.day !== event.endDay">
+                      <span class="uppercase leading-none" x-text="`${event.month} ${event.day}-${event.endDay}`"></span>
+                    </template>
+
+                    <template x-if="!event.endMonth || !event.endDay || (event.day === event.endDay && event.month === event.endMonth)">
+                      <span class="uppercase leading-none" x-text="`${event.month} ${event.day}`"></span>
+                    </template>
+                  </h3>
+                </div>
+                <div class="event__main {{ font_class }} {{ main_font_size }} flex flex-col md:inline-block col-span-6 md:col-span-9 row-start-2 md:row-start-1 row-span-1 md:pl-8">
+                  <span class="event__location" x-text="event.location"></span>
+                  <template x-if="event.venue">
+                    <span class="hidden md:inline-block mx-1 " aria-hidden="true">·</span>
+                  </template>
+                  <span class="event__venue mt-2 md:mt-0" x-show="event.venue" x-text="event.venue"></span>
+                </div>
+                <template x-if="event.url !== ''">
+                  <div class="event__link col-span-2 row-start-1 row-span-2 md:col-span-1 text-right">
+                    <a class="inline-block p-3 -mx-3 chevron-next hover:text-scheme-accent"
+                      :href="event.url">
+                      <span class="visually-hidden">{{ 'sections.tour.tour_ticket_link' | t }}
+                        <span x-text="event.name"></span>
+                      </span>
+                      <div class="w-3 h-3 border-solid border-current border-2 transform rotate-45 border-b-0 border-l-0 -mb-1"></div>
+                    </a>
+                  </div>
+                </template>
+              </li>
+            </template>
+          </ol>
+        </template>
+        <template x-if="moreLinkUrl">
+          <div class="max-w-screen-lg mx-auto mt-10 text-center">
+            <a :href="moreLinkUrl"
+                target="_blank"
+                class="btn btn-{{ section_color }}-accent">
+              <span class="btn-text">{{ 'sections.tour.tour_more_link' | t }}</span>
+              {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+            </a>
+          </div>
+        </template>
+        <template x-if="eventData.length === 0">
+          <p class="mt-5">{{ 'sections.tour.tour_no_events' | t }}.</p>
+        </template>
+      </div>
+    {% endunless %}
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+{% schema %}
+{
+  "name": "Tour and events",
+  "class": "section-tour",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Tour",
+      "info": "Shown if not on page"
+    },
+    {
+       "type": "paragraph",
+       "content": "Load events in from an external source, or add them as blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_max_events",
+      "label": "Enable max number of events"
+    },
+    {
+      "type": "range",
+      "id": "number_of_events",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "label": "Max number of events",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "font",
+      "label": "Font",
+      "options": [
+        {
+          "value": "product_grid_item",
+          "label": "Product grid item"
+        },
+        {
+          "value": "heading",
+          "label": "Heading"
+        }
+      ],
+      "default": "product_grid_item"
+    },
+    {
+      "type": "header",
+      "content": "External Source"
+    },
+    {
+      "type": "select",
+      "id": "tour_source",
+      "label": "Source",
+      "options": [
+        {
+          "value": "bandsintown",
+          "label": "Bandsintown"
+        },
+        {
+          "value": "eventbrite",
+          "label": "EventBrite"
+        }
+      ]
+    },
+    {
+       "type": "text",
+       "id": "bandsintown_name",
+       "label": "Bandsintown artist name"
+    },
+    {
+       "type": "text",
+       "id": "eventbrite_token",
+       "label": "Eventbrite token",
+       "info": "See: [Grab your Eventbrite Token](http://www.switchthemes.co/eventbrite)"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "blocks" : [
+    {
+      "type": "text",
+      "name": "Event",
+      "settings": [
+        {
+            "type": "range",
+            "id": "day",
+            "min": 1,
+            "max": 31,
+            "step": 1,
+            "label": "Day",
+            "default": 16
+        },
+        {
+           "type": "select",
+           "id": "month",
+           "label": "Month",
+           "options": [
+             {
+               "value": "Jan",
+               "label": {
+                "en": "January",
+                "fr": "janvier",
+                "es": "enero",
+                "de": "Januar",
+                "pt-BR": "Janeiro",
+                "pt-PT": "Janeiro"
+               }
+             },
+             {
+               "value": "Feb",
+               "label": {
+                "en": "February",
+                "fr": "février",
+                "es": "febrero",
+                "de": "Februar",
+                "pt-BR": "Fevereiro",
+                "pt-PT": "Fevereiro"
+               }
+             },
+             {
+               "value": "Mar",
+               "label": {
+                "en": "March",
+                "fr": "mars",
+                "es": "marzo",
+                "de": "März",
+                "pt-BR": "Março",
+                "pt-PT": "Março"
+               }
+             },
+             {
+               "value": "Apr",
+               "label": {
+                "en": "April",
+                "fr": "avril",
+                "es": "abril",
+                "de": "April",
+                "pt-BR": "Abril",
+                "pt-PT": "Abril"
+               }
+             },
+             {
+               "value": "May",
+               "label": {
+                "en": "May",
+                "fr": "mai",
+                "es": "mayo",
+                "de": "Mai",
+                "pt-BR": "Maio",
+                "pt-PT": "Maio"
+               }
+             },
+             {
+               "value": "Jun",
+               "label": {
+                "en": "June",
+                "fr": "juin",
+                "es": "junio",
+                "de": "Juni",
+                "pt-BR": "Junho",
+                "pt-PT": "Junho"
+               }
+             },
+             {
+               "value": "Jul",
+               "label": {
+                "en": "July",
+                "fr": "juillet",
+                "es": "julio",
+                "de": "Juli",
+                "pt-BR": "Julho",
+                "pt-PT": "Julho"
+               }
+             },
+             {
+               "value": "Aug",
+               "label": {
+                "en": "August",
+                "fr": "août",
+                "es": "agosto",
+                "de": "August",
+                "pt-BR": "Agosto",
+                "pt-PT": "Agosto"
+               }
+             },
+             {
+               "value": "Sep",
+               "label": {
+                "en": "September",
+                "fr": "septembre",
+                "es": "septiembre",
+                "de": "September",
+                "pt-BR": "Setembro",
+                "pt-PT": "Setembro"
+               }
+             },
+             {
+               "value": "Oct",
+               "label": {
+                "en": "October",
+                "fr": "octobre",
+                "es": "octubre",
+                "de": "Oktober",
+                "pt-BR": "Outubro",
+                "pt-PT": "Outubro"
+               }
+             },
+             {
+               "value": "Nov",
+               "label": {
+                "en": "November",
+                "fr": "novembre",
+                "es": "noviembre",
+                "de": "November",
+                "pt-BR": "Novembro",
+                "pt-PT": "Novembro"
+               }
+             },
+             {
+               "value": "Dec",
+               "label": {
+                "en": "December",
+                "fr": "décembre",
+                "es": "diciembre",
+                "de": "Dezember",
+                "pt-BR": "Dezembro",
+                "pt-PT": "Dezembro"
+               }
+             }
+           ],
+           "default": "Jan"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location",
+          "default": "Location"
+        },
+        {
+          "type": "text",
+          "id": "venue",
+          "label": "Venue",
+          "default": "Venue"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Ticket URL"
+        },
+        {
+          "type": "header",
+          "content": "End date"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_end_date",
+          "label": "This event has an end date"
+        },
+        {
+            "type": "range",
+            "id": "end_day",
+            "min": 1,
+            "max": 31,
+            "step": 1,
+            "label": "Day",
+            "default": 16
+        },
+        {
+          "type": "select",
+          "id": "end_month",
+          "label": "Month",
+          "options": [
+            {
+              "value": "Jan",
+              "label": {
+                "en": "January",
+                "fr": "janvier",
+                "es": "enero",
+                "de": "Januar",
+                "pt-BR": "Janeiro",
+                "pt-PT": "Janeiro"
+              }
+            },
+            {
+              "value": "Feb",
+              "label": {
+                "en": "February",
+                "fr": "février",
+                "es": "febrero",
+                "de": "Februar",
+                "pt-BR": "Fevereiro",
+                "pt-PT": "Fevereiro"
+              }
+            },
+            {
+              "value": "Mar",
+              "label": {
+                "en": "March",
+                "fr": "mars",
+                "es": "marzo",
+                "de": "März",
+                "pt-BR": "Março",
+                "pt-PT": "Março"
+              }
+            },
+            {
+              "value": "Apr",
+              "label": {
+                "en": "April",
+                "fr": "avril",
+                "es": "abril",
+                "de": "April",
+                "pt-BR": "Abril",
+                "pt-PT": "Abril"
+              }
+            },
+            {
+              "value": "May",
+              "label": {
+                "en": "May",
+                "fr": "mai",
+                "es": "mayo",
+                "de": "Mai",
+                "pt-BR": "Maio",
+                "pt-PT": "Maio"
+              }
+            },
+            {
+              "value": "Jun",
+              "label": {
+                "en": "June",
+                "fr": "juin",
+                "es": "junio",
+                "de": "Juni",
+                "pt-BR": "Junho",
+                "pt-PT": "Junho"
+              }
+            },
+            {
+              "value": "Jul",
+              "label": {
+                "en": "July",
+                "fr": "juillet",
+                "es": "julio",
+                "de": "Juli",
+                "pt-BR": "Julho",
+                "pt-PT": "Julho"
+              }
+            },
+            {
+              "value": "Aug",
+              "label": {
+                "en": "August",
+                "fr": "août",
+                "es": "agosto",
+                "de": "August",
+                "pt-BR": "Agosto",
+                "pt-PT": "Agosto"
+              }
+            },
+            {
+              "value": "Sep",
+              "label": {
+                "en": "September",
+                "fr": "septembre",
+                "es": "septiembre",
+                "de": "September",
+                "pt-BR": "Setembro",
+                "pt-PT": "Setembro"
+              }
+            },
+            {
+              "value": "Oct",
+              "label": {
+                "en": "October",
+                "fr": "octobre",
+                "es": "octubre",
+                "de": "Oktober",
+                "pt-BR": "Outubro",
+                "pt-PT": "Outubro"
+              }
+            },
+            {
+              "value": "Nov",
+              "label": {
+                "en": "November",
+                "fr": "novembre",
+                "es": "noviembre",
+                "de": "November",
+                "pt-BR": "Novembro",
+                "pt-PT": "Novembro"
+              }
+            },
+            {
+              "value": "Dec",
+              "label": {
+                "en": "December",
+                "fr": "décembre",
+                "es": "diciembre",
+                "de": "Dezember",
+                "pt-BR": "Dezembro",
+                "pt-PT": "Dezembro"
+              }
+            }
+          ],
+          "default": "Jan"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tour and events"
+    }
+  ]
+}
+{% endschema %}

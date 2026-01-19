@@ -1,0 +1,59 @@
+<section
+  id="main-cart-footer"
+  data-id="{{ section.id }}"
+  class="{% if cart == empty %}hidden{% endif %} section-b-padding"
+  data-color-scheme="primary"
+  x-data="ThemeSection_CartFooter()"
+>
+  <div class="md:grid md:grid-cols-12 section-x-padding">
+    {% if settings.cart_notes_enable %}
+      <div class="mt-4 md:col-span-5">
+        <label class="block" for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
+        <textarea
+          class="block mt-1 p-2 w-full border-text-width border-scheme-border text-sm bg-transparent"
+          name="note"
+          id="CartSpecialInstructions"
+          :class="{ 'opacity-50 cursor-wait' : updating }"
+          @change.debounce.300ms="updateNote($event)"
+        >
+          {{- cart.note -}}
+        </textarea>
+      </div>
+    {% endif %}
+    <div class="mt-4 md:col-span-5 md:col-start-8 lg:col-span-4 lg:col-start-9 text-center">
+      <dl class="grid grid-cols-2 text-right items-center js-contents">
+        {%- for discount_application in cart.cart_level_discount_applications -%}
+          <dt class="text-scheme-accent">
+            <span class="visually-hidden">{{ 'customer.order.discount' | t }}:</span><span>{{- discount_application.title -}}</span>
+          </dt>
+          <dd class="text-scheme-accent">
+            -{{ discount_application.total_allocated_amount | money }}
+          </dd>
+        {%- endfor -%}
+        <dt class="">{{ 'cart.general.subtotal' | t }}</dt>
+        <dd class="text-2xl text-bold">{{ cart.total_price | money }}</dd>
+      </dl>
+
+      <p class="mt-4 text-right text-sm">
+        {{ 'cart.general.shipping_at_checkout' | t }}
+      </p>
+
+      <div class="mt-4 lg:flex justify-between items-center w-full">
+        <input class="no-js cursor-pointer lg:mr-2  p-2 w-full btn btn-primary-accent no-js" type="submit" name="update" value="{{ 'cart.general.update' | t }}" form="cart">
+        <input class="cursor-pointer mt-2 lg:mt-0 p-2 w-full btn btn-primary-accent-full" type="submit" name="checkout" value="{{ 'cart.general.checkout' | t }}"  form="cart">
+      </div>
+
+      {% if additional_checkout_buttons and settings.cart_additional_buttons %}
+        <div class="additional-checkout-buttons mt-2">{{ content_for_additional_checkout_buttons }}</div>
+      {% endif %}
+
+      <div class="mt-4 lg:text-right text-scheme-accent" id="cart-errors"></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Cart footer"
+  }
+{% endschema %}

@@ -1,0 +1,60 @@
+{%- assign social_accounts = 'Bandcamp, Facebook, Instagram, TikTok, Twitter, Patreon, Pinterest, Soundcloud, Spotify, Flickr, Vimeo, Apple, LastFM, Youtube, Tumblr, TripleJ, Mixcloud' | split: ', ' -%}
+<ul class="-ml-4 -mb-4 flex items-center {% if position == 'hero' %}justify-center{% endif %} {% if position == 'header' %}justify-end{% endif %} flex-wrap" data-color-scheme="primary">
+  {% for social in social_accounts %}
+    {%- assign social_handle = social | handleize -%}
+    {% capture social_link %}social_{{ social_handle }}_url{% endcapture %}
+    {% capture social_icon %}icon-{{ social_handle }}{% endcapture %}
+
+    {% if settings[social_link] != blank %}
+      <li class="ml-4 mb-4">
+        <a class="fill-current hover:text-scheme-accent" href="{% if social_handle == 'email' %}mailto:{% endif %}{{ settings[social_link] }}">
+          <span class="block w-5 h-5" aria-hidden="true">
+            {%- liquid
+              case social_handle
+                when 'facebook'
+                  render 'icon-facebook'
+                when 'twitter'
+                  render 'icon-twitter'
+                when 'pinterest'
+                  render 'icon-pinterest'
+                when 'instagram'
+                  render 'icon-instagram'
+                when 'snapchat'
+                  render 'icon-snapchat'
+                when 'email'
+                  render 'icon-email'
+                when 'tumblr'
+                  render 'icon-tumblr'
+                when 'youtube'
+                  render 'icon-youtube'
+                when 'vimeo'
+                  render 'icon-vimeo'
+                when 'tiktok'
+                  render 'icon-tiktok'
+                when 'patreon'
+                  render 'icon-patreon'
+                when 'soundcloud'
+                  render 'icon-soundcloud'
+                when 'bandcamp'
+                  render 'icon-bandcamp'
+                when 'spotify'
+                  render 'icon-spotify'
+                when 'flickr'
+                  render 'icon-flickr'
+                when 'apple'
+                  render 'icon-apple'
+                when 'lastfm'
+                  render 'icon-lastfm'
+                when 'triplej'
+                  render 'icon-triplej'
+                when 'mixcloud'
+                  render 'icon-mixcloud'
+              endcase
+            -%}
+          </span>
+          <span class="visually-hidden">{{ social }}</span>
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

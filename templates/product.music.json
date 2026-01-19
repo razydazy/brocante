@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "feature-video": {
+      "type": "main-product__feature-video",
+      "disabled": true,
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "audio_player": {
+          "type": "audio_player",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "audio_player_tracklist": {
+          "type": "audio_player_tracklist",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "audio_player",
+        "variant_picker",
+        "buy_buttons",
+        "description",
+        "audio_player_tracklist"
+      ],
+      "settings": {
+        "layout": "full_width_thumbnails_bottom",
+        "thumbnail_layout": "fixed_size",
+        "show_thumbnails_on_mobile": true,
+        "mobile_layout": "content_width",
+        "hide_first_video": true,
+        "enable_image_zoom": false,
+        "enable_video_looping": false,
+        "autoplay_videos_on_desktop": true
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {}
+    }
+  },
+  "order": [
+    "feature-video",
+    "main",
+    "product-recommendations"
+  ]
+}

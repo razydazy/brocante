@@ -1,0 +1,95 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign height = block.settings.hero_image_style
+  assign image = block.settings.hero_image
+  assign image_mobile = block.settings.hero_image_mobile
+-%}
+<div class="relative overflow-hidden {% if height == 'full_screen' %}h-screen{% elsif height == 'full_height' %}h-full{% else %}h-auto{% endif %}" data-color-scheme="{{ block.settings.banner_text_color }}">
+  <div class="{% if settings.fill_image_to_border_edge == false or height == 'full_screen' or height == 'full_height' %}relative h-full w-full{% endif %}">
+    {% if image != blank %}
+      {% if image_mobile != blank %}
+        <div class="hidden lg:block">
+        {% endif %}
+    
+        {% if height == 'full_screen' or height == 'full_height' %}
+          {% render 'image-object' with
+            image: image,
+            focal_point: image_focal_point
+          %}
+        {% else %}
+          {% render 'responsive-image' with
+            image: image
+          %}
+        {% endif %}
+    
+        {% if image_mobile != blank %}
+        </div>
+        {% endif %}
+    
+        {% if image_mobile != blank %}
+        <div class="lg:hidden">
+          {% assign image = image_mobile %}
+          {% if height == 'full_screen' or height == 'full_height' %}
+            {% render 'image-object' with
+              image: image,
+              focal_point: image_focal_point
+            %}
+          {% else %}
+            {% render 'responsive-image' with
+              image: image
+            %}
+          {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+      <div class="bg-placeholder-darker-bg p-8 text-placeholder {% if height == 'full_screen' or height == 'full_height' %}absolute top-0 right-0 bottom-0 left-0{% endif %}" data-color-scheme="primary">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full text-scheme-text fill-current' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="bg-gradient-to-b {{ block.settings.gradient_color }} to-transparent absolute top-0 left-0 right-0 w-full h-1/6" style="opacity: {{ block.settings.gradient_opacity | divided_by: 100.0 }}"></div>
+
+  <div class="absolute top-0 left-0 right-0 bottom-0 z-10 py-8 {% if increase_bottom_padding %}pb-16{% endif %} wrapper">
+    <div class="w-full h-full flex justify-center items-center text-center">
+      <div class="text-scheme-text">
+        {%- liquid
+          assign logo = section.settings.logo
+          if block.settings.alternate_logo != blank
+            assign logo = block.settings.alternate_logo
+          endif
+        -%}
+        {%- if block.settings.show_logo_on_hero -%}
+          {% if logo != blank %}
+            {% capture image_size %}{{ block.settings.logo_max_width_hero | escape }}x{% endcapture %}
+            {% capture image_size_px %}{{ block.settings.logo_max_width_hero | escape }}px{% endcapture %}
+            {% capture image_size_2x %}{{ block.settings.logo_max_width_hero | times: 2 }}x{% endcapture %}
+            {% comment %}theme-check-disable ImgWidthAndHeight{% endcomment %}
+            <img src="{{ logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+            {% comment %}theme-check-enable ImgWidthAndHeight{% endcomment %}
+          {% else %}
+            <h1 class="block font-heading {{ settings.text_overlay_heading_size }} leading-snug">
+              <span class="type-text-overlay">
+                {{ shop.name }}
+              </span>
+            </h1>
+          {% endif %}
+          {% if section.settings.enable_social_icons_header %}
+            <div class="mt-8 block lg:hidden">
+              {% render 'social-icons', position: 'hero' %}
+            </div>
+          {% endif %}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0 z-10 text-center">
+    <button role="button" class="p-8 text-scheme-text" @click="el = document.getElementById('MainContent');var rect = el.getBoundingClientRect();window.scrollTo({top: rect.y, left: rect.x, behavior: 'smooth'})">
+      <span class="block w-12 h-12">
+        {% render 'icon-chevron-down' %}
+      </span>
+    </button>
+  </div>
+</div>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}

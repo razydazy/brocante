@@ -1,0 +1,254 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+<section class="slideshow bg-scheme-background section-with-no-padding"
+         data-color-scheme="primary"
+         data-section-type="slideshow"
+         data-section-id="{{ section.id }}"
+         data-slide-speed="{{ section.settings.slide_speed }}"
+         x-data="{ hover: false }"
+         @mouseleave="hover = false" @mouseover="hover = true"
+         {% if section.settings.auto_rotate %}data-auto-rotate="true"{% endif %}>
+
+    <div class="splide relative" data-splide='{ "autoplay": {{ section.settings.auto_rotate }}, "interval": 4500, "speed": 500 }'>
+      
+    <button class="splide__autoplay-control absolute top-0 left-0 z-10 p-2 opacity-0 text-white transition-opacity invisible">
+      <span class="flex items-center justify-center relative">
+        <span class="splide__pause inline-block w-6">
+          {% render 'icon-pause' %}
+          <span class="visually-hidden">{{ 'sections.slideshow.pause_slideshow' | t }}</span>
+        </span>
+        <span class="splide__play inline-block w-6">
+          {% render 'icon-play' %}
+          <span class="visually-hidden">{{ 'sections.slideshow.play_slideshow' | t }}</span>
+        </span>
+      </span>
+    </button>
+    <div class="splide__track">
+      <div class="splide__list">
+        {% for block in section.blocks %}
+          {%- liquid
+              assign height = section.settings.height
+              unless forloop.first
+                assign height = 'full_height'
+              endunless
+              assign content_position = block.settings.content_position
+              assign content_width_desktop = block.settings.content_width_desktop
+              assign image = block.settings.image
+              assign image_mobile = block.settings.image_mobile
+              assign title = block.settings.title
+              assign text = block.settings.text
+              assign text_color  = block.settings.text_color
+              assign cta_link = block.settings.cta_link
+              assign cta_text  = block.settings.cta_text
+            -%}
+          <div class="splide__slide" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            {%- render 'image-with-text-overlay',
+              height: height,
+              image: image,
+              image_mobile: image_mobile,
+              content_position: content_position,
+              content_width_desktop: content_width_desktop,
+              title: title,
+              text: text,
+              text_color: text_color,
+              cta_link: cta_link,
+              cta_text: cta_text,
+              slideshow_slide: true,
+              increase_bottom_padding: true
+            -%}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div :class="{ 'lg:opacity-100': hover  }" class="js-enabled transition-opacity splide__arrows absolute bottom-0 right-0 lg:bottom-auto lg:w-full lg:top-1/2 lg:left-0 transform translate-x-0 translate-y-0 lg:transform lg:-translate-y-1/2  flex lg:justify-between lg:opacity-0 pointer-events-none">
+      <button class="block splide__arrow splide__arrow--prev bg-scheme-background text-scheme-text p-4 pointer-events-auto">
+        <span class="visually-hidden">{{ 'sections.slideshow.previous_slide' | t }}</span>
+        <span class="block transform rotate-180 w-5 h-5 lg:w-8 lg:h-8">
+          {% render 'icon-chevron-right' %}
+        </span>
+      </button>
+      <button class="block splide__arrow splide__arrow--next  bg-scheme-background text-scheme-text p-4 pointer-events-auto">
+        <span class="visually-hidden">{{ 'sections.slideshow.next_slide' | t }}</span>
+        <span class="block w-5 h-5 lg:w-8 lg:h-8">
+          {% render 'icon-chevron-right' %}
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "natural", "label": "Adapt to first slide"},
+        { "value": "full_screen", "label": "Full screen"}
+      ],
+      "default":   "natural"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate slides",
+      "info": "This will show a play and pause button and disable dragging."
+    },
+    {
+      "type": "select",
+      "id": "slide_speed",
+      "label": "Autoplay speed",
+      "options": [
+        {
+          "value": "4000",
+          "label": "4 seconds"
+        },
+        {
+          "value": "5000",
+          "label": "5 seconds"
+        },
+        {
+          "value": "6000",
+          "label": "6 seconds"
+        },
+        {
+          "value": "7000",
+          "label": "7 seconds"
+        },
+        {
+          "value": "8000",
+          "label": "8 seconds"
+        },
+        {
+          "value": "9000",
+          "label": "9 seconds"
+        },
+        {
+          "value": "10000",
+          "label": "10 seconds"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image",
+          "info": "1800 x 800px .jpg recommended"
+        },
+        {
+          "id": "image_mobile",
+          "type": "image_picker",
+          "label": "Image - mobile",
+          "info": "800 x 1200px .jpg recommended"
+        },
+        {
+          "type":      "header",
+          "content":   "Content"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+              { "value": "justify-start items-start text-left", "label": "Top left"},
+              { "value": "justify-center items-start text-center", "label": "Top center"},
+              { "value": "justify-end items-start text-right", "label": "Top right"},
+              { "value": "justify-start items-center text-left", "label": "Left"},
+              { "value": "justify-center items-center text-center", "label": "Center"},
+              { "value": "justify-end items-center text-right", "label": "Right"},
+              { "value": "justify-start items-end text-left", "label": "Bottom left"},
+              { "value": "justify-center items-end text-center", "label": "Bottom center"},
+              { "value": "justify-end items-end text-right", "label": "Bottom right"}
+          ],
+          "default":   "justify-center items-center text-center"
+        },
+        {
+          "type": "select",
+          "id": "content_width_desktop",
+          "label": "Content width on desktop",
+          "default": "lg:w-2/3",
+          "options": [
+            {
+              "value": "lg:w-1/3",
+              "label": "One third"
+            },
+            {
+              "value": "lg:w-1/2",
+              "label": "One half"
+            },
+            {
+              "value": "lg:w-2/3",
+              "label": "Two thirds"
+            },
+            {
+              "value": "lg:w-full",
+              "label": "Full width"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image Slide"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "options": [
+              { "value": "primary", "label": "Primary"},
+              { "value": "secondary", "label": "Secondary"},
+              { "value": "tertiary", "label": "Tertiary"},
+              { "value": "white", "label": "White"},
+              { "value": "black", "label": "Black"}
+          ],
+          "default":   "white"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Call to action URL"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Call to action button text",
+          "default": "Shop Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

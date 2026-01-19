@@ -1,0 +1,225 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign size_classes = 'background-video-wrapper--' | append: section.settings.video_style
+  if section.settings.video_style_desktop == 'same'
+    assign video_style_desktop = section.settings.video_style
+  else
+    assign video_style_desktop = section.settings.video_style_desktop
+    assign size_classes = size_classes | append: ' lg:background-video-wrapper--' | append: video_style_desktop
+  endif
+  assign content_position = section.settings.content_position
+  assign text_align = section.settings.text_alignment
+  assign content_width_desktop = section.settings.content_width_desktop
+  assign text_color = section.settings.text_color
+  assign cta_link = section.settings.cta_link
+  assign cta_text = section.settings.cta_text
+-%}
+
+<section class="video-with-text-overlay border-t-grid border-grid-color relative bg-scheme-background section-with-no-padding" data-color-scheme="primary">
+  <div>
+    <div class="background-video-wrapper h-auto p-0  relative overflow-hidden {{ size_classes }}">
+      {% assign component_id = 'background-video-' | append: section.id %}
+      {% render 'background-video',
+        extra_classes: 'video-with-text-overlay__background-video',
+        video: section.settings.video_url,
+        fallback_image: section.settings.fallback_image,
+        component_id: component_id
+    %}
+    </div>
+    <div class="{{ content_width_desktop }} text-white">
+      <div class="absolute top-0 left-0 right-0 bottom-0 z-10 p-8">
+        <div class="flex {{ content_position }} {{ text_align }} h-full w-full">
+          <div class="{{ content_width_desktop }} overflow-hidden text-scheme-text" data-fade-in data-color-scheme="{{ text_color }}">
+            {% if section.settings.title != blank %}
+              <h2 class="font-heading  font-heading type-text-overlay {{ settings.text_overlay_heading_size }} leading-snug break-words"><span class="type-text-overlay">{{ section.settings.title }}</span></h2>
+            {% endif %}
+
+            {% if section.settings.text != blank %}
+              <div class="rte block leading-relaxed text-base lg:text-lg mt-4">
+              {{ section.settings.text }}
+            </div>
+            {% endif %}
+
+            {% if cta_link != blank and cta_text != blank %}
+              <div class="mt-5 lg:mt-10">
+                <a href="{{ cta_link }}" class="inline-block increase-target">
+                  <div class="btn btn-solid-{{ text_color }}-{{ settings.outline_button_color }} z-10 relative">
+                    <span class="btn-text">{{ cta_text }}</span>
+                    {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+                  </div>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+
+{% schema %}
+{
+  "name": "Video with text overlay",
+  "class": "has-full-screen-setting",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "id": "video_url",
+      "type": "text",
+      "label": "Video URL",
+      "info": "Accepts YouTube or .mp4 links",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "select",
+      "id": "video_style",
+      "label": "Aspect ratio – mobile",
+      "options": [
+        {
+          "value": "four-three",
+          "label": "Standard"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen"
+        },
+        {
+          "value": "cinematic",
+          "label": "Extra wide"
+        },
+        {
+          "value": "full-screen",
+          "label": "Full screen"
+        }
+      ],
+      "default": "widescreen"
+    },
+    {
+      "type": "select",
+      "id": "video_style_desktop",
+      "label": "Aspect ratio – desktop",
+      "options": [
+        {
+          "value": "same",
+          "label": "Same as mobile"
+        },
+        {
+          "value": "four-three",
+          "label": "Standard"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen"
+        },
+        {
+          "value": "cinematic",
+          "label": "Extra wide"
+        },
+        {
+          "value": "full-screen",
+          "label": "Full screen"
+        }
+      ],
+      "default": "same"
+    },
+    {
+      "id": "fallback_image",
+      "type": "image_picker",
+      "label": "Fallback image",
+      "info": "Shown if video fails to load or play"
+    },
+    {
+      "type":      "header",
+      "content":   "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Video with text overlay"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+          { "value": "justify-start items-start text-left", "label": "Top left"},
+          { "value": "justify-center items-start text-center", "label": "Top center"},
+          { "value": "justify-end items-start text-right", "label": "Top right"},
+          { "value": "justify-start items-center text-left", "label": "Left"},
+          { "value": "justify-center items-center text-center", "label": "Center"},
+          { "value": "justify-end items-center text-right", "label": "Right"},
+          { "value": "justify-start items-end text-left", "label": "Bottom left"},
+          { "value": "justify-center items-end text-center", "label": "Bottom center"},
+          { "value": "justify-end items-end text-right", "label": "Bottom right"}
+      ],
+      "default":   "justify-center items-center text-center"
+    },
+    {
+      "type": "select",
+      "id": "content_width_desktop",
+      "label": "Content width on desktop",
+      "default": "lg:w-2/3",
+      "options": [
+        {
+          "value": "lg:w-1/3",
+          "label": "One third"
+        },
+        {
+          "value": "lg:w-1/2",
+          "label": "One half"
+        },
+        {
+          "value": "lg:w-2/3",
+          "label": "Two thirds"
+        },
+        {
+          "value": "lg:w-full",
+          "label": "Full width"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"},
+          { "value": "white", "label": "White"},
+          { "value": "black", "label": "Black"}
+      ],
+      "default":   "white"
+    },
+    {
+      "type":      "header",
+      "content":   "Call to action"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video with text overlay"
+    }
+  ]
+}
+{% endschema %}

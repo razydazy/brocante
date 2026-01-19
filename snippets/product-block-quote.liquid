@@ -1,0 +1,13 @@
+{%- if block.settings.quote != blank -%}
+<div class="grid grid-cols-8 gap-4 -mt-theme-width py-8 border-t-theme-width border-b-theme-width border-scheme-border" {{ block.shopify_attributes }} data-color-scheme="{{ section_color | default: 'primary' }}">
+  <div class="text-5xl text-scheme-accent text-right font-heading">&ldquo;</div>
+  <blockquote class="col-span-6">
+    <div class="font-{{ block.settings.text_style }} {{ block.settings.text_size }}">
+    {{ block.settings.quote }}
+    </div>
+    {% if block.settings.source != blank %}
+      <footer class="mt-4 font-secondary">- {{ block.settings.source }}</footer>
+    {% endif %}
+  </blockquote>
+</div>
+{%- endif -%}

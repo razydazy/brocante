@@ -1,0 +1,22 @@
+
+{% if paginate.pages > 1 %}
+  <div class="grid grid-cols-2 py-8 font-secondary text-sm" data-color-scheme="{{ section_color | default: 'primary' }}">
+    <div class="text-left">
+      {% if paginate.previous.is_link %}
+        <a class="text-scheme-meta hover:text-scheme-accent" href="{{ paginate.previous.url }}">
+          <span class="inline-block align-middle w-5">{% render 'icon-back' %}</span>
+          <span class="inline-block align-middle">{{ paginate.previous.title | replace: '&laquo;', '' }}</span>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="text-right">
+      {% if paginate.next.is_link %}
+        <a class="text-scheme-meta hover:text-scheme-accent" href="{{ paginate.next.url }}">
+          <span class="inline-block align-middle">{{ paginate.next.title | replace: '&raquo;', '' }}</span>
+          <span class="inline-block align-middle w-5">{% render 'icon-forward' %}</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

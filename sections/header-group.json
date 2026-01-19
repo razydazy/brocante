@@ -1,0 +1,42 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "disabled": true,
+      "settings": {
+        "home_page_only": true,
+        "text": "Announce something here",
+        "link": "",
+        "color_scheme": "secondary"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify:\/\/shop_images\/BROCANTE_logo.png",
+        "logo_max_width": 180,
+        "main_linklist": "main-menu",
+        "show_all_navigation_links": false,
+        "feature_second_level_links": false,
+        "show_collection_images": false,
+        "collection_image_crop": "4.0",
+        "header_layout": "menu_icon_logo_center",
+        "show_border": true,
+        "header_show_search_icon": false,
+        "enable_social_icons_header": false,
+        "sticky_header": true,
+        "enable_overlay_on_homepage": true,
+        "overlay_text_color": "secondary",
+        "overlay_logo": "shopify:\/\/shop_images\/BROCANTE_logo_4f2d9181-5e1b-468d-83d0-c62da9e5fa0e.png",
+        "gradient_color": "from-white",
+        "gradient_opacity": 0
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

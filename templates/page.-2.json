@@ -1,0 +1,79 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "image_with_text_C6FLq7": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/juan-manuel-sanchez-lTuA_3LKGL8-unsplash.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "About",
+        "richtext": "<p> BROCANTEは東京自由が丘に2004年5月産声を上げました<\/p><p>幾重にも縁が重なり<\/p><p>小さな命と共に店を始動することとなりました<\/p><p>古物の買い付けはフランスへ渡りその度に感じていた事<\/p><p>古い物には価値があるという精神 <\/p><p>物事を大切にすること 暮らしを大切にすること 人を思うこと<\/p><p>全てはイコールでとてもシンプルだとういうこと<\/p><p>自然体で心地よく生きる <\/p><p>そんな暮らしを繋げて行かれればと思います<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_pbMPRk": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/zane-priedite-xE7_VEDZoKw-unsplash.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "What we believe",
+        "richtext": "<p><\/p><p>ふとした瞬間に見入るもの 何気なく手に取るもの<\/p><p>そこには情報から得た知識よりも先に <\/p><p>美しさを感じ取る感情が湧いている筈  <\/p><p>足元に咲く小さな花に心惹かれたときのように<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_wzh7Kx": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/1.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "Select",
+        "richtext": "<p> <\/p><p>アンティークやヴィンテージの家具や雑貨は<\/p><p>フランスの蚤の市から<\/p><p>またシーズンに合わせたファブリックは<\/p><p>トルコ モロッコ インド パキスタンなど <\/p><p>手仕事の文化が残る土地から<\/p><p>有名無名を問わずBROCANTEのフイルターを通して<\/p><p>心に響いたアイテムをセレクションしています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_9YKVmG": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/eberhard-grossgasteiger-eamjnHjGJQE-unsplash.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "Buying France",
+        "richtext": "<p><\/p><p>BROCANTE美しいガラクタを語源に持つフランス語 <\/p><p>絶え間なく続く私達の日常が少しでもより良くなるよう<\/p><p>古く美しいものを集めご紹介しています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_C6FLq7",
+    "image_with_text_pbMPRk",
+    "image_with_text_wzh7Kx",
+    "image_with_text_9YKVmG"
+  ]
+}

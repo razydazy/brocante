@@ -1,0 +1,70 @@
+{% comment %}theme-check-disable UndefinedObject{% endcomment %}
+<section
+  class="px-5 lg:px-10 section-y-padding {% if settings.center_page_titles %}max-w-screen-lg{% else %}max-w-screen-xl{% endif %} mx-auto grid grid-cols-1  {% unless settings.center_page_titles %}lg:grid-cols-2{% endunless %} gap-10"
+  data-color-scheme="primary">
+  <div>
+    <h1 class="font-heading {{ settings.template_heading_size }} break-words  {% if settings.center_page_titles %}text-center{% endif %}">{{ page.title }}</h1>
+    <div class="rte text-rte mt-4">
+      {{ page.content }}
+    </div>
+  </div>
+  <div class="">
+    {%- assign formId = 'ContactForm' -%}
+    {% form 'contact', id: formId, class: "outline-none" %}
+      {% if form.posted_successfully? %}
+        <p class="form-success">
+          {{ 'contact.form.post_success' | t }}
+        </p>
+      {% else %}
+      {{ form.errors | default_errors }}
+      <div class="lg:grid lg:grid-cols-2 lg:gap-4">
+        <div>
+          <label class="lg:mt-0 mb-2 font-secondary block text-sm" for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+          <input type="text"
+            class="w-full p-2 bg-transparent border-text-width border-scheme-border"
+            name="contact[name]"
+            id="ContactFormName"
+            value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            required
+            aria-required="true">
+        </div>
+        <div>
+          <label class="mt-4 lg:mt-0 mb-2 font-secondary block text-sm" for="ContactFormEmail">{{ 'contact.form.email' | t }}</label>
+          <input type="email"
+            name="contact[email]"
+            id="ContactFormEmail"
+            class="w-full p-2 bg-transparent border-text-width border-scheme-border {% if form.errors contains 'email' %}border-theme-color{% endif %}"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            required
+            aria-required="true">
+        </div>
+      </div>
+
+      <label class="mt-4 mb-1 block font-secondary text-sm" for="ContactFormPhone">{{ 'contact.form.phone' | t }}</label>
+      <input type="tel"
+        name="contact[phone]"
+        id="ContactFormPhone"
+        class="w-full p-2 bg-transparent border-text-width border-scheme-border"
+        value="{% if form[phone] %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+        pattern="[0-9\-]*">
+
+      <label class="mt-4 mb-1 block font-secondary text-sm" for="ContactFormMessage">{{ 'contact.form.message' | t }}</label>
+      <textarea rows="10"
+        name="contact[body]"
+        id="ContactFormMessage"
+        required
+        aria-required="true"
+        class="block mt-1 p-2 w-full border-text-width border-scheme-border text-base bg-transparent">
+        {%- if form.body -%}
+          {{- form.body -}}
+        {%- endif -%}
+      </textarea>
+
+      <input type="submit" class="mt-4 btn btn-outline-primary-{{ settings.outline_button_color }}" value="{{ 'contact.form.send' | t }}">
+    {% endif %}
+    {% endform %}
+  </div>
+</section>

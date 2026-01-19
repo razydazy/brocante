@@ -1,0 +1,85 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = 'primary'
+  assign product_videos = product.media | where: "media_type", "video"
+  assign external_videos = product.media | where: "media_type", "external_video"
+  assign featured_video = product_videos | concat: external_videos | sort: 'position' | first
+  assign featured_video_layout = section.settings.featured_video_layout
+-%}
+{% unless request.design_mode %}
+  {% render 'script-tags', script: 'video' %}
+{% endunless %}
+{%- if featured_video -%}
+<section class="{% if featured_video_layout == 'full_width' %}section-with-no-padding{% endif %}" data-color-scheme="{{ section_color }}">
+  <div x-data='ThemeModule_Video("productFeaturedVideo-{{ section.id }}", {{ featured_video.media_type | json }}, {{ featured_video.host | json }})' x-init="mounted()" class="{% unless featured_video_layout == 'full_width' %}wrapper{% endunless %}">
+    <div x-ref="video_container" class="relative" style="padding-top: {{ 1 | divided_by: featured_video.aspect_ratio | times: 100 }}%">
+      <template x-if="!enabled">
+        <button  @click="enableVideo()" class="absolute top-0 left-0 right-0 bottom-0 h-full w-full" type="button">
+          <span class="visually-hidden">{{ 'general.video.play' | t }}</span>
+          <span
+            class="z-40 absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-full w-14 h-14 lg:w-18 lg:h-18 bg-scheme-background text-scheme-background-overlay  flex items-center justify-center hover:bg-scheme-accent hover:text-scheme-accent-overlay transition-opacity"
+          >
+            <span class="w-8 h-8 lg:w-10 h-10 inline-block" >{% render 'icon-play' %}</span>
+          </span>
+          {% render 'image-object' with
+            image: featured_video.preview_image
+          %}
+        </button>
+      </template>
+      <template x-if="enabled">
+        {%- liquid
+          assign video_class = 'video absolute top-0 left-0 right-0 bottom-0 h-full w-full js-'
+          case featured_video.media_type
+          when 'external_video'
+            assign video_class = video_class | append: featured_video.host
+            if featured_video.host == 'youtube'
+              echo featured_video | external_video_url: enablejsapi: 1, autoplay: true, loop: section.settings.enable_video_looping, playlist: featured_video.external_id | external_video_tag: class: video_class, loading: "lazy"
+            else
+              echo featured_video | external_video_url: autoplay: true, loop: section.settings.enable_video_looping | external_video_tag: class: video_class, loading: "lazy"
+            endif
+          when 'video'
+            echo featured_video | media_tag: image_size: "2048x", autoplay: true, loop: section.settings.enable_video_looping, controls: true, preload: "none", autoplay: true, class: video_class, muted: false
+          endcase
+        -%}
+      </template>
+    </div>
+  </div>
+  {% if featured_video_layout == 'full_width' and settings.enable_breadcrumbs %}
+    <style>
+      #main-breadcrumbs {
+        display: none;
+      }
+    </style>
+    {% render 'breadcrumbs', section_color: section_color %}
+  {% endif %}
+</section>
+{%- endif -%}
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}
+
+{% schema %}
+{
+  "name": "Product - feature video",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Features the first product video."
+    },
+    {
+      "type": "select",
+      "id": "featured_video_layout",
+      "label": "Featured video layout",
+      "options": [
+        { "value": "full_width", "label": "Full width"},
+          { "value": "content_width", "label": "Content width"}
+      ],
+      "default":   "full_width"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label":  "Enable video looping",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

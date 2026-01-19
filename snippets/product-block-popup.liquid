@@ -1,0 +1,19 @@
+
+<div class="product-page-popup-link my-8 " x-data='ThemeComponent_PopUp({{ block.id | json }})' x-init="mounted()" data-color-scheme="{{ section_color | default: 'primary' }}">
+  <div class="js-enabled" {{ block.shopify_attributes }}>
+    <button
+      @click="openButton"
+      x-ref="trigger"
+      aria-haspopup="dialog"
+      class="cursor-pointer font-body {% if block.settings.icon != 'none' %}inline-flex justify-start items-center{% endif %}">
+      {% if block.settings.icon != 'none' %}<span class="inline-block w-7 h-7 mr-2">{% render 'product-icon', icon: block.settings.icon %}</span>{% endif %}
+      <span class="border-b-text-width border-scheme-text text-scheme-text hover:text-scheme-accent hover:border-scheme-accent py-0.5">{{ block.settings.text }}</span>
+    </button>
+  </div>
+  <noscript>
+    <a href="{{ block.settings.page.url }}" class="{% if block.settings.icon != 'none' %}inline-flex justify-start items-center{% endif %}">
+      {% if block.settings.icon != 'none' %}<span class="inline-block w-5 h-5 mr-2">{% render 'product-icon', icon: block.settings.icon %}</span>{% endif %}
+      <span class="{% if settings.links_show_underline %}border-b-text-width {{ border_class }}{% endif %} py-1 ">{{ block.settings.text }}</span>
+    </a>
+  </noscript>
+</div>

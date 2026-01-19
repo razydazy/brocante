@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-article__banner",
+      "disabled": true,
+      "settings": {
+        "image_width": "content_width",
+        "crop": "2.39",
+        "title_overlay": false,
+        "overlay_text_color": "white"
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "hide_title": false,
+        "show_image": false,
+        "show_author": true,
+        "show_date": true,
+        "show_share_buttons": true,
+        "show_tags": true,
+        "show_next_previous_links": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main"
+  ]
+}

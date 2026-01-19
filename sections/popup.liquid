@@ -1,0 +1,170 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- assign section_color = section.settings.color_scheme -%}
+<section
+  x-data="ThemeSection_popup()"
+  x-cloak
+  x-init="frequency = {{ section.settings.frequency }}, delay = {{ section.settings.delay }}, mounted()"
+  :class="{ 'translate-y-0-important' : show }"
+  class="popup fixed right-0 bottom-0 lg:w-1/2 lg:max-w-2xl lg:p-4 lg:pt-8  z-70 transition-transform duration-300 in-expo transform translate-y-full"  data-section-type="popup"   data-section-id="{{ section.id }}"
+>
+
+  <div class="wrapper py-10 lg:py-20 bg-scheme-background text-scheme-text relative" data-color-scheme="{{ section_color }}">
+
+    <button @click="closePopUp($event)" class="block p-1 w-8 ml-auto absolute top-2 right-2">
+      <span class="visually-hidden">{{ 'general.accessibility.close_modal' | t }}</span>
+      <span class="inline-block  w-6 h-6">{% render 'icon-close' %}</span>
+    </button>
+
+    <div>
+      {% if section.settings.title != '' %}
+      <h2 class="font-heading  {{ settings.section_heading_font_size }}">
+        {{ section.settings.title | escape }}
+      </h2>
+      {% endif %}
+
+      {% if section.settings.text != '' %}
+      <div class="rte font-body leading-snug {% if section.settings.title != '' %}mt-5{% endif %}">
+        {{ section.settings.text }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="mt-5 lg:mt-10">
+      {%- if section.settings.call_to_action == 'newsletter' -%}
+        <div class="font-body text-base leading-snug">
+          {% form 'customer', id: 'PopupNewsletter' %}
+            {{ form.errors | default_errors }}
+            {% if form.posted_successfully? %}
+              <p>{{ 'general.newsletter_form.confirmation' | t }}</p>
+            {% else %}
+              <div class="flex flex-row mx-auto lg:max-w-2xl justify-center mx-4">
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <label class="visually-hidden" for="Email-{{ section.id }}">
+                    {{ 'general.newsletter_form.newsletter_email' | t }}
+                  </label>
+                  <input type="email"
+                    name="contact[email]"
+                    id="Email-{{ section.id }}"
+                    value="{% if customer.email != blank %}{{ customer.email }}{% endif %}"
+                    placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    class="newsletter__input w-1 border-scheme-border bg-transparent flex-1 max-w-xl min-w-0 border-b-theme-width py-5 placeholder-secondary">
+                  <button class="btn btn-{{ section.settings.button_style }}-{{ section_color }}-{{ settings.outline_button_color }} md:w-auto ml-2 md:ml-12" type="submit" name="commit">
+                    <span class="btn-text">{{ 'general.newsletter_form.submit' | t }}</span>
+                    {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+                  </button>
+              </div>
+            {% endif %}
+          {% endform %}
+        </div>
+      {%- else -%}
+      {% if section.settings.cta_link != blank and section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_link }}" class="btn btn-{{ section.settings.button_style }}-{{ section_color }}-{{ settings.outline_button_color }}">
+          <span class="btn-text">{{ section.settings.cta_text }}</span>
+          {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+        </a>
+        {% endif %}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Popup",
+  "class": "relative z-60",
+  "settings": [
+    {
+      "type":      "range",
+      "id":        "delay",
+      "min":       2,
+      "max":        30,
+      "step":       1,
+      "label":     "Delay",
+      "unit":      "sec",
+      "default":   4,
+      "info": "Delay won't be applied when inside theme editor."
+    },
+    {
+      "type":      "range",
+      "id":        "frequency",
+      "min":       2,
+      "max":        30,
+      "step":       1,
+      "label":     "Frequency",
+      "unit":      "day",
+      "default":   30,
+      "info": "Number of days before a closed popup reappears."
+    },
+    {
+      "type":      "header",
+      "content":   "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Receive special offers and first look at new products.</p>"
+    },
+    {
+       "type": "select",
+       "id": "call_to_action",
+       "label": "Call to action",
+       "options": [
+          { "value": "newsletter", "label": "Newsletter signup"},
+          { "value": "button", "label": "Button"}
+       ],
+       "default": "newsletter",
+       "info": "Customers who subscribe will have their email address added to the “accepts marketing” [customer list](/admin/customers?query=&accepts_marketing=1)."
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "outline",
+      "options": [
+        {
+          "value": "outline",
+          "label": "Outline"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ]
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "secondary"
+    }
+  ]
+}
+{% endschema %}

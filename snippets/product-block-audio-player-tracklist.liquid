@@ -1,0 +1,39 @@
+{%- assign audioPlayerId = 'audioPlayer-' | append: section.id -%}
+<template x-if="$store['{{ audioPlayerId }}']">
+  <div class="my-8"
+    :class="{ 'ml-14': !$store['{{ audioPlayerId }}'].vinyl_tracklist_format, 'ml-8': $store['{{ audioPlayerId }}'].vinyl_tracklist_format }" data-color-scheme="{{ section_color | default: 'primary' }}">
+    <ol class="-mt-1 text-rte"
+      :class="{ 'list-outside  list-decimal': !$store['{{ audioPlayerId }}'].vinyl_tracklist_format }"
+    >
+      <template x-for="(track, index) in $store['{{ audioPlayerId }}'].tracklist" :key="index">
+        <li class="relative cursor-pointer py-1">
+          <button class="text-left" @click="$dispatch('tracklistButton-{{ audioPlayerId }}', { index: index, play: !$store['{{ audioPlayerId }}'].is_playing })">
+            <span
+              class="pointer-events-auto p-2 absolute top-0 flex items-center justify-center hover:border-scheme-accent hover:text-scheme-accent"
+              :class="{ '-left-16': !$store['{{ audioPlayerId }}'].vinyl_tracklist_format, '-left-10': $store['{{ audioPlayerId }}'].vinyl_tracklist_format }"
+            >
+              <span class="w-4 h-4 inline-block" x-show="!($store['{{ audioPlayerId }}'].is_playing && $store['{{ audioPlayerId }}'].track_index == index)">
+                {% render 'icon-play' %}
+                <span class="visually-hidden">{{ 'general.audio.play' | t }}</span>
+              </span>
+              <span class="w-4 h-4 inline-block" x-show="$store['{{ audioPlayerId }}'].is_playing && $store['{{ audioPlayerId }}'].track_index == index">
+                {% render 'icon-pause' %}
+                <span class="visually-hidden">{{ 'general.audio.pause' | t }}</span>
+              </span>
+            </span>
+            <template x-if="$store['{{ audioPlayerId }}'].vinyl_tracklist_format">
+              <span>
+              <span class="inline-block w-8" x-text="decodeHTML(track.title).substr(0,decodeHTML(track.title).indexOf(' '))"></span>
+              <span x-html="decodeHTML(track.title).substr(decodeHTML(track.title).indexOf(' ')+1)"></span>
+              </span>
+            </template>
+            <template x-if="!$store['{{ audioPlayerId }}'].vinyl_tracklist_format">
+              <span x-html="decodeHTML(track.title)"></span>
+            </template>
+            <span class="font-secondary text-scheme-meta text-sm" x-text="track.formattedTime"></span>
+          </button>
+        </li>
+      </template>
+    </ol>
+  </div>
+</template>

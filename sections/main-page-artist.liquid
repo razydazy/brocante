@@ -1,0 +1,34 @@
+<section class="wrapper section-y-padding {% if settings.center_page_titles %}text-center{% endif %}">
+  {%- unless section.settings.hide_title -%}
+  <h1 class="font-heading type-section-title {% if section.settings.heading_size == 'section_title' %}{{ settings.section_heading_font_size }}{% else %}{{ settings.template_heading_size }}{% endif %}">{{ page.title }}</h1>
+  {%- endunless -%}
+  {% if page.content != blank %}
+    <div class="{% unless section.settings.hide_title %}mt-2{% endunless %} rte text-rte max-w-2xl {% if settings.center_page_titles %}mx-auto{% endif %}">
+      {{ page.content }}
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "template", "label": "Template"},
+        { "value": "section_title", "label": "Section title"}
+      ],
+      "default":   "template"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_title",
+      "label": "Hide title",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

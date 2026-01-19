@@ -1,0 +1,99 @@
+{
+  "sections": {
+    "lookbook-with-image-1": {
+      "type": "lookbook-with-image",
+      "blocks": {
+        "5b158063-e0f3-4205-898c-d5c0653011be": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "4e4f1a42-4d73-4d09-ba99-10baefc0329b": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "5b158063-e0f3-4205-898c-d5c0653011be",
+        "4e4f1a42-4d73-4d09-ba99-10baefc0329b"
+      ],
+      "settings": {
+        "title": "",
+        "image_size": "full",
+        "image_position": "left",
+        "caption": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>",
+        "text_alignment": "text-left",
+        "color_scheme": "primary"
+      }
+    },
+    "lookbook-with-video": {
+      "type": "lookbook-with-video",
+      "blocks": {
+        "12b154bd-7e58-4706-8c02-fa08b3f03c70": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "d211876b-3219-4262-a5e9-95303688560f": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "12b154bd-7e58-4706-8c02-fa08b3f03c70",
+        "d211876b-3219-4262-a5e9-95303688560f"
+      ],
+      "settings": {
+        "title": "",
+        "mode": "click",
+        "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+        "aspect_ratio": "16:9",
+        "video_size": "half",
+        "video_position": "left",
+        "caption": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>",
+        "text_alignment": "text-left",
+        "color_scheme": "primary"
+      }
+    },
+    "lookbook-with-image-2": {
+      "type": "lookbook-with-image",
+      "blocks": {
+        "d4a57e0c-6bb9-4205-abcc-a3bb8ff43bf5": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "f4e971af-1593-447e-aab2-39c8ec84ff13": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "d4a57e0c-6bb9-4205-abcc-a3bb8ff43bf5",
+        "f4e971af-1593-447e-aab2-39c8ec84ff13"
+      ],
+      "settings": {
+        "title": "",
+        "image_size": "half",
+        "image_position": "right",
+        "caption": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>",
+        "text_alignment": "text-left",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "lookbook-with-image-1",
+    "lookbook-with-video",
+    "lookbook-with-image-2"
+  ]
+}

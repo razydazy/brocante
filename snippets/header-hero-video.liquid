@@ -1,0 +1,69 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign size_classes = 'background-video-wrapper--' | append: block.settings.video_style
+
+  if block.settings.video_style_desktop == 'same'
+    assign video_style_desktop = block.settings.video_style
+  else
+    assign video_style_desktop = block.settings.video_style_desktop
+    assign size_classes = size_classes | append: ' lg:background-video-wrapper--' | append: video_style_desktop
+  endif
+-%}
+
+<div class="relative overflow-hidden" data-color-scheme="{{ block.settings.banner_text_color }}">
+
+  <div class="background-video-wrapper hero-video h-auto p-0  relative overflow-hidden {{ size_classes }}">
+    {% assign component_id = 'background-video-' | append: section.id %}
+    {% render 'background-video',
+        extra_classes: 'video-with-text-overlay__background-video',
+        video: block.settings.video_url,
+        fallback_image: block.settings.fallback_image,
+        component_id: component_id
+    %}
+  </div>
+
+  <div class="bg-gradient-to-b {{ block.settings.gradient_color }} to-transparent absolute top-0 left-0 right-0 w-full h-1/6 z-10" style="opacity: {{ block.settings.gradient_opacity | divided_by: 100.0 }}"></div>
+
+  <div class="absolute top-0 left-0 right-0 bottom-0 z-10 py-8 {% if increase_bottom_padding %}pb-16{% endif %} wrapper">
+    <div class="w-full h-full flex justify-center items-center text-center">
+      <div class="text-scheme-text">
+        {%- liquid
+          assign logo = section.settings.logo
+          if block.settings.alternate_logo != blank
+            assign logo = block.settings.alternate_logo
+          endif
+        -%}
+        {%- if block.settings.show_logo_on_hero -%}
+          {% if logo != blank %}
+            {% capture image_size %}{{ block.settings.logo_max_width_hero | escape }}x{% endcapture %}
+            {% capture image_size_px %}{{ block.settings.logo_max_width_hero | escape }}px{% endcapture %}
+            {% capture image_size_2x %}{{ block.settings.logo_max_width_hero | times: 2 }}x{% endcapture %}
+            {% comment %}theme-check-disable ImgWidthAndHeight{% endcomment %}
+            <img class="mx-auto" src="{{ logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+            {% comment %}theme-check-enable ImgWidthAndHeight{% endcomment %}
+          {% else %}
+            <h1 class="block font-heading {{ settings.text_overlay_heading_size }} leading-snug">
+              <span class="type-text-overlay">
+                {{ shop.name }}
+              </span>
+            </h1>
+          {% endif %}
+          {% if section.settings.enable_social_icons_header %}
+            <div class="mt-8 block lg:hidden max-w-xs mx-auto">
+              {% render 'social-icons', position: 'hero' %}
+            </div>
+          {% endif %}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  
+  <div class="absolute bottom-0 left-0 right-0 z-10 text-center">
+    <button role="button" class="p-8 text-scheme-text" @click="el = document.getElementById('MainContent');var rect = el.getBoundingClientRect();window.scrollTo({top: rect.y, left: rect.x, behavior: 'smooth'})">
+      <span class="block w-12 h-12">
+        {% render 'icon-chevron-down' %}
+      </span>
+    </button>
+  </div>
+</div>
+{% comment %}theme-check-enable MissingTemplate{% endcomment %}

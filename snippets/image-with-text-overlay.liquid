@@ -1,0 +1,109 @@
+{% comment %}
+  Renders an image with text overlay, used in
+  the Image with text overlay and Slideshow sections.
+
+
+  Accepts:
+  - height: {String} Either 'natural' (no cropping), 'full_screen' (100vh) or 'full_height' (full height of container, aka 100%)
+  - image: {Image} Image to render
+  - image_mobile: {Image} Mobile image to render
+  - content_position: {String} Tailwind classes to orient content within hero
+  - text_color: {String}
+  - title: {String} Text for the heading of the overlay
+  - text: {HTML} HTML for the copy of the overlay
+  - cta_link: {Url} CTA Url
+  - cta_text: {String} Text for the button in the overlay
+  - cta_style {String} Text for button style, either 'full' or 'border'
+
+  Usage:
+  {%- render 'image-with-text-overlay',
+    height: height,
+    image: image,
+    image_mobile: image_mobile,
+    content_position: content_position,
+    title: title,
+    text: text,
+    cta_link: cta_link,
+    cta_text: cta_text,
+    cta_style: cta_style
+    increase_bottom_padding: true
+  -%}
+{% endcomment %}
+
+<div class="relative overflow-hidden {% if height == 'full_screen' %}h-screen-header{% elsif height == 'full_height' %}h-full{% else %}h-auto{% endif %} {% if cta_link != blank %}group{% endif %}">
+  <div class="{% if settings.fill_image_to_border_edge == false or height == 'full_screen' or height == 'full_height' %}relative h-full w-full{% endif %}">
+  {% if image != blank %}
+    {% if image_mobile != blank %}
+    <div class="hidden lg:block">
+    {% endif %}
+
+    {% if height == 'full_screen' or height == 'full_height' %}
+      {% render 'image-object' with
+        image: image
+      %}
+    {% else %}
+      {% render 'responsive-image' with
+        image: image
+      %}
+    {% endif %}
+
+    {% if image_mobile != blank %}
+    </div>
+    {% endif %}
+
+    {% if image_mobile != blank %}
+    <div class="lg:hidden">
+      {% assign image = image_mobile %}
+      {% if height == 'full_screen' or height == 'full_height' %}
+        {% render 'image-object' with
+          image: image
+        %}
+      {% else %}
+        {% render 'responsive-image' with
+          image: image
+        %}
+      {% endif %}
+    </div>
+    {% endif %}
+  {% else %}
+    <div class="bg-placeholder-bg p-8 text-placeholder {% if height == 'full_screen' or height == 'full_height' %}absolute top-0 right-0 bottom-0 left-0{% endif %}" data-color-scheme="primary">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full text-scheme-text fill-current' }}
+    </div>
+  {% endif %}
+  </div>
+
+  <div class="absolute top-0 left-0 right-0 bottom-0 z-10 py-8 {% if increase_bottom_padding %}py-16{% endif %} wrapper">
+    <div class="w-full h-full flex {{ content_position }} text-scheme-text {% if slideshow_slide %}px-5 lg:px-10{% endif %}" data-color-scheme="{{ text_color }}">
+      <div class="{{ content_width_desktop }} max-w-3xl" data-fade-in>
+        {% if title != blank %}
+          <h2 class="block font-heading type-text-overlay {{ settings.text_overlay_heading_size }} leading-snug">
+            {% if cta_link != blank and cta_text == blank %}
+              <a href="{{ cta_link }}" class="increase-target">
+            {% endif %}
+            {{ title | escape | strip }}
+            {% if cta_link != blank and cta_text == blank %}
+              </a>
+            {% endif %}
+          </h2>
+        {% endif %}
+
+        {% if text != blank %}
+          <div class="rte block leading-relaxed text-base lg:text-lg mt-4">
+            {{ text }}
+          </div>
+        {% endif %}
+
+        {% if cta_link != blank and cta_text != blank %}
+          <div class="mt-5 lg:mt-10">
+            <a href="{{ cta_link }}" class="inline-block text-scheme-text increase-target">
+              <div class="btn btn-solid-{{ text_color }}-{{ settings.outline_button_color }} z-10 relative">
+                <span class="btn-text">{{ cta_text }}</span>
+                {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+              </div>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

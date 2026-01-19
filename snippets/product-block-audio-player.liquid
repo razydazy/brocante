@@ -1,0 +1,61 @@
+
+{%- liquid
+  assign audioPlayerId = 'audioPlayer-' | append: section.id
+  if block.settings.tracklist contains "metafield-multi_line_text_field"
+    assign tracklist = block.settings.tracklist | split: '<span class="metafield-multi_line_text_field">' | last | split: "</span>" | first | strip_newlines | split: '<br />'
+  else
+    if block.settings.tracklist contains "<br/>"
+      assign tracklist = block.settings.tracklist | split: '<p>' | last | split: "</p>" | first | strip_newlines | strip | split: '<br/>'
+    else
+      assign tracklist =  block.settings.tracklist | remove_first: "<p>" | replace: '</p>', '' | strip_newlines | strip | split: '<p>'
+    endif
+  endif
+  assign feature_img_url = featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.'
+-%}
+{%- capture tracklist_js_object -%}[{% for track in tracklist %}{ title: {{ track | strip | escape | json }}, url: {{ forloop.index | prepend: '-' | prepend: product_handle | append: '.' | append: 'mp3' | file_url | prepend: 'https:' | json }} }{% unless forloop.last %},{% endunless %}{% endfor %}]{%- endcapture -%}
+{% if tracklist.size > 0 %}
+<div class="my-8 rte" {{ block.shopify_attributes }} x-data='ThemeModule_AudioPlayer({{ tracklist_js_object }}, "audioPlayer-{{ section.id }}", {{ product_title | escape | json }}, {{ feature_img_url | json }})' x-init="mounted()" x-cloak data-color-scheme="{{ section_color | default: 'primary' }}">
+  <div class="flex items-center">
+    <button class="rounded-full w-18 h-18 bg-scheme-text text-scheme-text-overlay  flex items-center justify-center relative hover:bg-scheme-accent hover:text-scheme-accent-overlay" @click="playButtonToggle()">
+      <span class="w-10 h-10 inline-block"  x-show="current_track.audio.paused">
+        {% render 'icon-play' %}
+        <span class="visually-hidden">{{ 'general.audio.play' | t }}</span>
+      </span>
+      <span class="w-10 h-10 inline-block" x-show="!current_track.audio.paused">
+        {% render 'icon-pause' %}
+        <span class="visually-hidden">{{ 'general.audio.pause' | t }}</span>
+      </span>
+    </button>
+    <div class="flex-1 pl-4">
+      <div class="flex justify-between items-center">
+        <template x-if="$store['{{ audioPlayerId }}'].vinyl_tracklist_format">
+          <div x-html="decodeHTML(current_track.title).substr(decodeHTML(current_track.title).indexOf(' ')+1)" class="font-secondary text-base flex-1"></div>
+        </template>
+        <template x-if="!$store['{{ audioPlayerId }}'].vinyl_tracklist_format">
+          <div x-html="decodeHTML(current_track.title)" class="font-secondary text-base flex-1"></div>
+        </template>
+        <div>
+          <button @click="prevTrack" :disabled="$store['{{ audioPlayerId }}'].track_index === 0" :class="{'text-scheme-meta': $store['{{ audioPlayerId }}'].track_index === 0}">
+            <span class="w-4 h-4 inline-block">{% render 'icon-audio-previous' %}</span>
+            <span class="visually-hidden">{{ 'general.audio.previous' | t }}</span>
+          </button>
+          <button @click="nextTrack" class="ml-1" :disabled="$store['{{ audioPlayerId }}'].track_index === ($store['{{ audioPlayerId }}'].tracklist.length -1)" :class="{'text-scheme-meta': $store['{{ audioPlayerId }}'].track_index === ($store['{{ audioPlayerId }}'].tracklist.length -1)}">
+            <span class="w-4 h-4 inline-block">{% render 'icon-audio-next' %}</span>
+            <span class="visually-hidden">{{ 'general.audio.next' | t }}</span>
+          </button>
+        </div>
+      </div>
+      <div class="relative w-full h-5 seek-bar-container  flex items-center">
+        <div class="absolute top-0 left-0 right-0 bottom-0 z-10 cursor-pointer" x-show="!current_track.audio.paused"  @click="seekBarClick"></div>
+        <div class="bg-scheme-border rounded-md h-2 w-full relative">
+          <div class="h-4 w-4 bg-scheme-text rounded-full absolute  transform -translate-x-1/4 -translate-y-1/4" :style="`left: ${progressPercentage}%`"></div>
+          <div class="progress-bar bg-scheme-text h-full rounded-md h-2" :style="`width: ${progressPercentage}%`"></div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-scheme-meta font-secondary text-sm mt-2">
+        <span x-text="formatTime(current_audio_progress)"></span><span x-text="formatTime(current_audio_duration)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,346 @@
+{
+  "sections": {
+    "slideshow_qx8AwG": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_pgVYdh": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/brocante_EC.png",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2\/3",
+            "title": "product",
+            "text": "<p>French Antiques & Vintage<\/p>",
+            "text_color": "white",
+            "cta_link": "shopify:\/\/collections\/new-arrival",
+            "cta_text": "Shop Now"
+          }
+        },
+        "slide_eApC6d": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "image": "shopify:\/\/shop_images\/product-2.png",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-1\/2",
+            "title": "Store",
+            "text": "<p>Jiyugaoka, meguro, japan<\/p>",
+            "text_color": "white",
+            "cta_link": "shopify:\/\/pages\/アクセス",
+            "cta_text": "Access"
+          }
+        },
+        "slide_wd463G": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/2023-05-16_19.53.jpg",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2\/3",
+            "title": "Collection",
+            "text": "<p>Table, Chair, Light, Mirror, Tableware, Rug, Jewelry<\/p>",
+            "text_color": "white",
+            "cta_link": "shopify:\/\/collections",
+            "cta_text": ""
+          }
+        },
+        "slide_DcYDPA": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/IMG_8526.jpg",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2\/3",
+            "title": "Our story",
+            "text": "",
+            "text_color": "white",
+            "cta_link": "shopify:\/\/pages\/about",
+            "cta_text": "Read more"
+          }
+        },
+        "slide_aQqHgJ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/aesthetic-window-shadow-beige-texture-background_b4bce489-e0c6-4b2a-b8fb-b1d6b0167651.jpg",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2\/3",
+            "title": "",
+            "text": "<p>\"Live life feeling the beauty of Mother Nature\"<br\/><br\/>Live in peace. Enjoy life.<\/p>",
+            "text_color": "white",
+            "cta_link": "",
+            "cta_text": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "slide_pgVYdh",
+        "slide_eApC6d",
+        "slide_wd463G",
+        "slide_DcYDPA",
+        "slide_aQqHgJ"
+      ],
+      "settings": {
+        "height": "natural",
+        "auto_rotate": true,
+        "slide_speed": "4000"
+      }
+    },
+    "rich_text_LwAdVH": {
+      "type": "rich-text",
+      "settings": {
+        "title": "BROCANTE",
+        "rich_text": "<p>As you walk in the morning, your path lit by gentle sunlight pouring in through leaves.<\/p><p> It reminds you that nature is always besides you. Plants and furnitures that recall traditional French homes. <\/p><p>We offer these elements to cherish each passing seasons with nature. <\/p>",
+        "max_width": "max-w-5xl",
+        "font_size": "medium",
+        "text_align": "text-center",
+        "color_scheme": "primary"
+      }
+    },
+    "rich_text_7NztHa": {
+      "type": "rich-text",
+      "settings": {
+        "title": "",
+        "rich_text": "<p>ふと微笑みが溢れるような柔らかな時間を<\/p><p>植物を慈しみ季節の移ろいととも﻿に紡いでいく<\/p><p>フランスで愛されてきた美しい物たちとこの場所から<\/p>",
+        "max_width": "max-w-2xl",
+        "font_size": "small",
+        "text_align": "text-center",
+        "color_scheme": "primary"
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "New Arrival",
+        "collection": "new-arrival",
+        "no_products": 18,
+        "products_per_row_desktop": "4",
+        "products_per_row_mobile": "2",
+        "show_view_all": false,
+        "color_scheme": "primary"
+      }
+    },
+    "collection_list_Jy6wbg": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_7pPnQB": {
+          "type": "collection",
+          "settings": {
+            "collection": "furniture",
+            "cta_text": "Shop Now",
+            "text_size": "3xl",
+            "text_color": "white"
+          }
+        },
+        "collection_aAG47w": {
+          "type": "collection",
+          "settings": {
+            "collection": "fabric",
+            "cta_text": "Shop Now",
+            "text_size": "3xl",
+            "text_color": "white"
+          }
+        },
+        "collection_RLVKAe": {
+          "type": "collection",
+          "settings": {
+            "collection": "ceramics",
+            "cta_text": "Shop Now",
+            "text_size": "3xl",
+            "text_color": "white"
+          }
+        }
+      },
+      "block_order": [
+        "collection_7pPnQB",
+        "collection_aAG47w",
+        "collection_RLVKAe"
+      ],
+      "settings": {
+        "heading": "Collections",
+        "crop": "1",
+        "full_width": false,
+        "color_scheme": "primary"
+      }
+    },
+    "image_with_text_Pe6Pbi": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/uliana-kopanytsia-Y_udKmR7_VU-unsplash.jpg",
+        "image_position": "right",
+        "image_size": "two_thirds",
+        "heading": "Ceramic",
+        "richtext": "",
+        "text_alignment": "text-center",
+        "cta_url": "shopify:\/\/collections\/ceramics",
+        "cta_text": "Read more",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "blog-posts": {
+      "type": "blog-posts",
+      "disabled": true,
+      "settings": {
+        "title": "Workshop",
+        "blog": "journal",
+        "post_limit": 3,
+        "crop": "1",
+        "blog_show_author": false,
+        "blog_show_date": true,
+        "show_post_excerpt": true,
+        "show_post_link": false,
+        "show_blog_link": true,
+        "text_align": "text-left",
+        "color_scheme": "primary"
+      }
+    },
+    "tour_events_zGiTXg": {
+      "type": "tour-events",
+      "blocks": {
+        "text_r3rDfQ": {
+          "type": "text",
+          "settings": {
+            "day": 16,
+            "month": "Jan",
+            "location": "年末年始休業のお知らせ",
+            "venue": "",
+            "url": "https:\/\/brocante-jp.biz\/2025\/12\/14\/%e5%b9%b4%e6%9c%ab%e5%b9%b4%e5%a7%8b%e4%bc%91%e6%a5%ad%e3%81%ae%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b-2\/",
+            "enable_end_date": false,
+            "end_day": 16,
+            "end_month": "Jan"
+          }
+        },
+        "text_fPcw4U": {
+          "type": "text",
+          "settings": {
+            "day": 16,
+            "month": "Jan",
+            "location": "東京蚤の市'25 Autumn出店＆ナチュリライベント出店いたしました",
+            "venue": "",
+            "url": "https:\/\/brocante-jp.biz\/2025\/10\/17\/%e6%9d%b1%e4%ba%ac%e8%9a%a4%e3%81%ae%e5%b8%82%e5%87%ba%e5%ba%97%e3%81%ae%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b-2\/",
+            "enable_end_date": false,
+            "end_day": 16,
+            "end_month": "Jan"
+          }
+        }
+      },
+      "block_order": [
+        "text_r3rDfQ",
+        "text_fPcw4U"
+      ],
+      "settings": {
+        "title": "News",
+        "enable_max_events": false,
+        "number_of_events": 5,
+        "font": "product_grid_item",
+        "tour_source": "bandsintown",
+        "bandsintown_name": "",
+        "eventbrite_token": "",
+        "color_scheme": "tertiary"
+      }
+    },
+    "image_with_text_p3PnDC": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/BRO_3001.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "instagram",
+        "richtext": "<p>日々の綴りとして<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "https:\/\/www.instagram.com\/_brocante\/",
+        "cta_text": "Follow us",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_nNQKGQ": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/240515_brocante_EC-img.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "Store",
+        "richtext": "<p>3-7-7 Jiyugaoka, Meguro-ku, Tokyo 152-0035, Japan<br\/><br\/>03-3725-5584<\/p><p><a href=\"https:\/\/www.google.com\/maps\/place\/BROCANTE+%2F+%E3%83%96%E3%83%AD%E3%82%AB%E3%83%B3%E3%83%88+%E8%87%AA%E7%94%B1%E3%81%8C%E4%B8%98+%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%A2%E3%83%B3%E3%83%86%E3%82%A3%E3%83%BC%E3%82%AF\/@35.6088577,139.6653981,15z\/data=!4m6!3m5!1s0x6018f51dff614c17:0x9cd4f5d6288519fa!8m2!3d35.6088577!4d139.6653981!16s%2Fg%2F1z44xz4cl?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D\" title=\"https:\/\/www.google.com\/maps\/place\/BROCANTE+%2F+%E3%83%96%E3%83%AD%E3%82%AB%E3%83%B3%E3%83%88+%E8%87%AA%E7%94%B1%E3%81%8C%E4%B8%98+%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%A2%E3%83%B3%E3%83%86%E3%82%A3%E3%83%BC%E3%82%AF\/@35.6088577,139.6653981,15z\/data=!4m6!3m5!1s0x6018f51dff614c17:0x9cd4f5d6288519fa!8m2!3d35.6088577!4d139.6653981!16s%2Fg%2F1z44xz4cl?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D\">Google map<\/a><\/p><p>Contact<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_overlay_HBUnPN": {
+      "type": "image-with-text-overlay",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/robin-wersich-Q0IrpWQIMR4-unsplash.png",
+        "height": "natural",
+        "title": "Our story",
+        "text": "<h5>BROCANTEはフランスアンティーク家具雑貨の販売と<\/h5><h5>造園外構工事を行うショップになります <\/h5><h5> <\/h5><h5>幾度となく訪れたフランスの地に赴き知り得たことは <\/h5><h5>古い物にこそ価値があるという精神 <\/h5><h5>長く大切にされる物には理由があること <\/h5><h5>物事を大事にすることと 暮らしを大切にすること <\/h5><h5>人を大切に思うというのは全てがイコールだということ <\/h5><h5>  <\/h5><h5>自然を感じながら生きること <\/h5><h5>心地よく暮らすこと <\/h5><h5>大切に生きること <\/h5><h5>後世につなげて行きたいと思っています <\/h5>",
+        "content_position": "justify-center items-center text-center",
+        "content_width_desktop": "lg:w-2\/3",
+        "text_color": "white",
+        "cta_link": "shopify:\/\/pages\/about",
+        "cta_text": "Read more"
+      }
+    },
+    "gallery_6EHkdC": {
+      "type": "gallery",
+      "blocks": {
+        "image_et4Qr7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/BRO_3001.jpg",
+            "caption": "instagram",
+            "url": "https:\/\/www.instagram.com\/_brocante\/"
+          }
+        },
+        "image_JzxDPe": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/ourstory-2.jpg",
+            "caption": "Our story",
+            "url": "shopify:\/\/pages\/about"
+          }
+        },
+        "image_fgJY68": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/IMG_5564.jpg",
+            "caption": "Store \/ Jiyugaoka",
+            "url": "shopify:\/\/pages\/アクセス"
+          }
+        }
+      },
+      "block_order": [
+        "image_et4Qr7",
+        "image_JzxDPe",
+        "image_fgJY68"
+      ],
+      "settings": {
+        "heading": "",
+        "text_size": "text-lg lg:text-2xl",
+        "full_width": true,
+        "images_per_row_desktop": "3",
+        "crop": "square",
+        "color_scheme": "primary",
+        "text_color": "white"
+      }
+    }
+  },
+  "order": [
+    "slideshow_qx8AwG",
+    "rich_text_LwAdVH",
+    "rich_text_7NztHa",
+    "featured-collection",
+    "collection_list_Jy6wbg",
+    "image_with_text_Pe6Pbi",
+    "blog-posts",
+    "tour_events_zGiTXg",
+    "image_with_text_p3PnDC",
+    "image_with_text_nNQKGQ",
+    "image_with_text_overlay_HBUnPN",
+    "gallery_6EHkdC"
+  ]
+}

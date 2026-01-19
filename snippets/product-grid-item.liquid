@@ -1,0 +1,323 @@
+{% comment %}theme-check-disable MissingTemplate,DeprecateLazysizes,DeprecateBgsizes{% endcomment %}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign sold_out = true
+  if product.available
+    assign sold_out = false
+  endif
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign hover_action = settings.products_hover_action
+  if product.metafields.label_theme.audio_preview != blank and settings.product_show_audio_preview
+    assign audio_preview = true
+    assign audio_url = product.metafields.label_theme.audio_preview.value.url
+    assign audio_preview_img_url = featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.'
+  endif
+  if settings.product_show_first_video_on_hover
+    assign first_video = product.media | where: "media_type", "video" | first
+  endif
+  if section_color == '' or section_color == blank
+    assign section_color = 'primary'
+  endif
+-%}
+<li class="{{ grid_item_width }} list-none" x-data='ThemeComponent_ProductGrid({{ hover_action | json }}, {{ product.title | escape | json }}{% if audio_preview %}, {{ audio_preview_img_url | json }}, {{ audio_url | json }}{% endif %})' x-init="mounted()" data-product-grid-item data-fade-in data-color-scheme="{{ section_color }}">
+  <div class="{% if settings.products_hover_action == 'none' %}group{% endif %} relative block  type-product-grid-item  {{ settings.product_grid_font }} {% if settings.product_grid_align == 'center' %}text-center{% endif %}"  @mouseleave="resetHover()" @mouseover="hover = true" @focusin="hover = true" @focusout="onFocusOut($event)">
+
+    <div class="relative overflow-hidden">
+      {% liquid
+        assign object_contain_grid = false
+        unless settings.product_grid_image_size == 'natural'
+          assign object_contain_grid = true
+          assign ratio = settings.product_grid_image_size | plus: 0
+        endunless
+      %}
+      {%- if object_contain_grid -%}
+        <div class="gallery-image-cropped relative"
+          style="padding-top:{{ 1 | divided_by: ratio | times: 100 }}%;">
+          {%- if product.featured_image != blank -%}
+          {%- render 'image-object' with
+            image: product.featured_image,
+            contain: true
+          -%}
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        {%- if product.featured_image != blank -%}
+          {%- render 'responsive-image' with
+            image: product.featured_image
+          -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {% if product.media.size > 1 and settings.products_hover_action == 'show_second_image' %}
+        {% if first_video != blank %}
+          <template x-if="hover">
+          {{ first_video | video_tag: controls: false, image_size: '300x300', autoplay: true, muted: true, loop: true, playsinline: true, class: 'opacity-0 product-item-hover object-cover absolute top-0 right-0 bottom-0 left-0 w-full h-full z-10 ' }}
+          </template>
+        {% else %}
+        {% assign hover_image = product.media[1].preview_image %}
+          <div class="product-item-hover lazyload absolute top-0 left-0 bottom-0 right-0 opacity-0 z-10 bg-cover transition-opacity duration-200 ease-in-out  bg-scheme-background"
+              data-bgset="{% render 'bgset', image: hover_image %}"
+              data-sizes="auto"
+              data-parent-fit="cover"
+              >
+          </div>
+        {%- endif-%}
+      {% endif %}
+
+      {% if product.media.size > 1 and settings.products_hover_action == 'slideshow' and embellishments != false %}
+        <div :class="{ 'lg:opacity-100': hover  }" class="transition-opacity lg:opacity-0 duration-200 ease-in-out z-20 absolute top-0 left-0 bottom-0 right-0 w-full h-full bg-scheme-background">
+          {% if first_video != blank %}
+            <template x-if="current_media === 2 && hover">
+              {{ first_video | video_tag: controls: false, image_size: '300x300', autoplay: true, muted: true, loop: true, playsinline: true, class: 'object-cover absolute top-0 right-0 bottom-0 left-0 w-full h-full' }}
+            </template>
+          {%- endif-%}
+          {%- assign counter = 1 -%}
+          {% for media in product.media %}
+            {%- liquid
+              if first_video != blank and first_video.id == media.id
+                continue
+              endif
+              assign hover_image = product.media[1].preview_image
+              if first_video != blank and counter == 2
+                assign counter = counter | plus: 1
+              endif
+            -%}
+            <div class="lazyload absolute top-0 left-0 bottom-0 right-0 bg-cover"
+                x-show.transition.opacity="current_media === {{ counter }}"
+                data-bgset="{% render 'bgset', image: media.preview_image %}"
+                data-sizes="auto"
+                data-parent-fit="cover"
+                >
+            </div>
+            {%- assign counter = counter | plus: 1 -%}
+          {% endfor%}
+        </div>
+      {% endif %}
+
+      {% if on_sale %}
+        <div class="absolute top-0 right-0 p-3 z-20">
+          <div class="bg-scheme-accent text-scheme-background text-sm p-2 font-secondary">{{ 'products.product.on_sale' | t }}</div>
+        </div>
+      {% endif %}
+
+      {% if audio_preview %}
+          <button
+          class="z-40 absolute bottom-4 right-4 {% if product.media.size > 1 and settings.products_hover_action == "slideshow" %}bottom-16{% endif %} lg:bottom-auto lg:right-auto lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-y-1/2 lg:-translate-x-1/2 rounded-full w-14 h-14 lg:w-18 lg:h-18 bg-scheme-background text-scheme-background-overlay  flex items-center justify-center lg:opacity-0 hover:bg-scheme-accent hover:text-scheme-accent-overlay transition-opacity"
+          @click="playButtonToggle()"
+          :class="{ 'lg:opacity-100': hover || is_playing }"
+          x-cloak
+        >
+          <span class="w-8 h-8 lg:w-10 h-10 inline-block"  x-show="!is_playing">
+            <span class="visually-hidden">{{ 'general.audio.play' | t }}</span>
+            {% render 'icon-play' %}
+          </span>
+          <span class="w-8 h-8 lg:w-10 h-10 inline-block" x-show="is_playing">
+            <span class="visually-hidden">{{ 'general.audio.pause' | t }}</span>
+            {% render 'icon-pause' %}
+          </span>
+        </button>
+      {% endif %}
+
+      {%- if product.media.size > 1 and settings.products_hover_action == "slideshow" -%}
+      <button :class="{ 'lg:opacity-100': hover  }" @click="if (current_media === 1){ current_media = {{ product.media.size | plus: 0 }} } else { current_media--}" role="button" class="product-grid-btn  transform -translate-x-full z-30  p-4 absolute -right-px bottom-0 lg:left-0 lg:right-auto  lg:top-1/2  lg:-translate-y-1/2 lg:-translate-x-0 lg:bottom-auto bg-scheme-background lg:opacity-0 {% if three_products_mobile %}hidden lg:block{% endif %}">
+        <span class="visually-hidden">{{ 'sections.slideshow.previous_slide' | t }}</span>
+        <span class="block transform rotate-180 w-5 h-5 lg:w-8 lg:h-8">
+          {% render 'icon-chevron-right' %}
+        </span>
+      </button>
+      <button  :class="{ 'lg:opacity-100': hover  }" @click="if (current_media === {{ product.media.size | plus: 0 }}){ current_media = 1  } else { current_media++}" role="button" class="product-grid-btn  transform lg:-translate-y-1/2 z-30 p-4 absolute right-0 bottom-0 lg:top-1/2 lg:bottom-auto  bg-scheme-background  lg:opacity-0 {% if three_products_mobile %}hidden lg:block{% endif %}">
+        <span class="visually-hidden">{{ 'sections.slideshow.next_slide' | t }}</span>
+        <span class="block w-5 h-5 lg:w-8 lg:h-8">
+          {% render 'icon-chevron-right' %}
+        </span>
+      </button>
+      {%- endif -%}
+
+      {%- if settings.enable_color_swatches_collections -%}
+        <div class="swatch-images-container hidden lg:block">
+          <div x-show.transition.opacity.duration.200ms="current_swatch_variant !== ''" class="bg-scheme-background absolute top-0 right-0 bottom-0 left-0 z-20"></div>
+          {%- assign swatch_trigger = 'products.product.color_swatch_trigger' | t | downcase -%}
+          {%- for option in product.options_with_values -%}
+            {%- liquid
+              assign is_color = false
+              assign option_downcase = option.name | downcase
+              if option_downcase contains swatch_trigger
+                assign is_color = true
+              elsif swatch_trigger == 'color' and option_downcase contains 'colour'
+                assign is_color = true
+              endif
+            -%}
+            {%- if is_color -%}
+              {%- liquid
+                assign option_index = forloop.index0
+                assign values = ''
+              -%}
+              {%- for variant in product.variants -%}
+                {%- assign value = variant.options[option_index] %}
+                {%- unless values contains value -%}
+                  {%- liquid
+                    assign values = values | join: ','
+                    assign values = values | append: ',' | append: value
+                    assign values = values | split: ','
+                  -%}
+                  {%- if variant.image -%}
+                    <div class="hidden lg:block product-item-hover bg-scheme-background lazyload absolute top-0 left-0 bottom-0 right-0 z-20 {% if object_contain_grid %}bg-contain{% else %}bg-cover{% endif %} bg-no-repeat bg-center transition-opacity duration-200 ease-in-out"
+                        data-bgset="{% render 'responsive-bg-image', image: variant.image %}"
+                        data-sizes="auto"
+                        data-parent-fit="cover"
+                        x-show.transition.opacity.duration.200ms="current_swatch_variant === '{{ variant.id }}'"
+                        >
+                    </div>
+                  {%- endif -%}
+                {%- endunless -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {% if settings.product_grid_item_star_ratings != 'none' %}
+    <div class="{% if small_text_on_mobile %}text-sm md:text-base{% else %}text-base{% endif %}">
+      <div class="mt-6 star-rating">
+        {% render 'star-rating',
+           type: settings.product_grid_item_star_ratings,
+           product: product
+        %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="{% if three_products_mobile %}text-sm md:text-base{% else %}text-base{% endif %}">
+      <a href="{{ product.url | within: collection }}" class="absolute top-0 left-0 w-full h-full z-20 block">
+        <span class="visually-hidden">{{ product.title }}</span>
+      </a>
+      <div class="text-scheme-text mt-6 mb-1 break-words" aria-hidden="true">
+        {% if settings.product_grid_show_vendor and product.vendor != blank %}
+          <p class="type-product-grid-item mb-1">
+            <span class="product-grid-vendor">{{ product.vendor }}</span>
+          </p>
+        {% endif %}
+
+        {% if settings.products_split_title and product.title contains '-' %}
+          {%- assign title = product.title | split: '-' -%}
+          <p class="product-grid-title">{{ title | last | strip }}</p>
+          <p class="mt-1">{{ title | first | strip }}</p>
+        {% else %}
+          <p class="product-grid-title">{{ product.title }}</p>
+        {% endif %}
+      </div>
+
+      {% assign metafield = settings.product_additional_metafield %}
+      {% if product.metafields.label_theme[metafield] != blank and settings.show_product_grid_metafield_collection_grid %}
+        <p class="text-scheme-text type-product-grid-item my-1">
+          {{ product.metafields.label_theme[metafield].value }}
+        </p>
+      {% endif %}
+
+      <p class="price m0 mt-2">
+        {% comment %}
+          You can show a leading 'from' or 'up to' by checking 'product.price_varies'
+          if your variants have different prices.
+        {% endcomment %}
+
+        {% if on_sale %}
+          {% if product.price_varies %}
+            {% assign sale_price = product.price | money %}
+              <span class="text-scheme-accent">{{ 'products.general.from_text_html' | t: price: sale_price }}</span>
+          {% else %}
+            {% unless sold_out %}
+              <span class="text-scheme-accent">{{ product.price | money }}</span>
+            {% endunless %}
+          {% endif %}
+        {% else %}
+          {% if product.price_varies %}
+            {% assign price = product.price | money %}
+              {{ 'products.general.from_text_html' | t: price: price }}
+          {% else %}
+            {% unless sold_out %}
+              {{ product.price | money }}
+            {% endunless %}
+          {% endif %}
+        {% endif %}
+
+        {% if sold_out %}
+          <span class="sold-out text-scheme-meta">{{ 'products.product.sold_out' | t }}</span>
+        {% endif %}
+
+        {% if on_sale %}
+          <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+          <s class="text-scheme-meta">{{ product.compare_at_price | money }}</s>
+        {% endif %}
+
+        {% assign current_variant = product.first_available_variant %}
+        {%- if current_variant.unit_price -%}
+          <p class="mt-1 {% if sold_out %}text-scheme-meta line-through{% endif %} text-xs" data-unit-price-wrapper>
+            <span data-unit-price>
+              {{- current_variant.unit_price | money -}}
+            </span>
+            <span>/</span>
+            <span data-unit-price-measurement-reference-value>
+            {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+              {{- current_variant.unit_price_measurement.reference_value -}}
+            {%- endif -%}
+            </span>
+            <span data-unit-price-measurement-reference-unit>
+              {{- current_variant.unit_price_measurement.reference_unit -}}
+            </span>
+          </p>
+        {%- endif -%}
+      </p>
+    </div>
+  </div>
+
+  {%- if settings.enable_color_swatches_collections -%}
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign is_color = false
+        assign swatch_trigger = 'products.product.color_swatch_trigger' | t | downcase
+        assign option_downcase = option.name | downcase
+        if option_downcase contains swatch_trigger
+          assign is_color = true
+        elsif swatch_trigger == 'color' and option_downcase contains 'colour'
+          assign is_color = true
+        endif
+      -%}
+    {%- if is_color -%}
+      <div class="mt-5">
+        {%- assign option_index = forloop.index0 -%}
+        {%- assign values = '' -%}
+        <div class="flex -mx-1 relative z-10 {% if settings.product_grid_align == 'center' %}justify-center{% else %}justify-start{% endif %} flex-wrap -mt-2" x-on:mouseleave="setTimeout(() => { current_swatch_variant = '' }, 200)">
+          {%- for variant in product.variants -%}
+            {%- assign value = variant.options[option_index] %}
+            {%- unless values contains value -%}
+              {%- liquid
+                assign values = values | join: ','
+                assign values = values | append: ',' | append: value
+                assign values = values | split: ','
+
+                assign color_image = value | handle | append: '.' | append: 'png' | file_img_url: '50x' | prepend: 'https:'
+                assign color_swatch_fallback = value | split: ' ' | last | handle
+                assign color_count = color_count | plus: 1
+              -%}
+              <a
+                href="{{ variant.url | within: collection }}"
+                class="relative block p-px m-0.5 border-scheme-border border min-w-4  cursor-pointer cursor-pointer"
+                x-on:mouseenter="current_swatch_variant = '{{ variant.id }}'"
+                x-on:focus="current_swatch_variant = '{{ variant.id }}'"
+                >
+                <span class="block w-10 h-10" style="background-image: url({{ color_image }}); background-color: {{ color_swatch_fallback }};"></span>
+                <span class="visually-hidden">{{ value }}</span>
+              </a>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+</li>

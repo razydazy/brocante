@@ -1,0 +1,24 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "show_logo": true,
+        "logo": "shopify:\/\/shop_images\/BROCANTE_logo.png",
+        "footer_linklist": "footer",
+        "show_border": true,
+        "show_newsletter": false,
+        "show_social_icons": true,
+        "show_payment_icons": false,
+        "show_locale_selector": false,
+        "show_country_selector": true,
+        "color_scheme": "secondary"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

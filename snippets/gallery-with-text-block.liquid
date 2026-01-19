@@ -1,0 +1,37 @@
+{%- if link != blank -%}
+<a href="{{ link }}" class="increase-target cursor-pointer "><span class="visually-hidden">{{ title }}</span></a>
+{%- endif-%}
+{%- if image != blank -%}
+  <div class="relative overflow-hidden">
+      {%- render 'image-crop' with
+        image: image,
+        ratio: ratio
+    -%}
+  </div>
+{%-else-%}
+  <div class="bg-placeholder-bg">
+  {%- if crop -%}
+    <div class="relative" style="padding-top: {{ 1 | divided_by: ratio | times: 100 }}%;" data-color-scheme="primary">
+      <span class="absolute top-0 left-0 right-0 bottom-0 text-scheme-text">{{ 'image' | placeholder_svg_tag: 'placeholder-svg fill-current' }}</span>
+    </div>
+  {%- else -%}
+    <div>
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {%- endif -%}
+  </div>
+{%- endif -%}
+<h2 class="font-heading {{ heading_class }} mt-6 mb-1" aria-hidden="true">
+  {{ title }}
+</h2>
+<div class="rte {{ description_class }}">
+  {{ description }}
+</div>
+{%- if link_text != blank and link != blank -%}
+<div class="mt-8">
+  <span class="btn btn-outline-{{ section_color }}-{{ settings.outline_button_color }}">
+    <span class="btn-text">{{ link_text }}</span>
+    {% if settings.buttons_show_arrow %}<span class="btn-icon">{% render 'icon-right_arrow' %}</span>{% endif %}
+  </span>
+</div>
+{%- endif -%}

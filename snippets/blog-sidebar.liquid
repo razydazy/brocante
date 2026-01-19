@@ -1,0 +1,44 @@
+<div class="lg:col-span-3 lg:col-end-13 space-y-8" data-color-scheme="primary">
+  <div>
+    <h2 class="font-secondary border-b-theme-width border-scheme-border pb-2">{{ 'blogs.sidebar.recent_articles' | t }}</h2>
+    <ul class="mt-4 mb-8">
+      {% for article in blogs[blog.handle].articles limit: 6 %}
+        <li class="mt-3">
+          <a href="{{ article.url }}" class="block hover:text-scheme-text">{{ article.title }}</a>
+          <time class="text-scheme-meta text-sm mt-2" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% if blog.all_tags.size > 0 %}
+  <div>
+    <h2 class="font-secondary border-b-theme-width border-scheme-border pb-2">{{ 'blogs.sidebar.categories' | t }}</h2>
+    <ul class="mt-4 mb-8">
+      {% if current_tags %}
+        <li>
+          <a class="border-b-text-width border-transparent inline-block py-1" href='{{ blogs[blog.handle].url }}'>{{ 'blogs.sidebar.all_tags' | t }}</a>
+        </li>
+      {% else %}
+        <li>
+          <span class="border-b-text-width border-scheme-text inline-block py-1">
+            {{ 'blogs.sidebar.all_tags' | t }}
+          </span>
+        </li>
+      {% endif %}
+      {% for tag in blog.all_tags %}
+        {% if current_tags contains tag %}
+          <li>
+            <span class="py-1 inline-block hover:text-scheme-accent border-b-text-width border-scheme-text">{{ tag }}</span>
+          </li>
+        {% else %}
+          <li>{{ tag | link_to_tag: tag | replace: 'title=', 'class="py-1 inline-block hover:text-scheme-accent border-b-text-width border-transparent" title=' }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <p>
+    <a class="font-secondary text-scheme-meta text-sm" href="{{ shop.url }}{{ blogs[blog.handle].url }}.atom" target="_blank">{{ 'blogs.sidebar.rss' | t }}</a>
+  </p>
+</div>

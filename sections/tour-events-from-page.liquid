@@ -1,0 +1,66 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign request_url = section.settings.page.url
+  if section.settings.page_section_id != ''
+    assign request_url = section.settings.page.url | append: '?sections=' | append: section.settings.page_section_id
+  endif
+-%}
+{% unless request.design_mode %}
+  <script src="{{ 'events-from-page.js' | asset_url }}" type="module"></script>
+  <script src="{{ 'events.js' | asset_url }}" type="module"></script>
+{% endunless %}
+<section class="bg-scheme-background text-scheme-text tour-events section-y-padding" data-color-scheme="{{ section_color }}">
+  <div x-data="ThemeSection_EventsFromPage('{{ request_url }}')" x-init="init()"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Tour and events from page",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "id": "page",
+      "type": "page",
+      "label": "Page"
+    },
+    {
+      "id": "page_section_id",
+      "type": "text",
+      "label": "Tour and events section ID",
+      "info": "Enter the section ID from the selected page for better performance. [How to find the section ID.](https://help.switchthemes.co/label/sections/content/tour-events.html)"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "tertiary",
+          "label": "Tertiary"
+        }
+      ],
+      "default": "primary"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tour and events from page"
+    }
+  ]
+}
+{% endschema %}

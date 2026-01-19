@@ -1,0 +1,177 @@
+{% comment %}theme-check-disable MissingTemplate,DeprecateLazysizes,DeprecateBgsizes{% endcomment %}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign sold_out = true
+  if product.available
+    assign sold_out = false
+  endif
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  if product.metafields.label_theme.audio_preview != blank and settings.product_show_audio_preview
+    assign audio_preview = true
+    assign audio_url = product.metafields.label_theme.audio_preview.value.url
+    assign audio_preview_img_url = featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.'
+  endif
+  if section_color == '' or section_color == blank
+    assign section_color = 'primary'
+  endif
+-%}
+<li class="{{ grid_item_width }} list-none max-w-full overflow-hidden" x-data='ThemeComponent_ProductGrid({{ hover_action | json }}, {{ product.title | escape | json }}{% if audio_preview %}, {{ audio_preview_img_url | json }}, {{ audio_url | json }}{% endif %})' x-init="mounted()" data-product-grid-item data-color-scheme="{{ section_color | default: 'primary' }}">
+  <div class="{% if settings.products_hover_action == 'none' %}group{% endif %} relative block  type-product-grid-item  {{ settings.product_grid_font }} {% if settings.product_grid_align == 'center' %}text-center{% endif %}"  @mouseleave="resetHover()" @mouseover="hover = true" @focusin="hover = true" @focusout="resetHover()">
+
+  <div class="flex items-top justify-between flex-nowrap {{ desktop_row_content_align }}"
+    >
+    {%- if show_index -%}
+    <div class="font-secondary mr-4 lg:mr-8 text-left w-4 text-right">
+      {{ forloop.index | plus: paginate.current_offset }}
+    </div>
+    {%- endif -%}
+    {%- if product.featured_image != blank -%}
+    <div class="flex-shrink-0 {% if show_index %}w-20 lg:w-24{% else %}w-24{% endif %} relative">
+      {% if audio_preview %}
+        <div class="pl-4">
+          <button
+          class="z-30 absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-full w-12 h-12 lg:w-16 lg:h-16 bg-scheme-background text-scheme-text  flex items-center justify-center lg:opacity-0 hover:bg-scheme-accent hover:text-scheme-accent-overlay transition-opacity"
+          @click="playButtonToggle()"
+          :class="{ 'lg:opacity-100': hover || is_playing }"
+          x-cloak
+        >
+          <span class="w-7 h-7 lg:w-10 lg:h-10 inline-block"  x-show="!is_playing">
+            <span class="visually-hidden">{{ 'general.audio.play' | t }}</span>
+            {% render 'icon-play' %}
+          </span>
+          <span class="w-7 h-7 lg:w-10 lg:h-10 inline-block" x-show="is_playing">
+            <span class="visually-hidden">{{ 'general.audio.pause' | t }}</span>
+            {% render 'icon-pause' %}
+          </span>
+        </button>
+      </div>
+      {% endif %}
+      {% liquid
+        assign object_contain_grid = false
+        unless settings.product_grid_image_size == 'natural'
+          assign object_contain_grid = true
+          assign ratio = settings.product_grid_image_size | plus: 0
+        endunless
+      %}
+      {%- if object_contain_grid -%}
+        <div class="gallery-image-cropped relative"
+          style="padding-top:{{ 1 | divided_by: ratio | times: 100 }}%;">
+          {%- if product.featured_image != blank -%}
+          {%- render 'image-object' with
+            image: product.featured_image,
+            contain: true
+          -%}
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        {%- if product.featured_image != blank -%}
+          {%- render 'responsive-image' with
+            image: product.featured_image
+          -%}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+
+
+    <div
+      class="flex-1 w-full text-left flex items-top justify-between flex-nowrap {{ desktop_row_content_align }}"
+      x-data="{
+      'handle': '{{ product.handle }}',
+      'baseUrl': '{{ shop.url }}{{ routes.root_url }}',
+      {% if product.has_only_default_variant and product.first_available_variant %}
+      'variant': {{ product.first_available_variant.id }},
+      {% endif %}
+      ...QuickBuy() }">
+      <div class="flex-1 w-full px-5 {% if show_index %}flex items-top{% endif %}">
+        <div>
+          <a href="{{ product.url | within: collection }}" class="absolute top-0 left-0 w-full h-full z-20 block break-words">
+            <span class="visually-hidden">{{ product.title }}</span>
+          </a>
+    
+          <div class="text-scheme-text">
+            {% if settings.products_split_title and product.title contains '-' %}
+              {%- assign title = product.title | split: '-' -%}
+              <p class="product-grid-title">{{ title | last | strip }}</p>
+              <p class="m-0 mt-1 text-sm">{{ title | first | strip }}</p>
+            {% else %}
+              <p class="product-grid-title">{{ product.title }}</p>
+            {% endif %}
+          </div>
+          <div class="mt-2 lg:hidden">
+            <div class="text-scheme-text text-sm">
+              <p class="price m-0">
+                {%- if on_sale -%}
+                  {%- if product.price_varies -%}{%- assign sale_price = product.price | money -%}<span class="text-scheme-accent">{{ 'products.general.from_text_html' | t: price: sale_price }}</span>
+                  {%- else -%}
+                    {%- unless sold_out -%}<span class="text-scheme-accent">{{ product.price | money }}</span>{%- endunless -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- if product.price_varies -%}
+                    {%- assign price = product.price | money -%}{{ 'products.general.from_text_html' | t: price: price }}
+                  {%- else -%}
+                    {%- unless sold_out -%}{{ product.price | money }}{%- endunless -%}
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if sold_out -%}<span class="sold-out text-scheme-meta">{{ 'products.product.sold_out' | t }}</span>{%- endif -%}
+                {%- if on_sale -%}<span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span><s class="text-scheme-meta">{{ product.compare_at_price | money }}</s>{%- endif -%}
+              </p>
+              <template x-if="state === 'success'">
+                <span class="inline-block lg:hidden mt-2 text-scheme-accent">{{ 'products.product.added_to_cart' | t }}</span>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div x-show="state !== 'success'" class="font-secondary pr-4 text-right hidden lg:block">
+        <div class="text-scheme-text text-base">
+          <p class="price m-0">
+            {%- if on_sale -%}
+              {%- if product.price_varies -%}{%- assign sale_price = product.price | money -%}<span class="text-scheme-accent">{{ 'products.general.from_text_html' | t: price: sale_price }}</span>
+              {%- else -%}
+                {%- unless sold_out -%}<span class="text-scheme-accent">{{ product.price | money }}</span>{%- endunless -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- if product.price_varies -%}
+                {%- assign price = product.price | money -%}{{ 'products.general.from_text_html' | t: price: price }}
+              {%- else -%}
+                {%- unless sold_out -%}{{ product.price | money }}{%- endunless -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- if sold_out -%}<span class="sold-out text-scheme-meta">{{ 'products.product.sold_out' | t }}</span>{%- endif -%}
+            {%- if on_sale -%}<span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span><s class="ml-2 text-scheme-meta">{{ product.compare_at_price | money }}</s>{%- endif -%}
+          </p>
+        </div>
+      </div>
+      <div class="w-8 flex-shrink-0 lg:w-auto">
+        <button class="relative z-30 quick-buy-button" @click="onClick($event)" :class="{ 'lg:hidden': state === 'success' }">
+          <span class="transition duration-200" :class="{ 'opacity-0': state === 'loading' }">
+            {%- if settings.cart_icon == 'cart' -%}
+            <span class="default w-8 h-8 inline-block">{%- render 'icon-cart-add' -%}</span>
+            {%- else -%}
+            <span class="default w-7 h-7 inline-block">{%- render 'icon-bag-add' -%}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'products.product.add_to_cart' | t }} {{ product.title }}</span>
+          </span>
+          <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 duration-200 w-6 w-6 inline-block" :class="{ 'opacity-100': state === 'loading', 'opacity-0': state !== 'loading' }" x-cloak>
+            <div class="loading"></div>
+          </span>
+        </button>
+        <template x-if="state === 'success'">
+          <a  href="{{ routes.cart_url }}"
+            {% if settings.ajax_cart_method == 'drawer' %}
+              data-cart-drawer-toggle
+              x-bind:aria-expanded="$store.drawer.cartDrawerOpen"
+              @click.prevent="$store.drawer.cartOpener = $event.currentTarget; $store.drawer.cartDrawerOpen = !$store.drawer.cartDrawerOpen"
+              @keydown.space="$store.drawer.cartOpener = $event.currentTarget; $store.drawer.cartDrawerOpen = !$store.drawer.cartDrawerOpen"
+            {% endif %}
+            class="hidden lg:block relative z-30 font-secondary text-base text-scheme-accent">{{ 'products.product.added_to_cart' | t }}</a>
+        </template>
+      </div>
+    </div>
+  </div>
+  </div>
+</li>

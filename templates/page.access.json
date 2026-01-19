@@ -1,0 +1,101 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "image_with_text_C6FLq7": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/juan-manuel-sanchez-lTuA_3LKGL8-unsplash.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "About",
+        "richtext": "<p> BROCANTEは東京自由が丘に2004年5月産声を上げました<\/p><p>幾重にも縁が重なり<\/p><p>小さな命と共に店を始動することとなりました<\/p><p>古物の買い付けはフランスへ渡りその度に感じていた事<\/p><p>古い物には価値があるという精神 <\/p><p>物事を大切にすること 暮らしを大切にすること 人を思うこと<\/p><p>全てはイコールでとてもシンプルだとういうこと<\/p><p>自然体で心地よく生きる <\/p><p>そんな暮らしを繋げて行かれればと思います<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_pbMPRk": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/zane-priedite-xE7_VEDZoKw-unsplash.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "What we believe",
+        "richtext": "<p><\/p><p>ふとした瞬間に見入るもの 何気なく手に取るもの<\/p><p>そこには情報から得た知識よりも先に <\/p><p>美しさを感じ取る感情が湧いている筈  <\/p><p>足元に咲く小さな花に心惹かれたときのように<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_wzh7Kx": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/1.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "heading": "Select",
+        "richtext": "<p> <\/p><p>アンティークやヴィンテージの家具や雑貨は<\/p><p>フランスの蚤の市から<\/p><p>またシーズンに合わせたファブリックは<\/p><p>トルコ モロッコ インド パキスタンなど <\/p><p>手仕事の文化が残る土地から<\/p><p>有名無名を問わずBROCANTEのフイルターを通して<\/p><p>心に響いたアイテムをセレクションしています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "image_with_text_9YKVmG": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image": "shopify:\/\/shop_images\/eberhard-grossgasteiger-eamjnHjGJQE-unsplash.jpg",
+        "image_position": "left",
+        "image_size": "half",
+        "heading": "Buying France",
+        "richtext": "<p><\/p><p>BROCANTE美しいガラクタを語源に持つフランス語 <\/p><p>絶え間なく続く私達の日常が少しでもより良くなるよう<\/p><p>古く美しいものを集めご紹介しています<\/p>",
+        "text_alignment": "text-center",
+        "cta_url": "",
+        "cta_text": "Shop Now",
+        "button_style": "outline",
+        "color_scheme": "secondary"
+      }
+    },
+    "custom_liquid_m4Qbmi": {
+      "type": "custom-liquid",
+      "settings": {
+        "title": "",
+        "custom_liquid": "<div class=\"gmap-iframe-wrap\">\n<!-- 下記にGoogleマップからコピーしたiframeタグが入り、class名のgmap-iframeを追記 -->\n<iframe src=\"https:\/\/www.google.com\/maps\/embed?pb=!1m14!1m8!1m3!1d12975.060858540151!2d139.6653981!3d35.6088577!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f51dff614c17%3A0x9cd4f5d6288519fa!2zQlJPQ0FOVEUgLyDjg5bjg63jgqvjg7Pjg4gg6Ieq55Sx44GM5LiYIOODleODqeODs-OCueOCouODs-ODhuOCo-ODvOOCrw!5e0!3m2!1sja!2sjp!4v1733904247596!5m2!1sja!2sjp\" width=\"2000\" height=\"600\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"><\/iframe>\n<\/div>\n<style>\niframe {\n    filter: grayscale(100%);\n}\n.gmap-iframe-wrap {\n<!-- Googleマップが画面中央に配置されるように設定 -->\ntext-align: center;\n}\n\n.gmap-iframe {\n<!-- PCサイズでは横幅が画面の60%のサイズになるように設定 -->\nwidth: 100%;\n}\n<!-- PCサイズとスマホサイズへの境界は767pxに設定している -->\n@media only screen and (max-width: 767px) {\n<!-- スマホサイズでは横幅が画面の85%のサイズになるように設定 -->\n.gmap-iframe {\nwidth: 85%;\n\n}\n}\n<\/style>",
+        "full_width": true,
+        "color_scheme": "primary"
+      }
+    },
+    "rich_text_YkPEYV": {
+      "type": "rich-text",
+      "settings": {
+        "title": "",
+        "rich_text": "<p>Open. 13:00p.m-18:00p.m<br\/>Closed. 火水木<br\/>address.3-7-7 jiyugaoka meguro  tokyo 〒152-0035<br\/>03-3725-5584<\/p>",
+        "max_width": "max-w-2xl",
+        "font_size": "small",
+        "text_align": "text-left",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_C6FLq7",
+    "image_with_text_pbMPRk",
+    "image_with_text_wzh7Kx",
+    "image_with_text_9YKVmG",
+    "custom_liquid_m4Qbmi",
+    "rich_text_YkPEYV"
+  ]
+}

@@ -1,0 +1,200 @@
+{% comment %}
+  This page represents the /collections and /products pages.
+{% endcomment %}
+{%- liquid
+  assign show_title = section.settings.show_title
+  assign ratio = section.settings.crop | plus: 0.0
+  assign items = collections
+  assign text_color = section.settings.text_color
+  assign text_size = section.settings.text_size
+  if section.blocks.size > 0
+    assign using_blocks = true
+    assign items = section.blocks
+  endif
+  if section.settings.full_width and show_title == false
+    assign full_width = true
+    assign section_class = 'section-with-no-padding'
+  elsif section.settings.full_width and show_title == true
+    assign full_width = true
+    assign section_class = 'section-t-padding section-with-no-bottom-padding'
+  else
+    assign section_class = 'section-y-padding'
+  endif
+-%}
+
+{% if section.settings.full_width and show_title == false %}
+<style>
+  #main-breadcrumbs {
+    display: none;
+  }
+</style>
+{% endif %}
+<section class="{{ section_class }}">
+  {%- if show_title -%}
+    <div class="wrapper">
+      <h1 class="font-heading {{ settings.template_heading_size }} {% if settings.center_page_titles %}text-center{% endif %}">{{ page_title }}</h1>
+    </div>
+  {%- endif -%}
+
+  <ul class="grid grid-cols-1 {{ section.settings.collection_per_row }} {% unless full_width %} {% if show_title %}mt-10{% endif %} gap-5 lg:gap-10 wrapper{% endunless %}">
+      {%- for item in items -%}
+        {%- liquid
+          assign collection = item
+          if using_blocks
+            assign collection = collections[item.settings.collection]
+            if item.settings.overlay_text_color != 'default'
+              assign text_color = item.settings.overlay_text_color
+            endif
+          endif
+          assign default_label = 'homepage.onboarding.collection_title' | t
+        -%}
+        {%- capture text_markup -%}
+          <div class="absolute w-full h-full z-10 top-0 left-0 flex items-center justify-center">
+            <div class="collection-list__text text-center flex flex-col items-center text-scheme-text p-5">
+              <h3 class="m-0 font-heading text-{{ text_size }}"><span class="type-text-overlay">{{ collection.title | default: default_label }}</span></h3>
+            </div>
+          </div>
+        {% endcapture -%}
+        <li class="collection-list-item relative" {{ block.shopify_attributes }} data-color-scheme="{{ text_color }}">
+          <a href="{{ collection.url | default: "#" }}">
+            {% if collection.image != blank or collection.products.first.featured_image != blank %}
+              {%- assign image_object = collection.image | default: collection.products.first.featured_image -%}
+              <div class="collection-list__image relative">
+                {% render 'image-crop' with
+                  image: image_object,
+                  ratio: ratio
+                %}
+                {{ text_markup }}
+              </div>
+            {% elsif collection == empty %}
+              <div class="bg-placeholder-darker-bg">
+                {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small fill-current' }}
+                {{ text_markup }}
+              </div>
+            {% else %}
+              <div class="h-40">
+                {{ text_markup }}
+              </div>
+            {% endif %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list page",
+  "settings": [
+    {
+       "type": "paragraph",
+       "content": "All of your collections are listed by default. To customize your list, add collection blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "collection_per_row",
+      "label": "Collections per row on desktop",
+      "options": [
+          { "value": "lg:grid-cols-2", "label": "2"},
+          { "value": "lg:grid-cols-3", "label": "3"},
+          { "value": "lg:grid-cols-4", "label": "4"}
+      ],
+      "default":   "lg:grid-cols-3"
+    },
+    {
+      "type": "select",
+      "id": "crop",
+      "label": "Crop images",
+      "options": [
+        {
+          "value": "0",
+          "label": "No crop"
+        },
+        {
+          "value": "1.3",
+          "label": "Landscape"
+        },
+        {
+          "value": "1",
+          "label": "Square"
+        },
+        {
+          "value": "0.8",
+          "label": "Portrait"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type":      "select",
+      "id":        "text_size",
+      "label":     "Text size",
+      "options": [
+        {
+          "value": "4xl",
+          "label": "Large"
+        },
+        {
+          "value": "3xl",
+          "label": "Medium"
+        }
+      ],
+      "default":   "3xl"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+          { "value": "primary", "label": "Primary text"},
+          { "value": "secondary", "label": "Secondary text"},
+          { "value": "tertiary", "label": "Tertiary text"},
+          { "value": "white", "label": "White"},
+          { "value": "black", "label": "Black"}
+      ],
+      "default":   "white"
+    }
+  ],
+  "blocks" :  [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+           "type": "collection",
+           "id": "collection",
+           "label": "Choose collection:"
+        },
+        {
+          "type": "select",
+          "id": "overlay_text_color",
+          "label": "Overlay text color",
+          "options": [
+            { "value": "default", "label": "Default"},
+            { "value": "primary", "label": "Primary text"},
+            { "value": "secondary", "label": "Secondary text"},
+            { "value": "tertiary", "label": "Tertiary text"},
+            { "value": "white", "label": "White"},
+            { "value": "black", "label": "Black"}
+          ],
+          "default": "default",
+          "info": "Override default section overlay text color"
+       }
+      ]
+    }
+  ]
+}
+{% endschema %}

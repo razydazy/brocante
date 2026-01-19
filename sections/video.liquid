@@ -1,0 +1,167 @@
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign overlay_heading = section.settings.overlay_heading
+  assign ratio = section.settings.aspect_ratio | split: ':'
+  assign ratio = ratio[1] | plus: 0.0 | divided_by: ratio[0] | plus: 0.0 | times: 100.0
+  if section.settings.full_width and overlay_heading
+    assign section_class = 'section-with-no-padding'
+  elsif section.settings.full_width and section.settings.heading != blank and overlay_heading == false
+    assign section_class = 'section-t-padding'
+  else
+    assign section_class = 'section-y-padding'
+  endif
+-%}
+{% unless request.design_mode %}
+  {% render 'script-tags', script: 'video' %}
+{% endunless %}
+<section class="bg-scheme-background text-scheme-text feature-video {{ section_class }}" data-color-scheme="{{ section_color }}">
+
+  {% if section.settings.heading != blank and overlay_heading == false %}
+    <div class="wrapper mb-10">
+      <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+        {{ section.settings.heading | strip | escape }}
+      </h2>
+    </div>
+  {% endif %}
+
+  <div  x-data='ThemeModule_Video("featuredVideo-{{ section.id }}", "external_video", {{ section.settings.video_url.type | json }})' x-init="mounted()" class="feature-video__video {% unless section.settings.full_width %} wrapper{% endunless %}">
+    <div x-ref="video_container" class="relative overflow-hidden" style="padding-bottom: {{ ratio }}%;">
+      <template x-if="!enabled">
+        <button  @click="enableVideo()" class="absolute top-0 left-0 right-0 bottom-0 h-full w-full flex items-center justify-center group" type="button">
+
+          <div class="z-40 text-center" data-fade-in>
+            {% if section.settings.heading != blank and overlay_heading %}
+              <h2 class="m-0 block font-heading type-text-overlay {{ settings.text_overlay_heading_size }} leading-snug pb-5 lg:pb-10  text-{{ section.settings.text_color  }}-text">
+                {{ section.settings.heading | escape | strip }}
+              </h2>
+            {% endif %}
+            <span
+              class="rounded-full w-14 h-14 lg:w-18 lg:h-18 bg-scheme-background text-scheme-background-overlay inline-flex items-center justify-center hover:bg-scheme-accent hover:text-scheme-accent-overlay transition-opacity"
+            >
+              <span class="w-8 h-8 lg:w-10 h-10 inline-block" >{% render 'icon-play' %}</span>
+            </span>
+          </div>
+
+          {%- if section.settings.cover_image != blank -%}
+            {% render 'image-object' with
+              image: section.settings.cover_image
+            %}
+          {%- else -%}
+            <div class="bg-placeholder-bg absolute top-0 left-0 right-0 bottom-0">
+              {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+            </div>
+          {%- endif -%}
+        </button>
+      </template>
+      <template  x-if="enabled">
+        {%- if section.settings.video_url.type == 'youtube' -%}
+          <iframe src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1&autoplay=1" class="js-youtube absolute top-0 left-0 right-0 bottom-0 w-full h-full" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+        {%- else -%}
+          <iframe src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?autoplay=1" class="js-vimeo  absolute top-0 left-0 right-0 bottom-0 w-full h-full" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+        {%- endif -%}
+      </template>
+    </div>
+  </div>
+</section>
+{% comment %}theme-check-disable MissingTemplate{% endcomment %}
+
+{% schema %}
+{
+  "name": "Video",
+  "class": "section-video",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_heading",
+      "label": "Overlay heading",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image"
+    },
+    {
+      "id": "video_url",
+      "type": "video_url",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "Accepts URLs from YouTube or Vimeo",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect ratio",
+      "default": "16:9",
+      "options": [
+        {
+          "value": "16:9",
+          "label": "Standard - 16:9"
+        },
+        {
+          "value": "4:3",
+          "label": "Standard - 4:3"
+        },
+        {
+          "value": "2.39:1",
+          "label": "Cinema"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Alt text"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"},
+          { "value": "white", "label": "White"},
+          { "value": "black", "label": "Black"}
+      ],
+      "default":   "white"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video"
+    }
+  ]
+}
+{% endschema %}

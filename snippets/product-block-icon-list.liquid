@@ -1,0 +1,33 @@
+{%- liquid
+  assign have_content = false
+  for i in (1..5)
+    assign text = 'text_' | append: i
+    if block.settings[text] != blank
+      assign have_content = true
+      break
+    endif
+  endfor  
+-%}
+{%- if have_content -%}
+<div class="-mt-theme-width border-t-theme-width border-b-theme-width border-scheme-border py-8" {{ block.shopify_attributes }} data-color-scheme="{{ section_color | default: 'primary' }}">
+  {%- if block.settings.heading != '' -%}
+  <h2 class="font-heading">{{ block.settings.heading }}</h2>
+  {%- endif -%}
+  <ul class="text-{{ block.settings.text_color }} {%- if block.settings.heading != '' -%}mt-4{% endif %} space-y-2">
+    {%- for i in (1..5) -%}
+    {%- capture icon %}icon_{{ i }}{%- endcapture -%}
+    {%- capture text %}text_{{ i }}{%- endcapture -%}
+    {%- liquid
+      assign icon = block.settings[icon]
+      assign text = block.settings[text]
+    -%}
+    {%- if text != '' -%}
+    <li class="flex items-top justify-start">
+      <span class="inline-block w-5 h-5 mr-2 flex-shrink-0 mt-0.5">{% render 'product-icon', icon: icon %}</span>
+      <span>{{ text }}</span>
+    </li>
+    {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>
+{%- endif -%}

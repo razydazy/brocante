@@ -1,0 +1,105 @@
+{%- liquid
+  assign image_width = section.settings.image_width
+  assign title_overlay = section.settings.title_overlay
+  assign overlay_text_color = section.settings.overlay_text_color
+  assign ratio = section.settings.crop | plus: 0.0
+  assign section_class = 'section-t-padding'
+  if image_width == 'full_width' and article.image != blank
+    assign section_class = 'section-with-no-padding'
+  endif
+  assign section_color = 'primary'
+-%}
+
+{%- if article.image != blank -%}
+<section class="{{ section_class }}">
+  <div class="relative {% unless image_width == 'full_width' %}wrapper{% endunless %}">
+    {%- if title_overlay -%}
+      <div class="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex items-center justify-center z-10">
+        <h1 class="m-0 block font-heading type-text-overlay {{ settings.text_overlay_heading_size }} leading-snug text-scheme-text text-center" data-color-scheme="{{ overlay_text_color }}">
+          {{ article.title }}
+        </h1>
+      </div>
+    {%- endif -%}
+    {% render 'image-crop' with
+      image: article.image,
+      ratio: ratio
+    %}
+  </div>
+  {% if image_width == 'full_width' and settings.enable_breadcrumbs %}
+    <style>
+      #main-breadcrumbs {
+        display: none;
+      }
+    </style>
+    {% render 'breadcrumbs', section_color: section_color %}
+  {% endif %}
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Article image",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_width",
+      "label": "Width",
+      "options": [
+          { "value": "full_width", "label": "Full width"},
+          { "value": "content_width", "label": "Content width"}
+      ],
+      "default":   "full_width"
+    },
+    {
+      "type": "select",
+      "id": "crop",
+      "label": "Crop image",
+      "options": [
+        {
+          "value": "0",
+          "label": "No crop"
+        },
+        {
+          "value": "0.8",
+          "label": "Portrait"
+        },
+        {
+          "value": "1",
+          "label": "Square"
+        },
+        {
+          "value": "1.3",
+          "label": "Landscape"
+        },
+        {
+          "value": "2.39",
+          "label": "Super wide"
+        },
+        {
+          "value": "4.0",
+          "label": "Letterbox"
+        }
+      ],
+      "default": "2.39"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_overlay",
+      "label": "Overlay article title"
+    },
+    {
+      "type": "select",
+      "id": "overlay_text_color",
+      "label": "Overlay text color",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"},
+          { "value": "white", "label": "White"},
+          { "value": "black", "label": "Black"}
+      ],
+      "default":   "white"
+    }
+  ]
+}
+{% endschema %}

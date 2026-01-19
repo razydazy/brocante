@@ -1,0 +1,61 @@
+<!-- /sections/custom-html.liquid -->
+{%- assign section_color = section.settings.color_scheme -%}
+<section class="bg-scheme-background text-scheme-text custom-html {% unless section.settings.full_width and section.settings.title == blank %}section-y-padding{% endunless %}" data-color-scheme="{{ section_color }}">
+  <div class="{% unless section.settings.full_width %}wrapper{% endunless %}">
+    {% if section.settings.title != '' %}
+    <h2 class="font-heading section-title-align {{ settings.section_heading_font_size }}">
+      {{ section.settings.title | escape }}
+    </h2>
+    {% endif %}
+
+    <div {% if section.settings.title != '' %}class="mt-10"{% endif %}>
+      {{ section.settings.custom_liquid }}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+ "name": "Custom liquid",
+ "settings": [
+   {
+    "type":      "text",
+    "id":        "title",
+    "label":     "Heading",
+    "default":   "Heading"
+   },
+   {
+     "id": "custom_liquid",
+     "type": "liquid",
+     "label": "Liquid",
+     "info": "Add app snippets or other Liquid code to create advanced customizations."
+   },
+   {
+     "type": "checkbox",
+     "id": "full_width",
+     "label": "Full width"
+   },
+   {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+          { "value": "primary", "label": "Primary"},
+          { "value": "secondary", "label": "Secondary"},
+          { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+ ],
+ "presets": [
+     {
+       "name": "Custom liquid"
+     }
+   ]
+}
+{% endschema %}

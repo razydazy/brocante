@@ -1,0 +1,285 @@
+{%- liquid
+  assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]'
+  assign label_classes = 'mt-4 mb-1 block font-secondary text-sm'
+  assign input_classes = 'w-full p-2 bg-transparent border-text-width border-scheme-border'
+  assign error_field_classes = 'border-scheme-accent'
+  assign error_message_classes = 'mt-2 text-scheme-accent text-sm'
+-%}
+
+<div
+  x-data="ThemeComponent_GiftCardRecipient()"
+  x-init="mounted()"
+  data-gift-card-recipient-form
+>
+  <div class="js-enabled">
+    <div class="custom-checkbox">
+      <input
+        x-model="enabled"
+        type="checkbox"
+        name="{{ gift_card_recipient_control_flag }}"
+        class="visually-hidden absolute"
+        id="Recipient-Checkbox-{{ section.id }}"
+        disabled
+        :disabled="false"
+      >
+      <label
+        class="cursor-pointer flex items-center"
+        for="Recipient-Checkbox-{{ section.id }}"
+      >
+        <span class="custom-checkbox__input"></span>
+        <span>{{- 'recipient.form.checkbox' | t -}}</span>
+      </label>
+    </div>
+  </div>
+
+  <div
+    class="no-js-undo-cloak"
+    x-show="enabled"
+    x-collapse
+    x-cloak
+  >
+    <div
+      class="mt-5 border border-scheme-accent text-scheme-accent p-3 mx-0 relative{% unless form.errors %} hidden{% endunless %}"
+      :class="{ 'hidden': !errors }"
+    >
+      <h2
+        class="text-base mb-2"
+        tabindex="-1"
+        autofocus
+      >
+        {{- 'contact.form.error_heading' | t -}}
+      </h2>
+
+      <ul class="list-none p-0 m-0 text-sm space-y-1.5">
+        {% if form.errors %}
+          {% for field in form.errors %}
+            <li>
+              {% if field == 'form' %}
+                {{ form.errors.messages[field] }}
+              {% else %}
+                <a href="#Recipient-{{ field }}-{{ section.id }}" class="text-scheme-accent underline">
+                  {{ form.errors.messages[field] }}
+                </a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        {% endif %}
+
+        <template x-if="errors">
+          <template x-for="[field, error] in Object.entries(errors)" :key="field">
+            <li class="mb-1.5">
+              <template x-if="field === 'form'">
+                  <span
+                    x-text="error"
+                  ></span>
+              </template>
+              <template x-if="field !== 'form'">
+                <a
+                  class="text-scheme-accent underline"
+                  :href="`#Recipient-${field}-{{ section.id }}`"
+                  x-text="`${error}`"
+                >
+                </a>
+              </template>
+            </li>
+          </template>
+        </template>
+      </ul>
+    </div>
+
+    <div class="recipient-fields">
+      <div class="recipient-field">
+        <div>
+          <label
+            class="{{ label_classes }}"
+            for="Recipient-email-{{ section.id }}"
+          >
+            <span class="js-enabled">
+              {{- 'recipient.form.email_label' | t -}}
+            </span>
+            <span class="no-js">
+              {{- 'recipient.form.email_label_optional_for_no_js_behavior' | t -}}
+            </span>
+          </label>
+
+          <input
+            class="{{ input_classes }}{% if form.errors contains 'email' %} {{ error_field_classes }}{% endif %}"
+            type="email"
+            :class="{ '{{ error_field_classes }}' : errors && errors.hasOwnProperty('email') }"
+            id="Recipient-email-{{ section.id }}"
+            value="{{ form.email }}"
+            name="properties[Recipient email]"
+            :aria-invalid="errors && errors.hasOwnProperty('email') ? 'true' : null"
+            :aria-describedby="errors && errors.hasOwnProperty('email') ? 'RecipientForm-email-error-{{ section.id }}' : null"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-email-error-{{ section.id }}"
+            {% endif %}
+            :disabled="!enabled"
+          >
+        </div>
+        <div
+          id="RecipientForm-email-error-{{ section.id }}"
+          class="{{ error_message_classes }}{% unless form.errors contains 'email' %} hidden{% endunless %}"
+          :class="{ 'hidden' : !(errors && errors.hasOwnProperty('email')) }"
+          x-text="errors && errors.hasOwnProperty('email') ? `${errors['email']}.` : null"
+        >
+          {%- if form.errors contains 'email' -%}
+            {{ form.errors.messages.email }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-field">
+        <div>
+          <label
+            class="{{ label_classes }}"
+            for="Recipient-name-{{ section.id }}"
+          >
+            {{- 'recipient.form.name_label' | t -}}
+          </label>
+
+          <input
+            class="{{ input_classes }}{% if form.errors contains 'name' %} {{ error_field_classes }}{% endif %}"
+            :class="{ '{{ error_field_classes }}' : errors && errors.hasOwnProperty('name') }"
+            autocomplete="name"
+            type="text"
+            id="Recipient-name-{{ section.id }}"
+            value="{{ form.name }}"
+            name="properties[Recipient name]"
+            :aria-invalid="errors && errors.hasOwnProperty('name') ? 'true': null"
+            :aria-describedby="errors && errors.hasOwnProperty('name') ? 'RecipientForm-name-error-{{ section.id }}' : null"
+            {% if form.errors contains 'name' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-name-error-{{ section.id }}"
+            {% endif %}
+            :disabled="!enabled"
+          >
+        </div>
+        <div
+          id="RecipientForm-name-error-{{ section.id }}"
+          class="{{ error_message_classes }}{% unless form.errors contains 'name' %} hidden{% endunless %}"
+          :class="{ 'hidden' : !(errors && errors.hasOwnProperty('name')) }"
+          x-text="errors && errors.hasOwnProperty('name') ? `${errors['name']}.` : null"
+        >
+          {%- if form.errors contains 'name' -%}
+            {{ form.errors.messages.name }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-field">
+        {%- liquid
+          assign max_chars_message = 200
+          assign max_chars_message_rendered = 'recipient.form.max_characters' | t: max_chars: max_chars_message
+          assign message_label_rendered = 'recipient.form.message_label' | t
+        -%}
+        <div>
+          <label
+            class="{{ label_classes }}"
+            for="Recipient-message-{{ section.id }}"
+          >
+            {{- message_label_rendered -}}
+          </label>
+          <textarea
+            rows="10"
+            id="Recipient-message-{{ section.id }}"
+            class="{{ input_classes }}{% if form.errors contains 'message' %} {{ error_field_classes }}{% endif %}"
+            :class="{ '{{ error_field_classes }}' : errors && errors.hasOwnProperty('message') }"
+            name="properties[Message]"
+            maxlength="{{ max_chars_message }}"
+            aria-label="{{ message_label_rendered }}"
+            :aria-invalid="errors && errors.hasOwnProperty('message') ? 'true': null"
+            :aria-describedby="errors && errors.hasOwnProperty('message') ? 'RecipientForm-message-error-{{ section.id }}' : null"
+            {% if form.errors contains 'message' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-message-error-{{ section.id }}"
+            {% endif %}
+            x-model="recipientMessage"
+            :disabled="!enabled"
+          >{{ form.message }}</textarea>
+        </div>
+
+        <label class="{{ label_classes }}">
+          <span class="no-js">{{- max_chars_message_rendered -}}</span>
+          <span class="js-enabled"
+          ><span x-text="messageLength"></span
+            >/<span x-show="messageLength < {{ max_chars_message }}">
+            {{- max_chars_message -}}</span
+            ><span x-show="messageLength >= {{ max_chars_message }}">
+            {{- max_chars_message_rendered -}}
+          </span>
+        </span>
+        </label>
+
+        <div
+          id="RecipientForm-message-error-{{ section.id }}"
+          class="{{ error_message_classes }}{% unless form.errors contains 'message' %} hidden{% endunless %}"
+          :class="{ 'hidden' : !(errors && errors.hasOwnProperty('message')) }"
+          x-text="errors && errors.hasOwnProperty('message') ? `${errors['message']}.` : null"
+        >
+          {%- if form.errors contains 'message' -%}
+            {{ form.errors.messages.message }}.
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="recipient-field">
+        <div>
+          <label
+            class="{{ label_classes }}"
+            for="Recipient-send_on-{{ section.id }}"
+          >
+            {{- 'recipient.form.send_on_label' | t -}}
+          </label>
+          <input
+            class="{{ input_classes }}{% if form.errors contains 'send_on' %} {{ error_field_classes }}{% endif %}"
+            :class="{ '{{ error_field_classes }}' : errors && errors.hasOwnProperty('send_on') }"
+            autocomplete="send_on"
+            type="date"
+            id="Recipient-send_on-{{ section.id }}"
+            placeholder="{{ 'recipient.form.send_on' | t }}"
+            pattern="\d{4}-\d{2}-\d{2}"
+            value="{{ form.send_on }}"
+            name="properties[Send on]"
+            :aria-invalid="errors && errors.hasOwnProperty('send_on') ? 'true': null"
+            :aria-describedby="errors && errors.hasOwnProperty('send_on') ? 'RecipientForm-send_on-error-{{ section.id }}' : null"
+            {% if form.errors contains 'send_on' %}
+              aria-invalid="true"
+              aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
+            {% endif %}
+            :disabled="!enabled"
+          >
+        </div>
+        <div
+          id="RecipientForm-send_on-error-{{ section.id }}"
+          class="{{ error_message_classes }}{% unless form.errors contains 'send_on' %} hidden{% endunless %}"
+          :class="{ 'hidden' : !(errors && errors.hasOwnProperty('send_on')) }"
+          x-text="errors && errors.hasOwnProperty('send_on') ? `${errors['send_on']}.` : null"
+        >
+          {%- if form.errors contains 'send_on' -%}
+            {{ form.errors.messages.send_on }}.
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <input
+      type="hidden"
+      name="{{ gift_card_recipient_control_flag }}"
+      value="if_present"
+      id="Recipient-Control-{{ section.id }}"
+      :disabled="true"
+    >
+
+    <input
+      type="hidden"
+      name="properties[__shopify_offset]"
+      value=""
+      id="Recipient-timezone-offset-{{ section.id }}"
+      disabled
+      :disabled="false"
+      :value="new Date().getTimezoneOffset()"
+    >
+  </div>
+</div>

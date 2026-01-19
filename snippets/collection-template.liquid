@@ -1,0 +1,273 @@
+{% comment %}theme-check-disable MissingTemplate,UndefinedObject,LiquidTag{% endcomment %}
+{%- liquid
+  assign product_limit = section.settings.grid | times: section.settings.rows
+  assign products_per_row = section.settings.grid
+  assign products_per_row_mobile = section.settings.grid_mobile | plus: 0
+  if template == 'collection.list' 
+    assign product_limit = section.settings.products_per_page
+    assign show_index = section.settings.show_index
+    assign desktop_row_content_align = section.settings.desktop_row_content_align
+  endif
+  assign show_sort = section.settings.enable_sorting
+  assign show_filters = section.settings.enable_filtering
+  assign show_image = section.settings.show_image
+  assign ratio = section.settings.crop | plus: 0.0
+  assign grid_cols = 12
+
+  assign main_class = 'lg:col-span-12'
+  assign section_class = 'section-y-padding'
+
+  if show_filters
+    assign sidebar_class = 'lg:col-span-2'
+    assign main_class = 'lg:col-span-10'
+    assign total_active_values = 0
+    for filter in collection.filters
+      assign total_active_values = total_active_values | plus: filter.active_values.size
+    endfor
+  endif
+
+  case products_per_row
+    when 2
+      assign desktop_col_span = 'lg:col-span-6'
+    when 3
+      assign desktop_col_span = 'lg:col-span-4'
+    when 4
+      assign desktop_col_span = 'lg:col-span-3'
+    when 5
+      assign grid_cols = 10
+      assign desktop_col_span = 'lg:col-span-2'
+  endcase
+
+  case products_per_row_mobile
+    when 1
+      assign mobile_col_span = 'col-span-2'
+    when 2
+      assign mobile_col_span = 'col-span-1'
+  endcase
+
+  assign desktop_grid_class = 'lg:grid-cols-' | append: grid_cols
+  assign col_span = mobile_col_span | append: ' ' | append: desktop_col_span
+
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign section_color = 'primary'
+-%}
+
+{% if settings.product_grid_item_star_ratings != 'none' %}
+  {% capture selector %}[data-section-id="{{ section.id }}"]{% endcapture %}
+  {% render 'star-style',
+     selector: selector,
+     section_color: section_color
+  %}
+{% endif %}
+
+<section class="{{ section_class }}" data-section-type="filterable" data-section-id="{{ section.id }}" x-data="ThemeSection_filterable()" x-init="mounted()" data-color-scheme="{{ section_color }}">
+
+  {% if show_filters == false and show_sort == true %}
+  <form id="Facet-Filters-Form" @submit.prevent="filterFormSubmit" class="hidden"></form>
+  {% endif %}
+
+  <div class="wrapper" id="facets-filterable">
+    <div class="lg:grid lg:gap-20 lg:grid-cols-12">
+      {% if section.settings.linklist != blank or show_filters %}
+        <aside class="relative hidden lg:block {{ sidebar_class }}">
+          <a class="in-page-link skip-link" href="#collection-grid">{{ 'collections.general.title' | t }}</a>
+          <div class="hidden" id="facets-results-count">
+            {%- if collection.products_count == 1 -%}
+              {{ 'collections.general.items_with_count.one' | t: count: collection.products_count }}
+            {%- else -%}
+              {{ 'collections.general.items_with_count.other' | t: count: collection.products_count }}
+            {%- endif -%}
+          </div>
+
+          {% if section.settings.linklist != blank %}
+            <nav aria-label="{{ 'collections.general.title' | t }}">
+              <ul class="mb-10 text-base">
+                {% for link in linklists[section.settings.linklist].links %}
+                  <li class="mb-2">
+                    <a class="inline-block" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+                      <span class="inline-block border-transparent border-b-text-width py-1 {% if link.active %} border-current{% endif %}">{{ link.title }}</span>
+                    </a>
+                    {%- liquid
+                      assign active_links = link.links | where: 'active', true
+                    -%}
+                    {% if link.levels > 0 %}
+                      <ul class="mt-2 {% unless link.active or active_links.size > 0 %}hidden{% endunless %} pb-4">
+                        {% for childlink in link.links %}
+                          <li class="ml-4 mb-2">
+                            <a class="inline-block" href="{{ childlink.url }}" {% if childlink.active %}aria-current="page"{% endif %}>
+                              <span class="inline-block border-transparent border-b-text-width py-1 {% if childlink.active %} border-current{% endif %}">{{ childlink.title }}</span>
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          {% endif %}
+          {% if show_filters %}
+            {% render 'filters-desktop',
+               results: collection,
+               section_color: section_color,
+               enable_color_swatch_filters: section.settings.enable_color_swatch_filters,
+               expand_filters: section.settings.expand_filters,
+               capitalize_filters: section.settings.capitalize_filters,
+               show_filter_count: section.settings.show_filter_count
+            %}
+          {% endif %}
+        </aside>
+      {% endif %}
+      <div class="{{ main_class }}">
+        {%- if collection.image != blank and show_image -%}
+        <div class="relative">
+          {% render 'image-crop' with
+            image: collection.image,
+            ratio: ratio
+          %}
+        </div>
+        {%- endif -%}
+        {%- if show_filters or show_sort -%}
+        <div class="flex justify-between items-center mt-0 lg:-mt-3 lg:ml-auto">
+          {% if show_filters %}
+            <div class="lg:hidden">
+              <button data-filter-toggle
+                  class="appearance-none border-0 border-b-text-width border-scheme-border border-b-text-width py-3 font-secondary text-sm whitespace-nowrap"
+                  type="button"
+                  x-bind:aria-expanded="$store.drawer.filterDrawerOpen"
+                  @click="$store.drawer.filterDrawerOpen = !$store.drawer.filterDrawerOpen">
+                <span class="inline-block align-middle h-4 w-4 mr-2">{% render 'icon-filters' %}</span>
+                <span class="inline-block align-middle">{{ 'facets.filters.title_tags' | t }}</span>
+              </button>
+            </div>
+          {% endif %}
+          <div class="hidden lg:block">
+            <h2 class="m-0 product-count__text">
+              {%- if collection.products_count == 1 -%}
+                {{ 'collections.general.items_with_count.one' | t: count: collection.products_count }}
+              {%- else -%}
+                {{ 'collections.general.items_with_count.other' | t: count: collection.products_count }}
+              {%- endif -%}
+            </h2>
+          </div>
+          {% if show_sort %}
+            <div class="ml-4 flex items-center">
+              <label class="font-secondary text-sm mr-4 border-b border-transparent sr-only lg:not-sr-only lg:mr-4" for="Collection-Sort">{{ 'facets.sorting.title' | t }}</label>
+              <select
+                form="Facet-Filters-Form"
+                id="Collection-Sort"
+                name="sort_by"
+                @input.debounce="filterFormSubmit"
+                class="inline-block font-secondary text-sm pr-6 h-full">
+                {%- for option in collection.sort_options -%}
+                  <option
+                    value="{{ option.value | escape }}"
+                    {% if option.value == sort_by %}selected="selected"{% endif %}>
+                      {{ option.name | escape }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+        </div>
+        {%- endif -%}
+        {% paginate collection.products by product_limit %}
+          {%- if collection.products.size > 0 -%}
+            {%- if template == 'collection.list' -%}
+              <ul id="facets-results"
+                class="grid gap-10 {% if show_filters or show_sort %}mt-8{% endif %}">
+              {% for product in collection.products %}
+                {% render 'product-list-item',
+                  product: product,
+                  enable_star_ratings: enable_star_ratings,
+                  star_color: star_color,
+                  forloop: forloop,
+                  show_index: show_index,
+                  desktop_row_content_align: desktop_row_content_align,
+                  paginate: paginate
+                %}
+              {% endfor %}
+              </ul>            
+            {%- else -%}
+              <ul id="facets-results"  class="grid grid-cols-2 {{ desktop_grid_class }} gap-10 {% if show_filters or show_sort %}mt-4 lg:mt-8{% endif %}">
+                {% for product in collection.products %}
+                  {% render 'product-grid-item',
+                    product: product,
+                    grid_item_width: col_span,
+                    enable_star_ratings: enable_star_ratings,
+                    star_color: star_color
+                  %}
+                {% endfor %}
+              </ul>
+            {%- endif -%}
+            {% if paginate.pages > 1 %}
+              <div class="grid grid-cols-4 mt-20 font-secondary text-sm">
+                <div class="text-left">
+                  {% if paginate.previous.is_link %}
+                    <a class="text-scheme-meta hover:text-scheme-accent" href="{{ paginate.previous.url }}">
+                      <span class="inline-block align-middle w-5">{% render 'icon-back' %}</span>
+                      <span class="inline-block align-middle">{{ paginate.previous.title | replace: '&laquo;', '' }}</span>
+                    </a>
+                  {% endif %}
+                </div>
+                <div class="col-span-2 text-scheme-meta text-center">
+                  <p class="hidden lg:block">
+                    {{ 'collections.pagination.item_count_label' | t }} {{ paginate.current_offset | plus: 1 }}-{% if paginate.next %}{{ paginate.current_offset | plus: paginate.page_size }}{% else %}{{ paginate.items }}{% endif %} of {{ paginate.items }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  {% if paginate.next.is_link %}
+                    <a class="text-scheme-meta hover:text-scheme-accent" href="{{ paginate.next.url }}">
+                      <span class="inline-block align-middle">{{ paginate.next.title | replace: '&raquo;', '' }}</span>
+                      <span class="inline-block align-middle w-5">{% render 'icon-forward' %}</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {%- else -%}
+            <p>{{ 'collections.general.no_matches' | t }}.</p>
+          {%- endif -%}
+        {% endpaginate %}
+      </div>
+    </div>
+    {% if section.settings.linklist or show_filters %}
+      <div class="z-100 menu-drawer fixed top-0 right-0 bottom-0 w-80 px-5 bg-scheme-background transform overflow-hidden flex flex-col"
+        x-show="$store.drawer.filterDrawerOpen"
+        x-transition:enter="transition ease duration-300"
+        x-transition:enter-start="opacity-0 translate-x-full"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease duration-300"
+        x-transition:leave-end="opacity-100 translate-x-full"
+        @click.away.prevent="$store.drawer.filterDrawerOpen = false"
+        role="dialog"
+        aria-modal="true"
+        data-filter-drawer
+        aria-labelledby="FilterTitle"
+        x-cloak>
+        <div class="relative flex items-center justify-between py-4 border-b-theme-width border-scheme-border">
+          <h1 class="font-heading text-base" id="FilterTitle">
+            {{ 'facets.filters.title_tags' | t }}
+          </h1>
+          <button @click.prevent="$store.drawer.filterDrawerOpen = false" class="block top-0">
+            <span class="visually-hidden"> {{ 'layout.drawers.close_menu' | t }}</span>
+            <span class="inline-block w-7 h-7">{% render 'icon-close' %}</span>
+          </button>
+        </div>
+        {% if show_filters %}
+          {% render 'filters-mobile',
+             results: collection,
+             section_color: section_color,
+             enable_color_swatch_filters: section.settings.enable_color_swatch_filters,
+             expand_filters: section.settings.expand_filters,
+             capitalize_filters: section.settings.capitalize_filters,
+             show_filter_count: section.settings.show_filter_count,
+             linklist: section.settings.linklist
+          %}
+        {%- endif -%}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% comment %}theme-check-enable MissingTemplate,UndefinedObject{% endcomment %}

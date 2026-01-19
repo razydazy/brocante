@@ -1,0 +1,33 @@
+<div class="section-x-padding section-y-padding max-w-lg mx-auto" data-color-scheme="primary">
+  <h1 class="font-heading text-2xl mb-2">{{ 'customer.activate_account.title' | t }}</h1>
+  <p>{{ 'customer.activate_account.subtext' | t }}</p>
+
+  {% form 'activate_customer_password' %}
+    {% if form.errors %}
+      <div class="mt-4 text-scheme-accent" tabindex="-1" data-login-error>{{ form.errors | default_errors }}</div>
+    {% endif %}
+
+      <label class="mt-4 mb-1 block font-secondary text-sm" for="CustomerPassword">
+        {{ 'customer.activate_account.password' | t }}
+      </label>
+      <input type="password"
+        name="customer[password]"
+        id="CustomerPassword"
+        class="w-full p-2 bg-transparent border-text-width border-scheme-border">
+
+      <label class="mt-4 mb-1 block font-secondary text-sm" for="CustomerPasswordConfirmation">
+        {{ 'customer.activate_account.password_confirm' | t }}
+      </label>
+      <input type="password"
+        name="customer[password_confirmation]"
+        id="CustomerPasswordConfirmation"
+        class="w-full p-2 bg-transparent border-text-width border-scheme-border">
+
+    <div class="mt-4">
+      <input type="submit" class="btn btn-primary-accent w-full" value="{{ 'customer.activate_account.submit' | t }}">
+    </div>
+    <div class="mt-4 text-center">
+      <input type="submit" class="" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
+    </div>
+  {% endform %}
+</div>

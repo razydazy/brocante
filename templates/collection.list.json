@@ -1,0 +1,39 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection__banner",
+      "disabled": true,
+      "settings": {
+        "image_width": "full_width",
+        "crop": "1.3",
+        "title_overlay": false,
+        "overlay_text_color": "white"
+      }
+    },
+    "header": {
+      "type": "main-collection__header",
+      "settings": {
+        "heading_size": "template",
+        "hide_title": false
+      }
+    },
+    "main": {
+      "type": "main-collection-list",
+      "settings": {
+        "show_image": false,
+        "crop": "1.3",
+        "enable_filtering": true,
+        "expand_filters": true,
+        "show_filter_count": false,
+        "enable_color_swatch_filters": false,
+        "enable_sorting": true,
+        "linklist": "collections"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "header",
+    "main"
+  ]
+}
